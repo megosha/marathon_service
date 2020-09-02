@@ -1,3 +1,4 @@
 marathon/settings.py
 .idea/*
 .env
+/static/
