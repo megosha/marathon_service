@@ -32,11 +32,14 @@
 <!--Formbuilder Form-->
 <form action="" method="POST" class="mbr-form form-with-styler" data-form-title="Mobirise Form"><input type="hidden" name="email" data-form-email="true" value="SWwCdaILHwl1DJ2p2WRRV5TYZX0VJgKWN/aJNyCu2s0T+usiO0hxrXsZwP/2fR5gsIMEtdz/ZKMgBewbNCtC/CUnl5kdSbR0H0I/DEoZ+jsauOd9sW1K/JY3+Of+FYer">
 {% csrf_token %}
-    <span class="mbr-fonts-style subtext display-4 text-light">{{ form.errors.custom }}</span>
-    <div class="form-row mt-3">
+    <div class="form-row">
 <div hidden="hidden" data-form-alert="" class="alert alert-success col-12"></div>
-<div hidden="hidden" data-form-alert-danger="" class="alert alert-danger col-12">
-</div>
+{#<div hidden="hidden" data-form-alert-danger="" class="alert alert-danger col-12">#}
+    {% if form.errors.custom %}
+        <div data-form-alert-danger="" class="alert alert-warning col-12 rounded">
+            <span class="mbr-fonts-style subtext display-4 text-light">{{ form.errors.custom }}</span>
+        </div>
+    {% endif %}
 </div>
 <div class="dragArea form-row">
 <div class="col-md-12">
@@ -44,11 +47,19 @@
 </div>
 <div class="col-md-12 form-group" data-for="login">
     {{ form.login }}
-    <span class="mbr-fonts-style subtext display-4 text-light">{{ form.login.errors }}</span>
+    {% if form.login.errors %}
+        <div class="alert alert-warning col-12 rounded p-0 m-0">
+            <span class="mbr-fonts-style subtext display-4 text-light p-0 m-0">{{ form.login.errors }}</span>
+        </div>
+    {% endif %}
 </div>
 <div class="col-lg-12 col-md-12 col-sm-12 form-group" data-for="password">
     {{ form.password }}
-    <span class="mbr-fonts-style subtext display-4 text-light">{{ form.password.errors }}</span>
+    {% if form.password.errors %}
+        <div class="alert alert-warning col-12 rounded p-0 m-0">
+            <span class="mbr-fonts-style subtext display-4 text-light p-0 m-0">{{ form.password.errors }}</span>
+        </div>
+    {% endif %}
 </div>
     <div class="col-lg-12 col-md-12 col-sm-12 align-right form-group"><a class="recovery" href="#">Не помню логин или пароль</a></div>
 <div class="col-md-12 input-group-btn mt-2"><button type="submit" class="btn btn-primary btn-form btn-bgr display-4">Войти</button></div>
