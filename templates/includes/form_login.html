@@ -1,0 +1,71 @@
+
+<section class="content02 cid-s8W7Ok1cDw" id="content02-n">
+
+
+
+
+    <div class="container">
+        <div class="row">
+            <div class="card col-12 col-md-12">
+                <div class="wrapper align-left">
+                    <h3 class="mbr-section-title mbr-bold align-left mbr-fonts-style display-2"><span>Вход в</span>&nbsp;<span>личный кабинет</span></h3>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="mbr-section extForm cid-s8W7lwQa7y" id="extForm2-m">
+
+
+
+
+   <div class="container">
+        <div class="media-container-row">
+            <div class="col-md-6 col-lg-6 block-content">
+                <div class="form-block">
+                    <div class="bg"></div>
+                    <div class="form-wrap" data-form-type="formoid">
+<!--Formbuilder Form-->
+<form action="" method="POST" class="mbr-form form-with-styler" data-form-title="Mobirise Form"><input type="hidden" name="email" data-form-email="true" value="SWwCdaILHwl1DJ2p2WRRV5TYZX0VJgKWN/aJNyCu2s0T+usiO0hxrXsZwP/2fR5gsIMEtdz/ZKMgBewbNCtC/CUnl5kdSbR0H0I/DEoZ+jsauOd9sW1K/JY3+Of+FYer">
+{% csrf_token %}
+    <span class="mbr-fonts-style subtext display-4 text-light">{{ form.errors.custom }}</span>
+    <div class="form-row mt-3">
+<div hidden="hidden" data-form-alert="" class="alert alert-success col-12"></div>
+<div hidden="hidden" data-form-alert-danger="" class="alert alert-danger col-12">
+</div>
+</div>
+<div class="dragArea form-row">
+<div class="col-md-12">
+<h4 class="mbr-fonts-style mb-4 mbr-fonts-style display-5">{% if registry %}{{ registry }}{% else %}Для входа, введите Ваш логин и пароль и нажмите "Войти"{% endif %}</h4>
+</div>
+<div class="col-md-12 form-group" data-for="login">
+    {{ form.login }}
+    <span class="mbr-fonts-style subtext display-4 text-light">{{ form.login.errors }}</span>
+</div>
+<div class="col-lg-12 col-md-12 col-sm-12 form-group" data-for="password">
+    {{ form.password }}
+    <span class="mbr-fonts-style subtext display-4 text-light">{{ form.password.errors }}</span>
+</div>
+    <div class="col-lg-12 col-md-12 col-sm-12 align-right form-group"><a class="recovery" href="#">Не помню логин или пароль</a></div>
+<div class="col-md-12 input-group-btn mt-2"><button type="submit" class="btn btn-primary btn-form btn-bgr display-4">Войти</button></div>
+</div>
+</form><!--Formbuilder Form-->
+</div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-6">
+                <div class="text-block">
+
+                    <h3 class="mbr-section-subtitle mbr-fonts-style mb-4 display-5">У Вас ещё нет учётной записи в личном кабинете? <br>Тогда зарегистрируйтесь в системе!</h3>
+
+                    <div class="mbr-section-btn mb-5"><a class="btn btn-md btn-bgr btn-success display-4" href="/register">Регистрация</a></div>
+                </div>
+                <p class="mb-4 mbr-fonts-style subtext display-4 pt-5">*Мы никому не передаеём Вашу личную информацию. Ознакомьтесь с нашей политикой конфиденциальности для получения дополнительной информации.</p>
+            </div>
+        </div>
+    </div>
+</section>
