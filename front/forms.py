@@ -1,5 +1,4 @@
 from django import forms
-from front import models
 
 
 class RegisterAccount(forms.Form):
@@ -8,7 +7,8 @@ class RegisterAccount(forms.Form):
     lastname = forms.CharField(max_length=100, required=True, widget=forms.TextInput(
         attrs={'type':'text', 'placeholder': 'Фамилия', "class": "form-control text-multiple"}))
     phone = forms.CharField(max_length=18, required=True, widget=forms.TextInput(
-        attrs={'type':'tel', 'placeholder': 'Телефон', "class": "form-control text-multiple"}))
+        attrs={'type':'tel', 'placeholder': 'Телефон', "class": "form-control text-multiple",
+               'oninput':'valid_phone(this.id)'}))
     email = forms.EmailField(required=True, widget=forms.EmailInput(
         attrs={'placeholder': 'Email', "class": "form-control text-multiple",}))
     ageconfirm = forms.BooleanField(required=True, widget=forms.CheckboxInput(
