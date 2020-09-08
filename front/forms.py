@@ -20,3 +20,7 @@ class Login(forms.Form):
         attrs={'placeholder': 'Логин', "class": "form-control input display-7",}))
     password = forms.CharField(required=True, widget=forms.PasswordInput(
         attrs={'type': 'password', 'placeholder': 'Пароль', "class": "form-control display-7"}))
+
+class ResetPWD(forms.Form):
+    email = forms.EmailField(required=True,
+                             widget=forms.EmailInput(attrs={"class": "form-control input display-7", 'placeholder': 'E-mail'}))

@@ -56,7 +56,7 @@ class Register(ContextViewMixin):
     def get(self, request, form=None):
         if form is None: form = forms.RegisterAccount()
         form_html = get_template('includes/form_register.html').render(context={"form": form}, request=request)
-        context = self.make_context(form_html=form_html)
+        context = self.make_context(form_html=form_html, title='Регистрация')
         return render(request, 'auth.html', context=context)
 
     def post(self, request):
@@ -92,7 +92,7 @@ class Register(ContextViewMixin):
                         html_message = render_to_string('mail/registration.html', mail_context)
                         plain_message = strip_tags(html_message)
                         send_email = functions.sendmail(subject=subject, message=plain_message, recipient_list=[email],
-                                                html_message=html_message)
+                                                        html_message=html_message)
                         if not send_email:
                             account.registry_sent = False
                             account.save()
@@ -118,7 +118,7 @@ class Login(ContextViewMixin):
         registry = request.session.pop('registry') if 'registry' in request.session else None
         context_insert = {"form": form, "registry": registry}
         form_html = get_template('includes/form_login.html').render(context=context_insert, request=request)
-        context = self.make_context(form_html=form_html)
+        context = self.make_context(form_html=form_html, title='Вход')
         return render(request, 'auth.html', context=context)
 
     def post(self, request):
@@ -145,6 +145,54 @@ class Logout(View):
         return HttpResponseRedirect("/")
 
 
+class ResetPassword(ContextViewMixin):
+    def get(self, request, form=None):
+        if request.user.is_authenticated:
+            return HttpResponseRedirect('/me')
+        if form is None:
+            form = forms.ResetPWD()
+
+        context_insert = {'form': form, 'title': "Сброс пароля"}
+        form_html = get_template('includes/form_reset.html').render(context=context_insert, request=request)
+        context = self.make_context(form_html=form_html, title='Сброс пароля')
+        return render(request, 'auth.html', context=context)
+
+    def post(self, request):
+        if request.user.is_authenticated: return HttpResponseRedirect('/me')
+        form = forms.ResetPWD(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            account = models.Account.objects.filter(user__email=email).first()
+            if not account:
+                form.errors['custom'] = "Пользователь с таким email не найден."
+            else:
+                password = functions.generate_code(length=8)
+                account.user.set_password(password)
+                try:
+                    account.user.save()
+                except:
+                    form.errors['custom'] = "Ошибка при сбросе пароля. Повторите попытку позднее."
+                else:
+                    subject = 'Сброс пароля в личном кабинете марафона "Движение Вверх"'
+                    settings = models.Setting.objects.filter().first()
+                    mail_context = {"login": email,
+                                    "password": password,
+                                    "settings": settings}
+                    html_message = render_to_string('mail/reset.html', mail_context)
+                    plain_message = strip_tags(html_message)
+                    send_email = functions.sendmail(subject=subject, message=plain_message, recipient_list=[email],
+                                                    html_message=html_message)
+                    if not send_email:
+                        form.errors['custom'] = "Ошибка при сбросе пароля. Повторите попытку позднее."
+                        # todo писать в таблицу ошибок или логов
+                    else:
+                        form_html = get_template('includes/reset_redirect.html').render(context={'email': email},
+                                                                                        request=request)
+                        context = self.make_context(form_html=form_html, title='Сброс пароля')
+                        return render(request, "auth.html", context)
+        return self.get(request, form=form)
+
+
 # todo feedback
 class Account(LoginRequiredMixin, ContextViewMixin):
     # class Account(View):
@@ -156,5 +204,5 @@ class Account(LoginRequiredMixin, ContextViewMixin):
 
     def get(self, request):
         # redirect_field_name = 'redirect_to'
-        context = self.make_context(tmp='qwe qweqwe qwe')
+        context = self.make_context()
         return render(request, 'account_ready.html', context=context)
