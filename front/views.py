@@ -3,7 +3,7 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.template.loader import get_template
 
@@ -45,6 +45,7 @@ class Index(ContextViewMixin):
 
 
 # todo в шаблоне сделать кнопку для пометки ошибочной регистрации (по нажатию запрос на api и удаление из базы этого пользователя по почте)
+#  удаление профиля
 @method_decorator(csrf_exempt, name='dispatch')
 class Register(ContextViewMixin):
     def dispatch(self, request, *args, **kwargs):
@@ -104,7 +105,6 @@ class Register(ContextViewMixin):
         return self.get(request, form=form)
 
 
-# todo recovery password with email template
 @method_decorator(csrf_exempt, name='dispatch')
 class Login(ContextViewMixin):
     def dispatch(self, request, *args, **kwargs):
@@ -144,6 +144,26 @@ class Logout(View):
             logout(self.request)
         return HttpResponseRedirect("/")
 
+
+class RemoveAccount(LoginRequiredMixin, ContextViewMixin):
+    #todo ставить признак, удалять если не был совершён вход в течении 2 недель
+    def post(self, request):
+        if models.Account.objects.filter(user=self.request.user).exists():
+            subject = 'Удаление профиля на платформе марафона "Движение Вверх"'
+            settings = models.Setting.objects.filter().first()
+            mail_context = {"login": self.request.user.email,
+                        "settings": settings}
+            html_message = render_to_string('mail/remove.html', mail_context)
+            plain_message = strip_tags(html_message)
+            send_email = functions.sendmail(subject=subject, message=plain_message, recipient_list=[self.request.user.email],
+                                        html_message=html_message)
+            if not send_email:
+                return JsonResponse({'sendmail':send_email})
+                # todo писать в таблицу ошибок или логов
+            else:
+                self.request.user.delete()
+                return JsonResponse({'sendmail': send_email, "deleted":True})
+        return HttpResponseRedirect('/')
 
 class ResetPassword(ContextViewMixin):
     def get(self, request, form=None):
