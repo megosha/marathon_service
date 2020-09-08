@@ -21,7 +21,7 @@ from front import models, forms, functions
 class ContextViewMixin(View):
     def make_context(self, context=None, **kwargs):
         if not context: context = {}
-        if self.request.user.is_authenticated:
+        if self.request.user.is_authenticated and models.Account.objects.filter(user=self.request.user).exists():
             context['user'] = self.request.user
         else:
             context['user'] = None
@@ -45,7 +45,6 @@ class Index(ContextViewMixin):
 
 
 # todo в шаблоне сделать кнопку для пометки ошибочной регистрации (по нажатию запрос на api и удаление из базы этого пользователя по почте)
-#  контекст из базы
 @method_decorator(csrf_exempt, name='dispatch')
 class Register(ContextViewMixin):
     def dispatch(self, request, *args, **kwargs):
@@ -106,11 +105,10 @@ class Register(ContextViewMixin):
 
 
 # todo recovery password with email template
-#  контролировать первый вхо
 @method_decorator(csrf_exempt, name='dispatch')
 class Login(ContextViewMixin):
     def dispatch(self, request, *args, **kwargs):
-        if not self.request.user.is_authenticated:
+        if not (self.request.user.is_authenticated and models.Account.objects.filter(user=self.request.user).exists()):
             return super().dispatch(request, *args, **kwargs)
         else:
             return HttpResponseRedirect('/me')
@@ -131,6 +129,9 @@ class Login(ContextViewMixin):
             user = authenticate(username=username, password=password)
             if user:
                 login(self.request, user)
+                if models.Account.objects.filter(user=self.request.user).exists():
+                    user.account.approved = True
+                    user.account.save()
                 return HttpResponseRedirect('/me')
             else:
                 form.errors['custom'] = f"Неверный логин или пароль"
@@ -147,6 +148,12 @@ class Logout(View):
 # todo feedback
 class Account(LoginRequiredMixin, ContextViewMixin):
     # class Account(View):
+    def dispatch(self, request, *args, **kwargs):
+        if models.Account.objects.filter(user=self.request.user).exists():
+            return super().dispatch(request, *args, **kwargs)
+        else:
+            return HttpResponseRedirect('/')
+
     def get(self, request):
         # redirect_field_name = 'redirect_to'
         context = self.make_context(tmp='qwe qweqwe qwe')

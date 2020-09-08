@@ -38,7 +38,7 @@ class Account(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     phone = models.CharField(max_length=18, blank=False, null=False, verbose_name="Контактный телефон")
-    approved = models.BooleanField(default=None, blank=True, null=True,
+    approved = models.BooleanField(default=False, blank=True, null=True,
                                         verbose_name="Статус подтверждения аккаунта (совершен вход в ЛК)")
     registry_sent = models.BooleanField(default=None, blank=True, null=True,
                                         verbose_name="Письмо о регистрации отправлено")
