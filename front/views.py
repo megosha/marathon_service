@@ -1,32 +1,22 @@
-import json
-from string import ascii_lowercase
-import random
-import environ
-from os import path
-
 from django.contrib.auth import authenticate, login, logout
-from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.template.loader import get_template
 
-from django.views.generic import FormView
 from django.views import View
 
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-from django.conf import settings
 
-from front import models, forms
+from front import models, forms, functions
+
 
 # Create your views here.
 
-base_dir = settings.BASE_DIR
-
-env = environ.Env()
-env.read_env(path.join(base_dir, '.env'))
 
 class ContextViewMixin(View):
     def make_context(self, context=None, **kwargs):
@@ -46,26 +36,16 @@ class ContextViewMixin(View):
                 context[f'{k}'] = v
         return context
 
-#todo feedback form for questions
+
+# todo feedback form for questions
 class Index(ContextViewMixin):
     def get(self, request):
         context = self.make_context()
         return render(request, 'index.html', context=context)
 
 
-LETTERS = ascii_lowercase
-NUMBERS = ''.join(str(i) for i in range(10))
-
-# todo refactor to functions file
-def generate_code(length=16):
-    bool_range = range(2)
-    code = ''.join(map(lambda x: random.choice(NUMBERS) if random.choice(bool_range) else str.upper(
-        random.choice(LETTERS)) if random.choice(bool_range) else random.choice(LETTERS), range(length)))
-    return code
-
-#todo template of registry
-# в шаблоне сделать кнопку для перехода на страницу входа
-# и кнопку для пометки ошибочной регистрации (по нажатию запрос на api и удаление из базы этого пользователя по почте)
+# todo в шаблоне сделать кнопку для пометки ошибочной регистрации (по нажатию запрос на api и удаление из базы этого пользователя по почте)
+#  контекст из базы
 @method_decorator(csrf_exempt, name='dispatch')
 class Register(ContextViewMixin):
     def dispatch(self, request, *args, **kwargs):
@@ -98,7 +78,7 @@ class Register(ContextViewMixin):
                     user.first_name = firstname
                     user.last_name = lastname
                     user.email = email
-                    password = generate_code(length=8)
+                    password = functions.generate_code(length=8)
                     user.set_password(password)
                     user.save()
                     account = models.Account.objects.create(user=user, phone=phone)
@@ -106,18 +86,17 @@ class Register(ContextViewMixin):
                     created = models.Account.objects.filter(user=user, phone=phone).exists()
                     if created:
                         subject = 'Регистрация на платформе марафона "Движение Вверх"'
-                        message = f'Здравствуйте!\nВы успешно зарегистрированы на платформе марафона "Движение Вверх"\n\n' \
-                                  f'Для входа в личный кабинет, используйте следующие дaнные:\n' \
-                                  f'Логин: {email}\nПароль: "{password}"\n\n' \
-                                  f'Внимание! не сообщайте никому данные для входа!'
-                        from_email = env('FROM_EMAIL')
-                        email_to = [email, ]
-                        try:
-                            send_mail(subject, message, from_email, email_to)
-                        except Exception as err:
+                        settings = models.Setting.objects.filter().first()
+                        mail_context = {"login": email,
+                                        "password": password,
+                                        "settings": settings}
+                        html_message = render_to_string('mail/registration.html', mail_context)
+                        plain_message = strip_tags(html_message)
+                        send_email = functions.sendmail(subject=subject, message=plain_message, recipient_list=[email],
+                                                html_message=html_message)
+                        if not send_email:
                             account.registry_sent = False
                             account.save()
-                            print(err)
                         else:
                             account.registry_sent = True
                             account.save()
@@ -125,7 +104,9 @@ class Register(ContextViewMixin):
                             return HttpResponseRedirect('/login')
         return self.get(request, form=form)
 
-#todo recovery password with email template
+
+# todo recovery password with email template
+#  контролировать первый вхо
 @method_decorator(csrf_exempt, name='dispatch')
 class Login(ContextViewMixin):
     def dispatch(self, request, *args, **kwargs):
@@ -155,15 +136,17 @@ class Login(ContextViewMixin):
                 form.errors['custom'] = f"Неверный логин или пароль"
         return self.get(request, form=form)
 
+
 class Logout(View):
     def dispatch(self, request, *args, **kwargs):
         if self.request.user.is_authenticated:
             logout(self.request)
         return HttpResponseRedirect("/")
 
-#todo feedback
+
+# todo feedback
 class Account(LoginRequiredMixin, ContextViewMixin):
-# class Account(View):
+    # class Account(View):
     def get(self, request):
         # redirect_field_name = 'redirect_to'
         context = self.make_context(tmp='qwe qweqwe qwe')

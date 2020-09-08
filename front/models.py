@@ -5,6 +5,11 @@ from datetime import datetime
 
 
 # Create your models here.
+class UpperSetting(models.Model):
+    endpoint = models.CharField(max_length=250, blank=True, null=True, verbose_name="Адрес API к сервису")
+    metadescr = models.TextField(default='', blank=True, null=True, verbose_name="Meta Description")
+    metakeywords = models.TextField(default='', blank=True, null=True, verbose_name="Meta Keyword")
+
 class Setting(models.Model):
     website = models.URLField(blank=True, null=True, verbose_name="Адрес сайта")
     contact_phone = models.CharField(max_length=18, blank=True, null=True, verbose_name="Контактный телефон")
@@ -12,8 +17,7 @@ class Setting(models.Model):
     soc_igm = models.URLField(blank=True, null=True, verbose_name="Ссылка на Instagram")
     soc_vk = models.URLField(blank=True, null=True, verbose_name="Ссылка на Вконтакте")
     soc_fb = models.URLField(blank=True, null=True, verbose_name="Ссылка на Facebook")
-    metadescr = models.TextField(default='', blank=True, null=True, verbose_name="Meta Description")
-    metakeywords = models.TextField(default='', blank=True, null=True, verbose_name="Meta Keyword")
+
 
 
 class Marathon(models.Model):
@@ -24,7 +28,7 @@ class Marathon(models.Model):
 
     class Meta:
         verbose_name = "Марафон"
-        verbose_name_plural = "Марафон"
+        verbose_name_plural = "Марафоны"
 
     def __str__(self):
         return f"{self.title}"
@@ -34,8 +38,7 @@ class Account(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     phone = models.CharField(max_length=18, blank=False, null=False, verbose_name="Контактный телефон")
-    # todo фиксировать
-    activated = models.BooleanField(default=None, blank=True, null=True,
+    approved = models.BooleanField(default=None, blank=True, null=True,
                                         verbose_name="Статус подтверждения аккаунта (совершен вход в ЛК)")
     registry_sent = models.BooleanField(default=None, blank=True, null=True,
                                         verbose_name="Письмо о регистрации отправлено")
@@ -43,7 +46,7 @@ class Account(models.Model):
     description = models.TextField(verbose_name="Комментарий", default=None, blank=True, null=True)
     photo = models.FileField(upload_to='images/avatars/', blank=True, verbose_name="Аватар")
     city = models.CharField(max_length=100, blank=True, null=True, verbose_name="Город")
-    marathone = models.ManyToManyField('Marathon', blank=True)
+    marathone = models.ManyToManyField('Marathon', blank=True, verbose_name="Марафоны")
 
     class Meta:
         verbose_name = "Аккаунт"

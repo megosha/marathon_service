@@ -22,9 +22,15 @@
                         <table border="0" cellpadding="0" cellspacing="0" style="margin: 0; padding: 0;" width="100%">
                             <tr>
                                 <td style="padding: 0; margin: 0;" width="39.285714285714%">
-                                    <a href="{{ site }}" target="_blank" style="text-decoration: none; font-size: 35px; font-weight: bold; color: #000;">
-                                        Марафон <span style="color: #ff513c;">"Движение Вверх"</span>
-                                    </a>
+                                    {% if settings %}
+                                        <a href="{{ site }}" target="_blank" style="text-decoration: none; font-size: 35px; font-weight: bold; color: #000;">
+                                            Марафон <span style="color: #ff513c;">"Движение Вверх"</span>
+                                        </a>
+                                        <span style="font-size: 35px; font-weight: bold; color: #000;">
+                                            Марафон <span style="color: #ff513c;">"Движение Вверх"</span>
+                                        </span>
+                                    {% else %}
+                                    {% endif %}
                                 </td>
 
                             </tr>
@@ -64,14 +70,16 @@
                                 <td colspan="3" height="20"></td>
                             </tr>
                             <tr>
-                                <td colspan="3" style="font-family: Arial, Helvetica, sans-serif; color: #000; text-decoration: none; font-size: 16px; line-height: 29px;">
-                                    <p>Не сообщайте данные для входа посторонним лицам!<br />
-                                        Ссылка для входа в личный кабинет:<br />
-                                        <a href="{{ site }}" target="_blank" style="font-weight: bold; color: #000">{{ site }}</a>
-                                    </p>
-                                    <p>Если это письмо пришло к Вам по ошибке, перейдите по этой ссылке: <a href="{{ remove_url }}" target="_blank" style="font-weight: bold; color: #000">{{ remove_url }}</a>.
-                                        Мы удалим Ваш аккаунт.</p>
-                                </td>
+                                {% if settings %}
+                                    <td colspan="3" style="font-family: Arial, Helvetica, sans-serif; color: #000; text-decoration: none; font-size: 16px; line-height: 29px;">
+                                        <p>Не сообщайте данные для входа посторонним лицам!<br />
+                                            Ссылка для входа в личный кабинет:<br />
+                                            <a href="{{ settings.website }}/login" target="_blank" style="font-weight: bold; color: #000">{{ settings.website }}/login</a>
+                                        </p>
+                                        <p>Если это письмо пришло к Вам по ошибке, перейдите по этой ссылке: <a href="{{ settings.website }}" target="_blank" style="font-weight: bold; color: #000">{{ settings.website }}</a>.
+                                            Мы удалим Ваш аккаунт.</p>
+                                    </td>
+                                {% endif %}
                             </tr>
                             <tr>
                                 <td colspan="3" height="30"></td>
@@ -91,12 +99,14 @@
                     <td width="588">
                         <table border="0" cellpadding="0" cellspacing="0" style="margin: 0; padding: 0;" width="100%">
                             <tr>
-                                <td width="333" style="text-align: left;">
-                                    <a href="tel:{{ phone }}" style="font-weight: bold; color: #000; font-size: 18px; text-decoration: none; font-family: Arial, Helvetica, sans-serif;">{{ phone }}</a>
-                                </td>
-                                <td width="333" style="text-align: right;">
-                                    <a href="mailto:{{ email }}" style="font-weight: bold; color: #000; font-size: 18px; text-decoration: none; font-family: Arial, Helvetica, sans-serif;">{{ email }}</a>
-                                </td>
+                                {% if settings %}
+                                    <td width="333" style="text-align: left;">
+                                        <a href="tel:{{ settings.contact_phone }}" style="font-weight: bold; color: #000; font-size: 18px; text-decoration: none; font-family: Arial, Helvetica, sans-serif;">{{ settings.contact_phon }}</a>
+                                    </td>
+                                    <td width="333" style="text-align: right;">
+                                        <a href="mailto:{{ settings.contact_mail }}" style="font-weight: bold; color: #000; font-size: 18px; text-decoration: none; font-family: Arial, Helvetica, sans-serif;">{{ settings.contact_mail }}</a>
+                                    </td>
+                                {% endif %}
                             </tr>
                         </table>
                     </td>

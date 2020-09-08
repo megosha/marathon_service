@@ -1,7 +1,13 @@
 from django.contrib import admin
 
 from front import models
+
+
 # Register your models here.
+class UpperSettingAdmin(admin.ModelAdmin):
+    list_display = ['endpoint']
+    list_display_links = ['endpoint']
+
 
 class SettingAdmin(admin.ModelAdmin):
     list_display = ['website', 'contact_phone', 'contact_mail']
@@ -9,7 +15,7 @@ class SettingAdmin(admin.ModelAdmin):
 
 
 class AccountAdmin(admin.ModelAdmin):
-    list_display = ['user', 'phone', 'activated', 'registry_sent', 'date_registry', 'description']
+    list_display = ['user', 'phone', 'approved', 'registry_sent', 'date_registry', 'description']
     list_display_links = ['user']
     list_filter = ['date_registry']
     search_fields = ['user', 'phone', 'description']
@@ -42,6 +48,7 @@ class VideoAdmin(admin.ModelAdmin):
     readonly_fields = ['date_create']
 
 
+admin.site.register(models.UpperSetting, UpperSettingAdmin)
 admin.site.register(models.Setting, SettingAdmin)
 admin.site.register(models.Account, AccountAdmin)
 admin.site.register(models.Feedback, FeedbackAdmin)
