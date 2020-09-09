@@ -14,6 +14,16 @@ from django.views.decorators.csrf import csrf_exempt
 
 from front import models, forms, functions
 
+import environ
+from django.conf import settings as sett
+from os import path
+
+
+base_dir = sett.BASE_DIR
+
+env = environ.Env()
+env.read_env(path.join(base_dir, '.env'))
+
 
 # Create your views here.
 
@@ -25,27 +35,53 @@ class ContextViewMixin(View):
             context['user'] = self.request.user
         else:
             context['user'] = None
-        # try:
-        #     settings = models.Settings.objects.get()
-        # except:
-        #     context = {}
-        # else:
-        #     context = {'settings': settings}
         if kwargs:
             for k, v in kwargs.items():
                 context[f'{k}'] = v
         return context
 
+class PostRequiredMixin(ContextViewMixin):
+    def dispatch(self, request, *args, **kwargs):
+        if request.method != "POST":
+            return HttpResponseRedirect('/')
+        return super().dispatch(request, *args, **kwargs)
+
 
 # todo feedback form for questions
 class Index(ContextViewMixin):
-    def get(self, request):
-        context = self.make_context()
+    def base(self, request, form=None):
+        if form is None: form = forms.Feedback()
+        reviews = models.Feedback.objects.all()[:30]
+        settings = models.Setting.objects.get()
+        feedback = request.session.pop('feedback') if 'feedback' in request.session else False
+        context = self.make_context(form=form,
+                                    reviews=reviews,
+                                    settings=settings,
+                                    feedback=feedback)
         return render(request, 'index.html', context=context)
+
+    def get(self, request, form=None):
+        return self.base(request, form)
+
+    def post(self, request):
+        form = forms.Feedback(request.POST)
+        if form.is_valid():
+            fields = {'firstname':'Имя', 'contact':'Контакты', 'message':'Сообщение'}
+            message = ''
+            for k, v in form.cleaned_data.items():
+                message += f'{fields.get(k)}: "{v}"\n'
+            subject = 'Новое сообщение по обратной связи  марафона "Движение Вверх"'
+            email = env('FEEDBACK_EMAIL')
+            send_email = functions.sendmail(subject=subject, message=message, recipient_list=[email],)
+            if not send_email:
+                form.errors['custom'] = f"При отправке сообщения произошла ошибка. Повторите попытку позднее."
+            else:
+                request.session['feedback'] = True
+                return HttpResponseRedirect('/#feedback-label')
+        return self.base(request, form)
 
 
 # todo в шаблоне сделать кнопку для пометки ошибочной регистрации (по нажатию запрос на api и удаление из базы этого пользователя по почте)
-#  удаление профиля
 @method_decorator(csrf_exempt, name='dispatch')
 class Register(ContextViewMixin):
     def dispatch(self, request, *args, **kwargs):
@@ -54,11 +90,14 @@ class Register(ContextViewMixin):
         else:
             return HttpResponseRedirect('/me')
 
-    def get(self, request, form=None):
+    def base(self, request, form=None):
         if form is None: form = forms.RegisterAccount()
         form_html = get_template('includes/form_register.html').render(context={"form": form}, request=request)
         context = self.make_context(form_html=form_html, title='Регистрация')
         return render(request, 'auth.html', context=context)
+
+    def get(self, request, form=None):
+        return self.base(request, form)
 
     def post(self, request):
         form = forms.RegisterAccount(request.POST)
@@ -102,7 +141,7 @@ class Register(ContextViewMixin):
                             account.save()
                             request.session['registry'] = f'Данные для входа в личный кабинет отправлены на {email}'
                             return HttpResponseRedirect('/login')
-        return self.get(request, form=form)
+        return self.base(request, form=form)
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -113,13 +152,17 @@ class Login(ContextViewMixin):
         else:
             return HttpResponseRedirect('/me')
 
-    def get(self, request, form=None):
+    def base(self, request, form=None):
         if form is None: form = forms.Login()
         registry = request.session.pop('registry') if 'registry' in request.session else None
         context_insert = {"form": form, "registry": registry}
         form_html = get_template('includes/form_login.html').render(context=context_insert, request=request)
         context = self.make_context(form_html=form_html, title='Вход')
         return render(request, 'auth.html', context=context)
+
+    def get(self, request, form=None):
+        return self.base(request, form)
+
 
     def post(self, request):
         form = forms.Login(request.POST)
@@ -135,7 +178,7 @@ class Login(ContextViewMixin):
                 return HttpResponseRedirect('/me')
             else:
                 form.errors['custom'] = f"Неверный логин или пароль"
-        return self.get(request, form=form)
+        return self.base(request, form=form)
 
 
 class Logout(View):
@@ -166,16 +209,18 @@ class RemoveAccount(LoginRequiredMixin, ContextViewMixin):
         return HttpResponseRedirect('/')
 
 class ResetPassword(ContextViewMixin):
-    def get(self, request, form=None):
+    def base(self, request, form=None):
         if request.user.is_authenticated:
             return HttpResponseRedirect('/me')
         if form is None:
             form = forms.ResetPWD()
-
         context_insert = {'form': form, 'title': "Сброс пароля"}
         form_html = get_template('includes/form_reset.html').render(context=context_insert, request=request)
         context = self.make_context(form_html=form_html, title='Сброс пароля')
         return render(request, 'auth.html', context=context)
+
+    def get(self, request, form=None):
+        return self.base(request, form)
 
     def post(self, request):
         if request.user.is_authenticated: return HttpResponseRedirect('/me')
@@ -210,7 +255,7 @@ class ResetPassword(ContextViewMixin):
                                                                                         request=request)
                         context = self.make_context(form_html=form_html, title='Сброс пароля')
                         return render(request, "auth.html", context)
-        return self.get(request, form=form)
+        return self.base(request, form=form)
 
 
 # todo feedback

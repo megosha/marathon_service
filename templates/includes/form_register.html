@@ -35,7 +35,7 @@
     <div class="form-row mt-3">
 <div hidden="hidden" data-form-alert="" class="alert alert-success col-12"></div>
     {% if form.errors.custom %}
-        <div data-form-alert-danger="" class="alert alert-warning col-12 rounded">
+        <div class="alert alert-warning col-12 rounded">
             <span class="mbr-fonts-style subtext display-4 text-light">{{ form.errors.custom }}</span>
         </div>
     {% endif %}
@@ -55,7 +55,7 @@
     {{ form.lastname }}
     {% if form.lastname.errors %}
         <div class="alert alert-warning col-12 rounded p-0 m-0">
-            <span class="mbr-fonts-style subtext display-4 text-light p-0 m-0">{{ form.lastname.errors }}</span>
+            <span class="mbr-fonts-style display-4 text-light p-0 m-0">{{ form.lastname.errors }}</span>
         </div>
     {% endif %}
 </div>

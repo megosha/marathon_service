@@ -23,7 +23,7 @@ class AccountAdmin(admin.ModelAdmin):
 
 class FeedbackAdmin(admin.ModelAdmin):
     list_display = ['account', 'custom_user', 'date_create']
-    list_display_links = ['account']
+    list_display_links = ['account', 'custom_user']
     list_filter = ['date_create', 'account', 'custom_user']
     search_fields = ['account', 'custom_user']
     readonly_fields = ['date_create']

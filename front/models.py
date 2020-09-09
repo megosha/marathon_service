@@ -69,7 +69,7 @@ class Feedback(models.Model):
         verbose_name_plural = "Отзывы"
 
     def __str__(self):
-        return f"{self.account.user.get_full_name()} / {self.custom_user}"
+        return f"{self.account} / {self.custom_user}"
 
 
 class Lesson(models.Model):

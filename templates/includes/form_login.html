@@ -36,8 +36,8 @@
 <div hidden="hidden" data-form-alert="" class="alert alert-success col-12"></div>
 {#<div hidden="hidden" data-form-alert-danger="" class="alert alert-danger col-12">#}
     {% if form.errors.custom %}
-        <div data-form-alert-danger="" class="alert alert-warning col-12 rounded">
-            <span class="mbr-fonts-style subtext display-4 text-light">{{ form.errors.custom }}</span>
+        <div class="alert alert-warning col-12 rounded p-0 m-0">
+            <span class="mbr-fonts-style display-4 text-light p-0 m-0">{{ form.errors.custom }}</span>
         </div>
     {% endif %}
 </div>

@@ -499,58 +499,65 @@
         <div class="carousel slide pt-3" role="listbox" data-pause="true" data-keyboard="false" data-ride="carousel" data-interval="20000">
             <div class="carousel-inner">
                 
+            {% for review in reviews %}
+                <div class="carousel-item">
 
-                
-                
-                
-                
-            <div class="carousel-item">
-                    <div class="user col-md-10 col-lg-8">
-                        <div class="user_image">
-                            <img src="/assets/images/face1.JPG" alt="" title="">
-                        </div>
+                    {% if review.account %}
+                        <div class="user col-md-10 col-lg-8">
+                            {% if review.account.photo %}
+                                <div class="user_image">
+                                    <img src="{{ review.account.photo.url }}" alt="" title="">
+                                </div>
+                            {% endif %}
                         <div class="user_text">
                             <span class="left-top mbr-iconfont fa-quote-left fa"></span>
                             <p class="mbr-fonts-style mbr-text mbr-white display-7">
-                                Очень актуальная тема о предназначение ,помогает его прежде всего найти!!! Четыре года назад я не знала кто Я, и чем мне заниматься в жизни. Благодаря этому курсу я нашла своё призвание и предназначение . Структурированная  подача материала, без воды , затронуты только важные аспекты этой темы и точечно направлены на решение проблем . Моя жизнь реально изменилась на 180 градусов , я приобрела уверенность в себе ( мне этого очень не хватала) поменяла своё мировоззрения , и освободилась от своих страхов и границ которые были у меня в голове!
+                                {{ review.feedback }}
                             </p>
-                            
                             <div class="user_name mbr-fonts-style mbr-white display-7">
-                                Елена</div>
+                                {{ review.account.user.first_name }}
+                            </div>
+                            {% if review.account.city %}
                             <div class="user_desk mbr-light mbr-fonts-style mbr-white display-4">
-                                г. Барнаул</div>
+                                {{ review.account.city }}</div>
+                            {% endif %}
                         </div>
-
-
                     </div>
-                </div><div class="carousel-item">
-                    <div class="user col-md-10 col-lg-8">
-                        <div class="user_image">
-                            <img src="/assets/images/face2.jpg" alt="" title="">
-                        </div>
+                    {% else %}
+                        <div class="user col-md-10 col-lg-8">
+                            {% if review.custom_photo %}
+                                <div class="user_image">
+                                    <img src="{{ review.custom_photo.url }}" alt="" title="">
+                                </div>
+                            {% endif %}
                         <div class="user_text">
                             <span class="left-top mbr-iconfont fa-quote-left fa"></span>
                             <p class="mbr-fonts-style mbr-text mbr-white display-7">
-                                Этот марафон в первую очередь помогает увидеть свои минусы и недоработки, а самое главное получить наставление как их исправить. Увидить себя - где ты сейчас на самом деле.  Посреди суеты задуматься о своём предназначении и эффективности в жизни. Получаю стимул, что нужно развиваться, без этого результата не достичь.
+                                {{ review.feedback }}
                             </p>
-                            
-                            <div class="user_name mbr-fonts-style mbr-white display-7">Дмитрий</div>
-                            <div class="user_desk mbr-light mbr-fonts-style mbr-white display-4">г. Барнаул</div>
+                            <div class="user_name mbr-fonts-style mbr-white display-7">
+                                {{ review.custom_user }}
+                            </div>
+                            {% if review.custom_city %}
+                            <div class="user_desk mbr-light mbr-fonts-style mbr-white display-4">
+                                {{ review.custom_city }}</div>
+                            {% endif %}
                         </div>
-
-
                     </div>
-                </div></div>
+                    {% endif %}
+
+                </div>
+            {% endfor %}
 
             <div class="carousel-controls">
                 <a class="carousel-control-prev" role="button" data-slide="prev">
                     <span aria-hidden="true" class="mbri-arrow-prev mbr-iconfont"></span>
-                    <span class="sr-only">Previous</span>
+                    <span class="sr-only">Назад</span>
                 </a>
 
                 <a class="carousel-control-next" role="button" data-slide="next">
                     <span aria-hidden="true" class="mbri-arrow-next mbr-iconfont"></span>
-                    <span class="sr-only">Next</span>
+                    <span class="sr-only">Вперёд</span>
                 </a>
             </div>
         </div>
@@ -566,8 +573,8 @@
         <div class="row">
             <div class="card col-12 col-md-12">
                 <div class="wrapper align-left">
-                    <h4 class="mbr-section-subtitle pb-1 align-left mbr-regular mbr-fonts-style display-5">СТАРТ 22 СЕНТЯБРЯ</h4>
-                    <h3 class="mbr-section-title mbr-bold align-left mbr-fonts-style display-2"><span>ДО НАЧАЛА</span>&nbsp;<span>МАРАФОНА</span>&nbsp;ОСТАЛОСЬ</h3>
+                    <h4 class="mbr-section-subtitle pb-1 align-left mbr-regular mbr-fonts-style display-5">СТАРТ 1 ОКТЯБРЯ</h4>
+                    <h3 class="mbr-section-title mbr-bold align-left mbr-fonts-style display-2"><span>ДО НАЧАЛА</span>&nbsp;<span>МАРАФОНА</span>&nbsp</h3>
                     
                     
                     
@@ -592,7 +599,7 @@
         <div class="hoursCountdown col-xs-3 col-sm-3 col-md-3" title="Час."></div> 
         <div class="minutesCountdown col-xs-3 col-sm-3 col-md-3" title="Мин."></div> 
         <div class="secondsCountdown col-xs-3 col-sm-3 col-md-3" title="Сек."></div>
-        <div class="countdown pt-5 mt-2" data-due-date="2020/09/16"> 
+        <div class="countdown pt-5 mt-2" data-due-date="2020/10/1">
         </div>
     </div>
 </section>
@@ -776,36 +783,51 @@
                     
 <!--Formbuilder Form-->
 <form action="" method="POST" class="mbr-form form-with-styler mt-4" data-form-title="Mobirise Form"><input type="hidden" name="email" data-form-email="true" value="3a4LnDG1SEUzQSL0jfLHHtWD6+Ip7g1pj5b/pVqg9UrwEhyVf7fWT/9Lnuo4OwBhPANNAzPoS0fG3Xr2iUvo2NLR9S3DwDDbgDhHVw+bsSmDKxX1KjYdtGlHApbRxnHw">
+{% csrf_token %}
 <div class="row">
-<div hidden="hidden" data-form-alert="" class="alert alert-success col-12">Ваше сообщение успешно отправлено!</div>
-<div hidden="hidden" data-form-alert-danger="" class="alert alert-danger col-12">
-</div>
+{% if feedback %}
+    <div data-form-alert="" class="alert alert-success col-12">Ваше сообщение успешно отправлено!</div>
+{% endif %}
+ {% if form.errors.custom %}
+    <div class="alert alert-warning col-12 rounded p-0 m-0">
+        <span class="mbr-fonts-style display-4 text-light p-0 m-0">{{ form.errors.custom }}</span>
+    </div>
+ {% endif %}
 </div>
 <div class="dragArea row">
 <div class="col-lg-12 col-md-12 col-sm-12 form-group" data-for="name">
-<input type="text" name="name" placeholder="Ваше имя" data-form-field="name" class="form-control display-7" value="" id="name-map02-d">
+{#<input type="text" name="name" placeholder="Ваше имя" data-form-field="name" class="form-control display-7" value="" id="name-map02-d">#}
+    {{ form.firstname }}
+    {% if form.firstname.errors %}
+        <div class="alert alert-warning col-12 rounded p-0 m-0">
+            <span class="mbr-fonts-style subtext display-4 text-light p-0 m-0">{{ form.firstname.errors }}</span>
+        </div>
+    {% endif %}
 </div>
 <div class="col form-group " data-for="contact" style="">
-<input type="text" name="contact" placeholder="Ваш телефон или e-mail" data-form-field="contact" class="form-control display-7" required="required" value="" id="contact-map02-d">
+{#<input type="text" name="contact" placeholder="Ваш телефон или e-mail" data-form-field="contact" class="form-control display-7" required="required" value="" id="contact-map02-d">#}
+    {{ form.contact }}
+    {% if form.contact.errors %}
+        <div class="alert alert-warning col-12 rounded p-0 m-0">
+            <span class="mbr-fonts-style subtext display-4 text-light p-0 m-0">{{ form.contact.errors }}</span>
+        </div>
+    {% endif %}
 </div>
 <div class="col-lg-12 col-md-12 col-sm-12 form-group" data-for="message">
-<textarea name="message" placeholder="Ваш вопрос или сообщение" data-form-field="message" class="form-control display-7" required="required" id="message-map02-d"></textarea>
+{#<textarea name="message" placeholder="Ваш вопрос или сообщение" data-form-field="message" class="form-control display-7" required="required" id="message-map02-d"></textarea>#}
+    {{ form.message }}
+    {% if form.message.errors %}
+        <div class="alert alert-warning col-12 rounded p-0 m-0">
+            <span class="mbr-fonts-style subtext display-4 text-light p-0 m-0">{{ form.message.errors }}</span>
+        </div>
+    {% endif %}
 </div>
     <p class="mbr-text mbr-regular align-left mbr-fonts-style text-small display-4">Внимание! Введёные Вами персональные данные никуда не передаются и&nbsp; используются только для обратной связи.</p>
 <div class="col-auto input-group-btn mbr-section-btn"><button type="submit" class="btn btn-form btn-success display-4">Отправить вопрос</button></div>
 </div>
 </form><!--Formbuilder Form-->
 </div>
-<!--                 <div class="google-map" mbr-map="googleMap"></div>
-                <div class="map-placeholder">
-                    <div placeholder>
-                        <div class="mobirise-spinner">
-                            <em></em>
-                            <em></em>
-                            <em></em>
-                        </div>
-                    </div>
-                </div> -->
+
             </div>
 
             <div class="card col-lg-6 col-md-12 col-sm-12">
@@ -819,30 +841,35 @@
                     
                 <div class="list-item">
                         <span class="mbr-iconfont listico mbri-letter" style="color: rgb(255, 78, 60); fill: rgb(255, 78, 60);"></span>
-                        <h5 class="mbr-fonts-style text2 display-4"><strong>info@example.com</strong></h5>
+                        <h5 class="mbr-fonts-style text2 display-4"><strong>{{ settings.contact_mail }}</strong></h5>
                     </div><div class="list-item">
                         <span class="mbr-iconfont listico mbri-tablet-vertical" style="color: rgb(255, 78, 60); fill: rgb(255, 78, 60);"></span>
                         <h5 class="mbr-fonts-style text2 display-4"><strong>
-                            +7 987 456 1232</strong></h5>
+                            {{ settings.contact_phone }}</strong></h5>
                     </div></div>
                 
                 <div class="social-list py-4" id="feedback-label">
-                    <div class="soc-item">
-                        <a href="https://twitter.com/mobirise" target="_blank">
-                            <div class="mbr-iconfont mbr-iconfont-social socicon-twitter socicon" style="color: rgb(255, 255, 255); fill: rgb(255, 255, 255);" media-simple="true"></div>
-                        </a>
-                    </div>
-                    <div class="soc-item">
-                        <a href="https://www.facebook.com/pages/Mobirise/1616226671953247" target="_blank">
-                            <div class="mbr-iconfont mbr-iconfont-social socicon-facebook socicon" style="color: rgb(255, 255, 255); fill: rgb(255, 255, 255);" media-simple="true"></div>
-                        </a>
-                    </div>
-                    <div class="soc-item">
-                        <a href="https://plus.google.com/u/0/+Mobirise" target="_blank">
-                            <div class="mbr-iconfont mbr-iconfont-social socicon-googleplus socicon" style="color: rgb(255, 255, 255); fill: rgb(255, 255, 255);" media-simple="true"></div>
-                        </a>
-                    </div>
-                    
+                    {% if settings.soc_igm %}
+                        <div class="soc-item">
+                            <a href="{{ settings.soc_igm }}" target="_blank">
+                                <div class="mbr-iconfont mbr-iconfont-social socicon-instagram socicon" style="color: rgb(255, 255, 255); fill: rgb(255, 255, 255);" media-simple="true"></div>
+                            </a>
+                        </div>
+                    {% endif %}
+                    {% if settings.soc_vk %}
+                        <div class="soc-item">
+                            <a href="{{ settings.soc_vk }}" target="_blank">
+                                <div class="mbr-iconfont mbr-iconfont-social socicon-vkontakte socicon" style="color: rgb(255, 255, 255); fill: rgb(255, 255, 255);" media-simple="true"></div>
+                            </a>
+                        </div>
+                    {% endif %}
+                    {% if settings.soc_vk %}
+                        <div class="soc-item">
+                            <a href="{{ settings.soc_fb }}" target="_blank">
+                                <div class="mbr-iconfont mbr-iconfont-social socicon-facebook socicon" style="color: rgb(255, 255, 255); fill: rgb(255, 255, 255);" media-simple="true"></div>
+                            </a>
+                        </div>
+                    {% endif %}
                     
                     
                 </div>
