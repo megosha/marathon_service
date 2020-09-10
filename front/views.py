@@ -14,19 +14,18 @@ from django.views.decorators.csrf import csrf_exempt
 
 from front import models, forms, functions
 
-import environ
-from django.conf import settings as sett
-from os import path
+# import environ
+# from django.conf import settings as sett
+# from os import path
 
 
-base_dir = sett.BASE_DIR
-
-env = environ.Env()
-env.read_env(path.join(base_dir, '.env'))
+# base_dir = sett.BASE_DIR
+#
+# env = environ.Env()
+# env.read_env(path.join(base_dir, '.env'))
 
 
 # Create your views here.
-
 
 class ContextViewMixin(View):
     def make_context(self, context=None, **kwargs):
@@ -46,8 +45,13 @@ class PostRequiredMixin(ContextViewMixin):
             return HttpResponseRedirect('/')
         return super().dispatch(request, *args, **kwargs)
 
+class Test(ContextViewMixin):
+    def get(self, request):
+        form_html = get_template('includes/reset_redirect.html').render(context={'email': 'qwe'},
+                                                                        request=request)
+        context = self.make_context(form_html=form_html, title='Сброс пароля')
+        return render(request, "auth.html", context)
 
-# todo feedback form for questions
 class Index(ContextViewMixin):
     def base(self, request, form=None):
         if form is None: form = forms.Feedback()
@@ -71,7 +75,11 @@ class Index(ContextViewMixin):
             for k, v in form.cleaned_data.items():
                 message += f'{fields.get(k)}: "{v}"\n'
             subject = 'Новое сообщение по обратной связи  марафона "Движение Вверх"'
-            email = env('FEEDBACK_EMAIL')
+            settings = models.Setting.objects.filter().first()
+            if not settings:
+                form.errors['custom'] = f"При отправке сообщения произошла ошибка. Повторите попытку позднее."
+                return self.base(request, form)
+            email = settings.contact_mail
             send_email = functions.sendmail(subject=subject, message=message, recipient_list=[email],)
             if not send_email:
                 form.errors['custom'] = f"При отправке сообщения произошла ошибка. Повторите попытку позднее."
@@ -81,7 +89,6 @@ class Index(ContextViewMixin):
         return self.base(request, form)
 
 
-# todo в шаблоне сделать кнопку для пометки ошибочной регистрации (по нажатию запрос на api и удаление из базы этого пользователя по почте)
 @method_decorator(csrf_exempt, name='dispatch')
 class Register(ContextViewMixin):
     def dispatch(self, request, *args, **kwargs):
@@ -120,15 +127,19 @@ class Register(ContextViewMixin):
                     password = functions.generate_code(length=8)
                     user.set_password(password)
                     user.save()
+                    # # todo вынести привязку привязку марафона в оплату темы марафона
+                    # marathone = models.Marathon.objects.filter().first()
                     account = models.Account.objects.create(user=user, phone=phone)
 
                     created = models.Account.objects.filter(user=user, phone=phone).exists()
                     if created:
+                        # account.marathone.add(marathone)
                         subject = 'Регистрация на платформе марафона "Движение Вверх"'
                         settings = models.Setting.objects.filter().first()
                         mail_context = {"login": email,
                                         "password": password,
-                                        "settings": settings}
+                                        "settings": settings,
+                                        "account":account}
                         html_message = render_to_string('mail/registration.html', mail_context)
                         plain_message = strip_tags(html_message)
                         send_email = functions.sendmail(subject=subject, message=plain_message, recipient_list=[email],
@@ -141,6 +152,8 @@ class Register(ContextViewMixin):
                             account.save()
                             request.session['registry'] = f'Данные для входа в личный кабинет отправлены на {email}'
                             return HttpResponseRedirect('/login')
+                    else:
+                        user.delete()
         return self.base(request, form=form)
 
 
@@ -261,13 +274,34 @@ class ResetPassword(ContextViewMixin):
 # todo feedback
 class Account(LoginRequiredMixin, ContextViewMixin):
     # class Account(View):
-    def dispatch(self, request, *args, **kwargs):
-        if models.Account.objects.filter(user=self.request.user).exists():
-            return super().dispatch(request, *args, **kwargs)
-        else:
-            return HttpResponseRedirect('/')
+    # def dispatch(self, request, *args, **kwargs):
+    #     if models.Account.objects.filter(user=self.request.user).exists():
+    #         return super().dispatch(request, *args, **kwargs)
+    #     else:
+    #         return HttpResponseRedirect('/')
 
-    def get(self, request):
-        # redirect_field_name = 'redirect_to'
-        context = self.make_context()
+    # def base(self, request, form=None, context=None):
+    #     if not models.Account.objects.filter(user=self.request.user).exists():
+    #         return HttpResponseRedirect('/')
+    #     return render(request, 'account_ready.html', context=context)
+
+    def get(self, request, form=None):
+        if not models.Account.objects.filter(user=self.request.user).exists():
+            return HttpResponseRedirect('/')
+        marathon = request.GET.get('marathon')
+        marathon = models.Marathon.objects.filter(pk=marathon).first()
+        if marathon:
+           lessons = models.Lesson.objects.filter(marathon=marathon).order_by('number')
+           # lessons[0].video_set
+        else:
+            lessons = []
+        account: models.Account = request.user.account
+        marathones = models.Marathon.objects.filter(lesson__payment__account=account).distinct()
+        context = self.make_context(marathon=marathon,
+                                    lessons=lessons,
+                                    marathones=marathones)
         return render(request, 'account_ready.html', context=context)
+
+    # def post(self, request):
+    #     """ для отзывов """
+    #     return self.base(request, form=form)

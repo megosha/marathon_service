@@ -23,7 +23,8 @@ class Setting(models.Model):
 class Marathon(models.Model):
     title = models.CharField(max_length=250, blank=False, null=False, verbose_name="Название темы/вебинара")
     date_start = models.DateTimeField(default=None, blank=True, null=True, verbose_name="Дата старта марафона")
-    date_create = models.DateTimeField(default=None, blank=True, null=True, verbose_name="Дата создания")
+    date_create = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name="Дата создания")
+    promo = models.TextField(null=True, blank=True, verbose_name="Ссылка на YouTube-видео (Промо-ролик)")
     description = models.TextField(verbose_name="Комментарий/Описание", default=None, blank=True, null=True)
 
     class Meta:
@@ -74,7 +75,7 @@ class Feedback(models.Model):
 
 class Lesson(models.Model):
     marathon = models.ForeignKey(Marathon, blank=True, null=True, on_delete=models.CASCADE, verbose_name="Марафон")
-    number = models.SmallIntegerField(null=False, blank=False,
+    number = models.PositiveSmallIntegerField(null=False, blank=False,
                                       verbose_name="Порядковый номер темы в марафоне")
     title = models.CharField(max_length=250, blank=False, null=False, verbose_name="Название темы/вебинара")
     description = models.TextField(default=None, blank=True, null=True, verbose_name="Комментарий к теме/вебинару")
@@ -94,7 +95,7 @@ class Lesson(models.Model):
 
 class Video(models.Model):
     lesson = models.ForeignKey(Lesson, blank=True, null=True, on_delete=models.CASCADE, verbose_name="Тема/Вебинар")
-    number = models.SmallIntegerField(null=False, blank=False,
+    number = models.PositiveSmallIntegerField(null=False, blank=False,
                                       verbose_name="Порядковый номер видео (номер отображения в уроке)")
     link = models.TextField(null=True, blank=True, verbose_name="Ссылка на YouTube видео")
     description = models.TextField(default=None, blank=True, null=True, verbose_name="Комментарий к видео")
@@ -110,9 +111,36 @@ class Video(models.Model):
     def __str__(self):
         return f"{self.lesson.title} -  №{self.number}"
 
+# def set_uid():
+#     all_p = Payment.objects.all().order_by('uid').last()
+#     if not all_p:
+#         return 1
+#     if Payment.objects.filter(uid=all_p+1)
 
-# class Payment(models.Model):
-#     date_pay = models.DateTimeField(auto_now=True, blank=False, null=False, verbose_name="Дата оплаты")
+
+
+class Payment(models.Model):
+    yuid = models.CharField(max_length=250, blank=True, null=True, verbose_name="Идентификатор платежа в ЯК")
+    # uid = models.PositiveSmallIntegerField(primary_key=True, default=0, blank=True, null=True, verbose_name="Идентификатор платежа в системе")
+    amount = models.DecimalField(default=0, decimal_places=2, max_digits=20, blank=True,
+                                   verbose_name="Сумма платежа")
+    account = models.ForeignKey(Account, blank=False, null=False, on_delete=models.DO_NOTHING, verbose_name="Аккаунт")
+    lesson = models.ForeignKey(Lesson, blank=False, null=False, on_delete=models.DO_NOTHING, verbose_name="Тема/Вебинар")
+    date_pay = models.DateTimeField(auto_now=True, blank=False, null=False, verbose_name="Дата оплаты")
+    date_approve = models.DateTimeField(blank=True, null=True, verbose_name="Дата подтверждения платежа")
+    status = models.CharField(max_length=250, blank=True, null=True, verbose_name="Статус платежа в ЯК")
+    # mailstatus = models.BooleanField(default=None, blank=True, null=True, verbose_name="Чек отправлен в ЯК")
+    request = models.TextField(blank=True, null=True, verbose_name="Запрос в ЯК")
+    response = models.TextField(blank=True, null=True, verbose_name="Ответ от ЯК")
+
+    class Meta:
+        # unique_together = ('account', 'lesson') - #TODO по истечении двух месяцев повторный платеж
+        verbose_name = "Платёж"
+        verbose_name_plural = "Платёжи"
+
+    def __str__(self):
+        return f"account.pk: {self.account.pk} -  №{self.pk}"
+
 #
 #
 # class Logging():

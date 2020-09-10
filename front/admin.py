@@ -47,6 +47,12 @@ class VideoAdmin(admin.ModelAdmin):
     search_fields = ['title', 'lesson']
     readonly_fields = ['date_create']
 
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = ['date_pay', 'yuid', 'status', 'account', 'lesson']
+    list_display_links = ['date_pay', 'yuid']
+    list_filter = ['date_pay', 'status', 'lesson', 'account']
+    search_fields = ['account', 'lesson', 'status']
+    readonly_fields = ['date_pay']
 
 admin.site.register(models.UpperSetting, UpperSettingAdmin)
 admin.site.register(models.Setting, SettingAdmin)
@@ -55,3 +61,4 @@ admin.site.register(models.Feedback, FeedbackAdmin)
 admin.site.register(models.Marathon, MarathonAdmin)
 admin.site.register(models.Lesson, LessonAdmin)
 admin.site.register(models.Video, VideoAdmin)
+admin.site.register(models.Payment, PaymentAdmin)

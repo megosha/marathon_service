@@ -1,6 +1,6 @@
 from django.urls import re_path, path, include
 
-from front import views
+from front import views, api
 
 urlpatterns = [
     path('', views.Index.as_view()),
@@ -10,5 +10,9 @@ urlpatterns = [
     path('logout', views.Logout.as_view()),
     path('remove', views.RemoveAccount.as_view()),
     path('reset', views.ResetPassword.as_view()),
+    path('api/account_deny/<str:uuid>_<str:login>', api.AccountDeny.as_view()),
+    path('accountdeny', api.RenderDeny.as_view()),
+
+    path('test', views.Test.as_view()),
 ]
 

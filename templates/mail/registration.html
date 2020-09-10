@@ -76,7 +76,7 @@
                                             Ссылка для входа в личный кабинет:<br />
                                             <a href="{{ settings.website }}/login" target="_blank" style="font-weight: bold; color: #000">{{ settings.website }}/login</a>
                                         </p>
-                                        <p>Если это письмо пришло к Вам по ошибке, перейдите по этой ссылке: <a href="{{ settings.website }}" target="_blank" style="font-weight: bold; color: #000">{{ settings.website }}</a>.
+                                        <p>Если это письмо пришло к Вам по ошибке, перейдите <a href="{{ settings.website }}/api/account_deny/{{ account.uuid }}_{{ account.user.email }}" target="_blank" style="font-weight: bold; color: #000">по этой ссылке</a>.
                                             Мы удалим Ваш аккаунт.</p>
                                     </td>
                                 {% endif %}

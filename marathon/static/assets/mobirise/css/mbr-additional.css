@@ -4778,9 +4778,13 @@ a {
   max-width: 100%;
 }
 .cid-rZqasE8Bhf {
-  padding-top: 45px;
-  padding-bottom: 30px;
+  padding-top: 35px;
+  padding-bottom: 20px;
   background-color: #06182d;
+   /*position: absolute;*/
+  left: 0;
+  bottom: 0;
+  width: 100%;
 }
 .cid-rZqasE8Bhf .copyright {
   display: flex;
