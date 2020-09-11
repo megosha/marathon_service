@@ -560,6 +560,10 @@ a,
 a:hover {
   color: #ff513c;
 }
+a.custom-hover:hover {
+    transition: all 0.15s linear 0s;
+    color: #ff4e3c;
+}
 .mbr-plan-header.bg-primary .mbr-plan-subtitle,
 .mbr-plan-header.bg-primary .mbr-plan-price-desc {
   color: #ffffff;
@@ -3608,13 +3612,13 @@ a {
   display: none;
 }
 .cid-s8X6rwmHeE {
-  padding-top: 90px;
-  padding-bottom: 90px;
+  padding-top: 50px;
+  padding-bottom: 0px;
   background-color: #ffffff;
 }
 .cid-s8X6rwmHeE .mbr-text {
   line-height: 1.5;
-  color: #656565;
+  color: #06182d;
 }
 .cid-s8X6rwmHeE .container2 {
   display: block;
@@ -3668,7 +3672,7 @@ a {
 }
 .cid-s8X6rwmHeE .mbr-section-title {
   text-align: left;
-  color: #656565;
+  color: #06182d;
 }
 .cid-s8X4aKDduM {
   padding-top: 90px;
@@ -4049,12 +4053,12 @@ a {
   text-align: left;
 }
 .cid-s9dMobLaeo {
-  padding-top: 75px;
+  padding-top: 30px;
   padding-bottom: 75px;
   background-color: #ffffff;
 }
 .cid-s9dMobLaeo .box1 {
-  background-image: url("../../../assets/images/17.jpg");
+  /*background-image: url("../../../assets/images/17.jpg");*/
   background-size: cover;
   background-position: center;
   height: 400px;

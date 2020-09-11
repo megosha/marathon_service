@@ -97,7 +97,7 @@ class Video(models.Model):
     lesson = models.ForeignKey(Lesson, blank=True, null=True, on_delete=models.CASCADE, verbose_name="Тема/Вебинар")
     number = models.PositiveSmallIntegerField(null=False, blank=False,
                                       verbose_name="Порядковый номер видео (номер отображения в уроке)")
-    link = models.TextField(null=True, blank=True, verbose_name="Ссылка на YouTube видео")
+    link = models.CharField(max_length=25, null=True, blank=True, verbose_name="ID видео на YouTube")
     description = models.TextField(default=None, blank=True, null=True, verbose_name="Комментарий к видео")
     date_create = models.DateTimeField(auto_now=True, verbose_name="Дата создания")
     date_publish = models.DateTimeField(default=datetime.now(), blank=True, null=True, verbose_name="Дата публикации")

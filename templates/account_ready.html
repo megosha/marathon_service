@@ -58,267 +58,32 @@
 
 </section>
 
-<!--<section class="extContent cid-s8X6rwmHeE" id="extContent21-18">-->
+<section class="extContent cid-s8X6rwmHeE" id="extContent21-18">
+    <div class="container">
+        <h3 class="mbr-section-title mbr-bold align-center mbr-fonts-style display-2">Список доступных марафонов</h3>
+        <div class="row">
+            {% for mar in marathones %}
+                <div class="col-md-4">
+                    <p>
+                        <a href="/me?marathon={{ mar.pk }}" class="mbr-text mbr-fonts-style display-7 custom-hover{% if mar.pk == marathon.pk %} text-primary{% endif %}">{{ mar.title }}</a>
+                    </p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
 
-<!--    -->
 
-<!--    -->
-
-<!--    <div class="container">-->
-<!--        -->
-
-<!--        <div class="row">-->
-<!--            <div class="col-md-4">-->
-<!--                <p class="mbr-text mbr-fonts-style display-7">Building Age: 2 Years</p>-->
-
-<!--            </div>-->
-
-<!--            <div class="col-md-4">-->
-
-<!--                <p class="mbr-text mbr-fonts-style display-7">Cooling: Central Cooling-->
-<!--                </p>-->
-
-<!--            </div>-->
-
-<!--            <div class="col-md-4">-->
-
-<!--                <p class="mbr-text mbr-fonts-style display-7">Sewer: Public/City-->
-<!--                </p>-->
-
-<!--            </div>-->
-
-<!--            <div class="col-md-4">-->
-
-<!--                <p class="mbr-text mbr-fonts-style display-7">Parking: Attached Garage-->
-<!--                </p>-->
-
-<!--            </div>-->
-
-<!--            <div class="col-md-4">-->
-
-<!--                <p class="mbr-text mbr-fonts-style display-7">Heating: Forced Air, Gas-->
-<!--                </p>-->
-
-<!--            </div>-->
-
-<!--            -->
-
-<!--        </div>-->
-<!--    </div>-->
-<!--</section>-->
-
-<!--<section class="accordion1 cid-s8X4aKDduM" id="accordion01-15">-->
-
-<!--    -->
-
-<!--    -->
-<!--    <div class="container">-->
-<!--        <div class="row">-->
-<!--            <div class="col-12 col-md-12 title-text">-->
-<!--                <h3 class="mbr-section-title mbr-bold align-center mbr-fonts-style display-2">-->
-<!--                    Вебинары&nbsp;<span>марафона</span></h3>-->
-<!--                <h4 class="mbr-section-subtitle pb-1 align-center mbr-light mbr-fonts-style display-7">Здесь находятся все Ваши вебинары, а также вебинары, которые Вы можете приобрести, щёлкнув по соответствующей вкладке</h4>-->
-<!--                -->
-<!--            </div>-->
-<!--        </div>-->
-<!--        <div class="row">-->
-<!--            <div class="col-lg-12">-->
-<!--                <div id="bootstrap-accordion_15" class="panel-group accordionStyles accordion" role="tablist" aria-multiselectable="true">-->
-<!--                    <div class="row">-->
-<!--                        <div class="col-lg-12">-->
-<!--                            -->
-<!--                            <div class="card">-->
-<!--                                <div class="card-header" role="tab" id="headingOne">-->
-<!--                                    <a role="button" class="panel-title collapsed text-black pr-3" data-toggle="collapse" data-core="" href="#collapse1_15" aria-expanded="false" aria-controls="collapse1">-->
-
-<!--                                        <h4 class="mbr-fonts-style display-7">Тема №1 "Название темы"<span class="toggle-icon inactive sign mbr-iconfont"></span>-->
-<!--                                        </h4>-->
-
-<!--                                    </a>-->
-<!--                                </div>-->
-<!--                                <div id="collapse1_15" class="panel-collapse noScroll collapse " role="tabpanel" aria-labelledby="headingOne" data-parent="#bootstrap-accordion_15">-->
-<!--                                    <div class="panel-body">-->
-<!--                                        <p class="mbr-fonts-style panel-text pr-2 display-4">-->
-<!--                                            Aliquam purus sit amet luctus venenatis lectus magna fringilla urna. Egestas-->
-<!--                                            congue quisque egestas diam in arcu cursus euismod.</p>-->
-<!--                                        <iframe class="frame-video" src="https://www.youtube.com/embed/3jT_q7dt-cM" frameborder="0" allowfullscreen="">-->
-<!--</iframe>-->
-<!--                                        <iframe width="460" height="215" src="https://www.youtube.com/embed/3jT_q7dt-cM" frameborder="0" allowfullscreen="">-->
-<!--</iframe>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <div class="card">-->
-<!--                                <div class="card-header" role="tab" id="headingTwo">-->
-<!--                                    <a role="button" class="collapsed panel-title text-black pr-3" data-toggle="collapse" data-core="" href="#collapse2_15" aria-expanded="false" aria-controls="collapse2">-->
-<!--                                        <h4 class="mbr-fonts-style display-7"><span class="toggle-icon inactive sign mbr-iconfont"></span>Тема №2 "Название темы"</h4>-->
-<!--                                    </a>-->
-
-<!--                                </div>-->
-<!--                                <div id="collapse2_15" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingTwo" data-parent="#bootstrap-accordion_15">-->
-<!--                                    <div class="panel-body">-->
-<!--                                        <p class="mbr-fonts-style panel-text pr-2 display-4">-->
-<!--                                            Aliquam purus sit amet luctus venenatis lectus magna fringilla urna. Egestas-->
-<!--                                            congue quisque egestas diam in arcu cursus euismod.</p>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <div class="card">-->
-<!--                                <div class="card-header" role="tab" id="headingThree">-->
-<!--                                    <a role="button" class="collapsed text-black panel-title pr-3" data-toggle="collapse" data-core="" href="#collapse3_15" aria-expanded="false" aria-controls="collapse3">-->
-<!--                                        <h4 class="mbr-fonts-style display-7"><span class="toggle-icon inactive sign mbr-iconfont"></span>Тема №3</h4>-->
-<!--                                    </a>-->
-<!--                                </div>-->
-<!--                                <div id="collapse3_15" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingThree" data-parent="#bootstrap-accordion_15">-->
-<!--                                    <div class="panel-body">-->
-<!--                                        <p class="mbr-fonts-style panel-text pr-2 display-4"><strong>Нет доступа к темам вебинара. Но Вы можете его приобрести.&nbsp;<br>Внимание! Если Вы уже оплатили этот вебинар, но доступ к нему не появился, <b><a href="index.html#accordion01-a" class="text-primary">обратитесь к ответам на наиболее частые вопросы на главной странице сайта</a>.</b></strong></p>-->
-<!--                                    </div>-->
-<!--                                    <div class="buttons-wrap mt-0">-->
-<!--                        <div class="mbr-section-btn align-center align-self-center"><a class="btn btn-lg btn-primary display-4" href="#" data-toggle="modal" data-target="#mbr-popup-13">Получить вебинар №3</a></div>-->
-<!--                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <div class="card">-->
-<!--                                <div class="card-header" role="tab" id="headingFour">-->
-<!--                                    <a role="button" class="collapsed panel-title text-black pr-3" data-toggle="collapse" data-core="" href="#collapse4_15" aria-expanded="false" aria-controls="collapse4">-->
-<!--                                        <h4 class="mbr-fonts-style display-7"><span class="toggle-icon inactive sign mbr-iconfont"></span>-->
-<!--                                            Ut sed semper massa. Cras imperdiet?-->
-<!--                                        </h4>-->
-<!--                                    </a>-->
-<!--                                </div>-->
-<!--                                <div id="collapse4_15" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingFour" data-parent="#bootstrap-accordion_15">-->
-<!--                                    <div class="panel-body">-->
-<!--                                        <p class="mbr-fonts-style panel-text pr-2 display-4">-->
-<!--                                            Aliquam purus sit amet luctus venenatis lectus magna fringilla urna. Egestas-->
-<!--                                            congue quisque egestas diam in arcu cursus euismod.-->
-<!--                                        </p>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <div class="card">-->
-<!--                                <div class="card-header" role="tab" id="headingFive">-->
-<!--                                    <a role="button" class="collapsed panel-title text-black pr-3" data-toggle="collapse" data-core="" href="#collapse5_15" aria-expanded="false" aria-controls="collapse5">-->
-<!--                                        <h4 class="mbr-fonts-style display-7"><span class="toggle-icon inactive sign mbr-iconfont"></span>-->
-<!--                                            Orci semper interdum nec ac tortor at?-->
-<!--                                        </h4>-->
-<!--                                    </a>-->
-<!--                                </div>-->
-<!--                                <div id="collapse5_15" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingFive" data-parent="#bootstrap-accordion_15">-->
-<!--                                    <div class="panel-body">-->
-<!--                                        <p class="mbr-fonts-style panel-text pr-2 display-4">-->
-<!--                                            Aliquam purus sit amet luctus venenatis lectus magna fringilla urna. Egestas-->
-<!--                                            congue quisque egestas diam in arcu cursus euismod.</p>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            -->
-<!--                        </div>-->
-<!--                        <div class="col-lg-12">-->
-<!--                            -->
-<!--                            <div class="card">-->
-<!--                                <div class="card-header" role="tab" id="headingOne">-->
-<!--                                    <a role="button" class="panel-title collapsed text-black pr-3" data-toggle="collapse" data-core="" href="#collapse7_15" aria-expanded="false" aria-controls="collapse7">-->
-<!--                                        <h4 class="mbr-fonts-style display-7"><span class="toggle-icon inactive sign mbr-iconfont"></span>At tellus at urna-->
-<!--                                            condimentum mattis-->
-<!--                                        </h4>-->
-<!--                                    </a>-->
-<!--                                </div>-->
-<!--                                <div id="collapse7_15" class="panel-collapse noScroll collapse " role="tabpanel" aria-labelledby="headingOne" data-parent="#bootstrap-accordion_15">-->
-<!--                                    <div class="panel-body">-->
-<!--                                        <p class="mbr-fonts-style panel-text pr-2 display-4">-->
-<!--                                            Aliquam purus sit amet luctus venenatis lectus magna fringilla urna. Egestas-->
-<!--                                            congue quisque egestas diam in arcu cursus euismod.</p>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <div class="card">-->
-<!--                                <div class="card-header" role="tab" id="headingTwo">-->
-<!--                                    <a role="button" class="collapsed panel-title text-black pr-3" data-toggle="collapse" data-core="" href="#collapse8_15" aria-expanded="false" aria-controls="collapse8">-->
-<!--                                        <h4 class="mbr-fonts-style display-7"><span class="toggle-icon inactive sign mbr-iconfont"></span>Viverra nam libero-->
-<!--                                            justo laoreet sit amet-->
-<!--                                        </h4>-->
-<!--                                    </a>-->
-
-<!--                                </div>-->
-<!--                                <div id="collapse8_15" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingTwo" data-parent="#bootstrap-accordion_15">-->
-<!--                                    <div class="panel-body">-->
-<!--                                        <p class="mbr-fonts-style panel-text pr-2 display-4">-->
-<!--                                            Aliquam purus sit amet luctus venenatis lectus magna fringilla urna. Egestas-->
-<!--                                            congue quisque egestas diam in arcu cursus euismod.</p>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <div class="card">-->
-<!--                                <div class="card-header" role="tab" id="headingThree">-->
-<!--                                    <a role="button" class="collapsed text-black panel-title pr-3" data-toggle="collapse" data-core="" href="#collapse9_15" aria-expanded="false" aria-controls="collapse9">-->
-<!--                                        <h4 class="mbr-fonts-style display-7"><span class="toggle-icon inactive sign mbr-iconfont"></span>Mollis nunc sed id-->
-<!--                                            semper risus-->
-<!--                                        </h4>-->
-<!--                                    </a>-->
-<!--                                </div>-->
-<!--                                <div id="collapse9_15" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingThree" data-parent="#bootstrap-accordion_15">-->
-<!--                                    <div class="panel-body">-->
-<!--                                        <p class="mbr-fonts-style panel-text pr-2 display-4">Aliquam purus sit amet luctus-->
-<!--                                            venenatis lectus magna fringilla urna. Egestas congue quisque egestas diam-->
-<!--                                            in arcu cursus euismod.-->
-<!--                                        </p>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <div class="card">-->
-<!--                                <div class="card-header" role="tab" id="headingFour">-->
-<!--                                    <a role="button" class="collapsed panel-title text-black pr-3" data-toggle="collapse" data-core="" href="#collapse10_15" aria-expanded="false" aria-controls="collapse10">-->
-<!--                                        <h4 class="mbr-fonts-style display-7"><span class="toggle-icon inactive sign mbr-iconfont"></span>-->
-<!--                                            Dui sapien eget mi proin sed libero enim-->
-<!--                                        </h4>-->
-<!--                                    </a>-->
-<!--                                </div>-->
-<!--                                <div id="collapse10_15" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingFour" data-parent="#bootstrap-accordion_15">-->
-<!--                                    <div class="panel-body">-->
-<!--                                        <p class="mbr-fonts-style panel-text pr-2 display-4">-->
-<!--                                            Aliquam purus sit amet luctus venenatis lectus magna fringilla urna. Egestas-->
-<!--                                            congue quisque egestas diam in arcu cursus euismod.-->
-<!--                                        </p>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            <div class="card">-->
-<!--                                <div class="card-header" role="tab" id="headingFive">-->
-<!--                                    <a role="button" class="collapsed panel-title text-black pr-3" data-toggle="collapse" data-core="" href="#collapse11_15" aria-expanded="false" aria-controls="collapse11">-->
-<!--                                        <h4 class="mbr-fonts-style display-7"><span class="toggle-icon inactive sign mbr-iconfont"></span>-->
-<!--                                            Sit amet mauris commodo quis imperdiet-->
-<!--                                        </h4>-->
-<!--                                    </a>-->
-<!--                                </div>-->
-<!--                                <div id="collapse11_15" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingFive" data-parent="#bootstrap-accordion_15">-->
-<!--                                    <div class="panel-body">-->
-<!--                                        <p class="mbr-fonts-style panel-text pr-2 display-4">-->
-<!--                                            Aliquam purus sit amet luctus venenatis lectus magna fringilla urna. Egestas-->
-<!--                                            congue quisque egestas diam in arcu cursus euismod.</p>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            -->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</section>-->
-
+{% if marathon %}
 <section class="accordion1 cid-s9dQTcaqKT" id="accordion01-1r">
 
-    
-
-    
     <div class="container">
         <div class="row">
             <div class="col-12 col-md-12 title-text">
                 <h3 class="mbr-section-title mbr-bold align-center mbr-fonts-style display-2">
-                    Вебинары&nbsp;<span>марафона</span></h3>
-                <h4 class="mbr-section-subtitle pb-1 align-center mbr-light mbr-fonts-style display-7">Здесь находятся все Ваши вебинары, а также вебинары, которые Вы можете приобрести, щёлкнув по соответствующей вкладке</h4>
-                
+                    Марафон&nbsp;<span>{{ marathon.title }}</span></h3>
+                <h4 class="mbr-section-subtitle pb-1 align-center mbr-light mbr-fonts-style display-7">{{ marathon.description }}</h4>
+                <p class="mbr-section-subtitle pb-1 align-center mbr-light mbr-fonts-style display-4">Здесь находятся все Ваши вебинары, а также вебинары, которые Вы можете приобрести, щёлкнув по соответствующей вкладке</p>
             </div>
         </div>
         <div class="row">
@@ -326,104 +91,83 @@
                 <div id="bootstrap-accordion_26" class="panel-group accordionStyles accordion" role="tablist" aria-multiselectable="true">
                     <div class="row">
                         <div class="col-lg-12">
-                            
-                            <div class="card">
-                                <div class="card-header" role="tab" id="headingTwo">
-                                    <a role="button" class="collapsed panel-title text-black pr-3" data-toggle="collapse" data-core="" href="#collapse2_26" aria-expanded="false" aria-controls="collapse2">
-                                        <h4 class="mbr-fonts-style display-7"><span class="toggle-icon inactive sign mbr-iconfont"></span><span class="text-primary display-5">Тема №1. </span>"Моя жизненная Миссия"</h4>
+                            {% for lesson in lessons %}
+
+                                <div class="card">
+                                <div class="card-header" role="tab" id="heading{{ lesson.number }}">
+                                    <a role="button" class="collapsed panel-title text-black pr-3" data-toggle="collapse" data-core="" href="#collapse{{ lesson.number }}_26" aria-expanded="false" aria-controls="collaps{{ lesson.number }}">
+                                        <h4 class="mbr-fonts-style display-7"><span class="toggle-icon inactive sign mbr-iconfont"></span><span class="text-primary display-5">Тема №{{ lesson.number }}. </span>{{ lesson.title }}</h4>
                                     </a>
 
                                 </div>
-                                <div id="collapse2_26" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingTwo" data-parent="#bootstrap-accordion_26">
+                                <div id="collapse{{ lesson.number }}_26" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="heading{{ lesson.number }}" data-parent="#bootstrap-accordion_26">
                                     <div class="panel-body">
-                                        
-                                        <!-- CUSTOM VIDEOS  -->
-                                        
-<div class="extVideo cid-s9dMobLaeo" id="extVideo2-1q" style="background-color: transparent">
+                                        {% if not lesson.paid %}
+                                            <p class="mbr-fonts-style panel-text pr-2 display-4"><strong>
+                                                {% if lesson.expired %}
+                                                    Срок дествия двухмесячного доступа к теме истёк.
+                                                {% else %}
+                                                    Нет доступа к теме. Но Вы можете его приобрести.&nbsp;
+                                                <br>Внимание! Если Вы уже оплатили этот вебинар, но доступ к нему не появился, <b><a href="index.html#accordion01-a" class="text-primary">обратитесь к ответам на наиболее частые вопросы на главной странице сайта</a>.</b></strong></p>
+                                            {% endif %}
+                                            <div class="buttons-wrap mt-0">
+                                                <p class="mbr-fonts-style panel-text pr-2 display-5"><strong>Стоимость темы ₽{{ lesson.cost }}</strong></p>
+                                                <div class="mbr-section-btn align-center align-self-center"><a class="btn btn-lg btn-primary display-4" href="#" data-toggle="modal" data-target="#mbr-popup-2s">Получить вебинар №3 за ₽{{ lesson.cost }} </a></div>
+                                            </div>
+                                        {% else %}
 
+                                               <p class="mbr-fonts-style panel-text pr-2 display-4"><strong>{{ lesson.description }}</strong></p>
+                                                {% if lesson.video_set.all %}
+                                            <!-- CUSTOM VIDEOS  -->
+                                                <div class="extVideo cid-s9dMobLaeo" id="extVideo2-1q" style="background-color: transparent">
 
+                                                    <div class="container align-center">
+                                                        <div class="row justify-content-md-center">
+                                                            {% for video in lesson.video_set.all %}
+                                                            <div class="mbr-white col-md-12 col-12 col-lg-6">
+                                                                <p class="mbr-fonts-style panel-text pr-2 display-4">{{ video.description }}</p>
+                                                                <div class="box1" style="background-image: url('http://img.youtube.com/vi/{{ video.link }}/maxresdefault.jpg');">
+                                                                    <div class="mbr-media show-modal align-center py-2" data-toggle="modal" data-target=".w1">
+                                                                        <div class="icon-wrap">
+                                                                            <span class="mobi-mbri-play mobi-mbri"></span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        {% for vid in lesson.video_set.all %}
+                                                            <div class="modalWindow w{{ vid.number }}" style="display: none;">
+                                                                <div class="modalWindow-container">
+                                                                    <div class="modalWindow-video-container">
+                                                                        <div class="modalWindow-video">
+                                                                            <iframe width="100%" height="100%" frameborder="0" allowfullscreen="1" data-src="https://youtu.be/{{ video.link }}"></iframe>
+{#                                                                            <iframe width="100%" height="100%" frameborder="0" allowfullscreen="1" data-src="https://www.youtube.com/watch?v={{ video.link }}"></iframe>#}
+                                                                        </div>
+                                                                        <a class="close custom-close" role="button" data-dismiss="modal">
+                                                                            <span aria-hidden="true" class="mbri-close closeModal"></span>
+                                                                            <span class="sr-only">Close</span>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        {% endfor %}
+{##}
 
-
-
-    <div class="container align-center">
-        <div class="row justify-content-md-center">
-            <div class="mbr-white col-md-12 col-12 col-lg-6">
-                <p class="mbr-fonts-style panel-text pr-2 display-4"> Небольшое описание к видео</p>
-                <div class="box1">
-                    <div class="mbr-media show-modal align-center py-2" data-toggle="modal" data-target=".w1">
-                        <div class="icon-wrap">
-                            <span class="mobi-mbri-play mobi-mbri"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="mbr-white col-md-12 col-12 col-lg-6">
-                <p class="mbr-fonts-style panel-text pr-2 display-4"> Небольшое описание к видео</p>
-                <div class="box2">
-                    <div class="mbr-media show-modal align-center py-2" data-toggle="modal" data-target=".w2">
-                        <div class="icon-wrap">
-                            <span class="mobi-mbri-play mobi-mbri"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div>
-        <div class="modalWindow w1" style="display: none;">
-            <div class="modalWindow-container">
-                <div class="modalWindow-video-container">
-                    <div class="modalWindow-video">
-                        <iframe width="100%" height="100%" frameborder="0" allowfullscreen="1" data-src="https://www.youtube.com/watch?v=J21qu_vspfg"></iframe>
-                    </div>
-                    <a class="close custom-close" role="button" data-dismiss="modal">
-                        <span aria-hidden="true" class="mbri-close closeModal"></span>
-                        <span class="sr-only">Close</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="modalWindow w2" style="display: none;">
-            <div class="modalWindow-container">
-                <div class="modalWindow-video-container">
-                    <div class="modalWindow-video">
-                        <iframe width="100%" height="100%" frameborder="0" allowfullscreen="1" data-src="https://www.youtube.com/watch?v=8-e8LSfT6gI"></iframe>
-                    </div>
-                    <a class="close custom-close" role="button" data-dismiss="modal">
-                        <span aria-hidden="true" class="mbri-close closeModal"></span>
-                        <span class="sr-only">Close</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-
-    </div>
-</div>
-                                        
-                                        
-                                     <!-- CUSTOM VIDEOS  END  -->    
-                                        
+                                                    </div>
+                                                </div>
+                                                                                     <!-- CUSTOM VIDEOS  END  -->
+                                                {% endif %}
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
-                            <div class="card">
-                                <div class="card-header" role="tab" id="headingThree">
-                                    <a role="button" class="collapsed text-black panel-title pr-3" data-toggle="collapse" data-core="" href="#collapse3_26" aria-expanded="false" aria-controls="collapse3">
-                                        <h4 class="mbr-fonts-style display-7"><span class="toggle-icon inactive sign mbr-iconfont"></span><span class="text-primary display-5">Тема №2. </span>"Как перейти от существования к яркой жизни"</h4>
-                                    </a>
-                                </div>
-                                <div id="collapse3_26" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingThree" data-parent="#bootstrap-accordion_26">
-                                    <div class="panel-body">
-                                        <p class="mbr-fonts-style panel-text pr-2 display-4"><strong>Нет доступа к темам вебинара. Но Вы можете его приобрести.&nbsp;<br>Внимание! Если Вы уже оплатили этот вебинар, но доступ к нему не появился, <b><a href="index.html#accordion01-a" class="text-primary">обратитесь к ответам на наиболее частые вопросы на главной странице сайта</a>.</b></strong></p>
-                                    </div>
-                                    <div class="buttons-wrap mt-0">
-                        <div class="mbr-section-btn align-center align-self-center"><a class="btn btn-lg btn-primary display-4" href="#" data-toggle="modal" data-target="#mbr-popup-2s">Получить вебинар №3</a></div>
-                    </div>
-                                </div>
-                            </div>
-                           
+
+                            {% empty %}
+                                <p class="mbr-fonts-style display-5">Пока опубликованных тем в этом марафоне нет. Но они появятся уже скоро.</p>
+                            {% endfor %}
                         </div>
                         
                     </div>
@@ -432,6 +176,7 @@
         </div>
     </div>
 </section>
+ {% endif %}
 
 {#<!--<section class="extVideo cid-s9dMobLaeo" id="extVideo2-1q">-->#}
 {##}

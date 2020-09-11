@@ -1,4 +1,7 @@
+from datetime import datetime, timedelta
+
 from django.contrib.auth import authenticate, login, logout
+from django.db.models import Exists, OuterRef
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
@@ -13,6 +16,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 
 from front import models, forms, functions
+
 
 # import environ
 # from django.conf import settings as sett
@@ -39,11 +43,13 @@ class ContextViewMixin(View):
                 context[f'{k}'] = v
         return context
 
+
 class PostRequiredMixin(ContextViewMixin):
     def dispatch(self, request, *args, **kwargs):
         if request.method != "POST":
             return HttpResponseRedirect('/')
         return super().dispatch(request, *args, **kwargs)
+
 
 class Test(ContextViewMixin):
     def get(self, request):
@@ -51,6 +57,7 @@ class Test(ContextViewMixin):
                                                                         request=request)
         context = self.make_context(form_html=form_html, title='Сброс пароля')
         return render(request, "auth.html", context)
+
 
 class Index(ContextViewMixin):
     def base(self, request, form=None):
@@ -70,7 +77,7 @@ class Index(ContextViewMixin):
     def post(self, request):
         form = forms.Feedback(request.POST)
         if form.is_valid():
-            fields = {'firstname':'Имя', 'contact':'Контакты', 'message':'Сообщение'}
+            fields = {'firstname': 'Имя', 'contact': 'Контакты', 'message': 'Сообщение'}
             message = ''
             for k, v in form.cleaned_data.items():
                 message += f'{fields.get(k)}: "{v}"\n'
@@ -80,7 +87,7 @@ class Index(ContextViewMixin):
                 form.errors['custom'] = f"При отправке сообщения произошла ошибка. Повторите попытку позднее."
                 return self.base(request, form)
             email = settings.contact_mail
-            send_email = functions.sendmail(subject=subject, message=message, recipient_list=[email],)
+            send_email = functions.sendmail(subject=subject, message=message, recipient_list=[email], )
             if not send_email:
                 form.errors['custom'] = f"При отправке сообщения произошла ошибка. Повторите попытку позднее."
             else:
@@ -139,7 +146,7 @@ class Register(ContextViewMixin):
                         mail_context = {"login": email,
                                         "password": password,
                                         "settings": settings,
-                                        "account":account}
+                                        "account": account}
                         html_message = render_to_string('mail/registration.html', mail_context)
                         plain_message = strip_tags(html_message)
                         send_email = functions.sendmail(subject=subject, message=plain_message, recipient_list=[email],
@@ -176,7 +183,6 @@ class Login(ContextViewMixin):
     def get(self, request, form=None):
         return self.base(request, form)
 
-
     def post(self, request):
         form = forms.Login(request.POST)
         if form.is_valid():
@@ -202,24 +208,26 @@ class Logout(View):
 
 
 class RemoveAccount(LoginRequiredMixin, ContextViewMixin):
-    #todo ставить признак, удалять если не был совершён вход в течении 2 недель
+    # todo ставить признак, удалять если не был совершён вход в течении 2 недель
     def post(self, request):
         if models.Account.objects.filter(user=self.request.user).exists():
             subject = 'Удаление профиля на платформе марафона "Движение Вверх"'
             settings = models.Setting.objects.filter().first()
             mail_context = {"login": self.request.user.email,
-                        "settings": settings}
+                            "settings": settings}
             html_message = render_to_string('mail/remove.html', mail_context)
             plain_message = strip_tags(html_message)
-            send_email = functions.sendmail(subject=subject, message=plain_message, recipient_list=[self.request.user.email],
-                                        html_message=html_message)
+            send_email = functions.sendmail(subject=subject, message=plain_message,
+                                            recipient_list=[self.request.user.email],
+                                            html_message=html_message)
             if not send_email:
-                return JsonResponse({'sendmail':send_email})
+                return JsonResponse({'sendmail': send_email})
                 # todo писать в таблицу ошибок или логов
             else:
                 self.request.user.delete()
-                return JsonResponse({'sendmail': send_email, "deleted":True})
+                return JsonResponse({'sendmail': send_email, "deleted": True})
         return HttpResponseRedirect('/')
+
 
 class ResetPassword(ContextViewMixin):
     def base(self, request, form=None):
@@ -288,15 +296,23 @@ class Account(LoginRequiredMixin, ContextViewMixin):
     def get(self, request, form=None):
         if not models.Account.objects.filter(user=self.request.user).exists():
             return HttpResponseRedirect('/')
+        account: models.Account = request.user.account
         marathon = request.GET.get('marathon')
         marathon = models.Marathon.objects.filter(pk=marathon).first()
+        marathones = models.Marathon.objects.filter(lesson__payment__account=account).distinct()
+        if marathones.count() == 1 and marathon is None:
+            marathon = models.Marathon.objects.filter().first()
         if marathon:
-           lessons = models.Lesson.objects.filter(marathon=marathon).order_by('number')
-           # lessons[0].video_set
+            # есть ли актуальный (не просроченный) платеж за урок
+            paid_allowed = account.payment_set.filter(lesson=OuterRef('id'),
+                                                      date_approve__gte=datetime.now() - timedelta(days=62))
+            # причина отсутсивя доступа: True если просрочен платеж, False, если платежа не было
+            paid_expired = account.payment_set.filter(lesson=OuterRef('id'),
+                                                      date_approve__lt=datetime.now() - timedelta(days=62))
+            lessons = models.Lesson.objects.filter(marathon=marathon, date_publish__lte=datetime.now()).annotate(
+                paid=Exists(paid_allowed), expired=Exists(paid_expired)).order_by('number')
         else:
             lessons = []
-        account: models.Account = request.user.account
-        marathones = models.Marathon.objects.filter(lesson__payment__account=account).distinct()
         context = self.make_context(marathon=marathon,
                                     lessons=lessons,
                                     marathones=marathones)
