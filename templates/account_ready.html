@@ -108,7 +108,7 @@
                                                     Срок дествия двухмесячного доступа к теме истёк.
                                                 {% else %}
                                                     Нет доступа к теме. Но Вы можете его приобрести.&nbsp;
-                                                <br>Внимание! Если Вы уже оплатили этот вебинар, но доступ к нему не появился, <b><a href="index.html#accordion01-a" class="text-primary">обратитесь к ответам на наиболее частые вопросы на главной странице сайта</a>.</b></strong></p>
+                                                <br>Внимание! Если Вы уже оплатили этот вебинар, но доступ к нему не появился, <b><a href="/#accordion01-a" class="text-primary">обратитесь к ответам на наиболее частые вопросы на главной странице сайта</a>.</b></strong></p>
                                             {% endif %}
                                             <div class="buttons-wrap mt-0">
                                                 <p class="mbr-fonts-style panel-text pr-2 display-5"><strong>Стоимость темы ₽{{ lesson.cost }}</strong></p>
@@ -126,8 +126,8 @@
                                                             {% for video in lesson.video_set.all %}
                                                             <div class="mbr-white col-md-12 col-12 col-lg-6">
                                                                 <p class="mbr-fonts-style panel-text pr-2 display-4">{{ video.description }}</p>
-                                                                <div class="box1" style="background-image: url('http://img.youtube.com/vi/{{ video.link }}/maxresdefault.jpg');">
-                                                                    <div class="mbr-media show-modal align-center py-2" data-toggle="modal" data-target=".w1">
+                                                                <div class="box1" style="background-image: url('https://img.youtube.com/vi/{{ video.link }}/maxresdefault.jpg');">
+                                                                    <div class="mbr-media show-modal align-center py-2" data-toggle="modal" data-target=".w{{ video.number }}">
                                                                         <div class="icon-wrap">
                                                                             <span class="mobi-mbri-play mobi-mbri"></span>
                                                                         </div>
@@ -143,8 +143,7 @@
                                                                 <div class="modalWindow-container">
                                                                     <div class="modalWindow-video-container">
                                                                         <div class="modalWindow-video">
-                                                                            <iframe width="100%" height="100%" frameborder="0" allowfullscreen="1" data-src="https://youtu.be/{{ video.link }}"></iframe>
-{#                                                                            <iframe width="100%" height="100%" frameborder="0" allowfullscreen="1" data-src="https://www.youtube.com/watch?v={{ video.link }}"></iframe>#}
+                                                                            <iframe width="100%" height="100%" frameborder="0" allowfullscreen="1" data-src="https://youtu.be/{{ vid.link }}"></iframe>
                                                                         </div>
                                                                         <a class="close custom-close" role="button" data-dismiss="modal">
                                                                             <span aria-hidden="true" class="mbri-close closeModal"></span>

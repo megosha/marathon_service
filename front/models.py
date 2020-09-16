@@ -57,11 +57,23 @@ class Account(models.Model):
         return f"{self.user.get_full_name()}"
 
 
+class ReviewKind(models.Model):
+    kind = models.CharField(max_length=250, blank=True, null=True, verbose_name="Тип отзыва")
+
+    class Meta:
+        verbose_name = "Категория отзывов"
+        verbose_name_plural = "Категории отзывов"
+
+    def __str__(self):
+        return f"{self.kind}"
+
+
 class Feedback(models.Model):
-    account = models.ForeignKey(Account, blank=True, null=True, on_delete=models.SET_NULL, verbose_name="Отзыв")
+    account = models.ForeignKey(Account, blank=True, null=True, on_delete=models.SET_NULL, verbose_name="Аккаунт на сайте")
+    kind = models.ForeignKey(ReviewKind, default=None, blank=True, null=True, on_delete=models.SET_NULL, verbose_name="Тип отзыва")
     feedback = models.TextField(null=True, blank=True, verbose_name="Отзыв")
     date_create = models.DateTimeField(auto_now=True, verbose_name="Дата создания отзыва")
-    custom_user = models.CharField(max_length=250, blank=True, null=True, verbose_name="Имя")
+    custom_user = models.CharField(max_length=250, blank=True, null=True, verbose_name="Имя (ручное добавление)")
     custom_city = models.CharField(max_length=100, blank=True, null=True, verbose_name="Город")
     custom_photo = models.FileField(upload_to='images/avatars/', blank=True, verbose_name="Аватар")
 

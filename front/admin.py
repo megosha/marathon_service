@@ -22,11 +22,16 @@ class AccountAdmin(admin.ModelAdmin):
     readonly_fields = ['date_registry']
 
 class FeedbackAdmin(admin.ModelAdmin):
-    list_display = ['account', 'custom_user', 'date_create']
-    list_display_links = ['account', 'custom_user']
-    list_filter = ['date_create', 'account', 'custom_user']
+    list_display = ['account', 'kind', 'custom_user', 'date_create']
+    list_display_links = ['account', 'kind', 'custom_user']
+    list_filter = ['kind', 'date_create', 'account', 'custom_user']
     search_fields = ['account', 'custom_user']
     readonly_fields = ['date_create']
+
+class ReviewKindAdmin(admin.ModelAdmin):
+    list_display = ['pk', 'kind']
+    list_display_links = ['pk', 'kind']
+    search_fields = ['kind']
 
 class MarathonAdmin(admin.ModelAdmin):
     list_display = ['title', 'date_start']
@@ -58,6 +63,7 @@ admin.site.register(models.UpperSetting, UpperSettingAdmin)
 admin.site.register(models.Setting, SettingAdmin)
 admin.site.register(models.Account, AccountAdmin)
 admin.site.register(models.Feedback, FeedbackAdmin)
+admin.site.register(models.ReviewKind, ReviewKindAdmin)
 admin.site.register(models.Marathon, MarathonAdmin)
 admin.site.register(models.Lesson, LessonAdmin)
 admin.site.register(models.Video, VideoAdmin)

@@ -62,7 +62,7 @@ class Test(ContextViewMixin):
 class Index(ContextViewMixin):
     def base(self, request, form=None):
         if form is None: form = forms.Feedback()
-        reviews = models.Feedback.objects.all()[:30]
+        reviews = models.Feedback.objects.filter(kind=1)[:30]
         settings = models.Setting.objects.get()
         feedback = request.session.pop('feedback') if 'feedback' in request.session else False
         context = self.make_context(form=form,
@@ -321,3 +321,17 @@ class Account(LoginRequiredMixin, ContextViewMixin):
     # def post(self, request):
     #     """ для отзывов """
     #     return self.base(request, form=form)
+
+class Book(ContextViewMixin):
+    def base(self, request):
+        reviews = models.Feedback.objects.filter(kind=2)
+        context = self.make_context(reviews=reviews)
+        return render(request, 'book.html', context=context)
+
+    def get(self, request):
+        return self.base(request)
+
+class PaymentReturnUrl(ContextViewMixin):
+    def get(self, request):
+        context = self.make_context(content='страница возврата после оплаты')
+        return render(request, 'general.html.', context=context)
