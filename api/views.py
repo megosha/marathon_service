@@ -136,6 +136,8 @@ class PaymentReturnUrl(ContextViewMixin):
                 else:
                     if payment.status != payment_info.status:
                         payment.status = payment_info.status
+                        if payment_info.status == 'succeeded':
+                            payment.date_approve = datetime.datetime.now()
                         payment.save()
                     # content = f"Статус платежа {payment.lesson.marathon.title}, тема №{payment.lesson.number}: {payment.status}"
         form_html = get_template('includes/payment_info.html').render(context={'payment': payment},
@@ -160,6 +162,8 @@ class YandexNotify(ContextViewMixin):
         payment_obj = models.Payment.objects.filter(yuid=payment.id).first()
         if payment_obj and payment_obj.status != payment.status:
             payment_obj.status = payment.status
+            if payment.status == 'succeeded':
+                payment_obj.date_approve = datetime.datetime.now()
             payment_obj.save()
 
         return HttpResponse(status=200)
