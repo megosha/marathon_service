@@ -32,9 +32,10 @@
   
   {% include "includes/nav.html" %}
 
-  {% block content %}
-    {{ content }}
-  {% endblock %}
+
+    {% if error %}<p class="py-5 my-5">{{ error }}</p>{% endif %}
+    <p class="py-5 my-5">{{ content }}</p>
+
 
 
 {% include "includes/footer.html" %}

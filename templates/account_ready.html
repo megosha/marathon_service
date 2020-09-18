@@ -112,7 +112,12 @@
                                             {% endif %}
                                             <div class="buttons-wrap mt-0">
                                                 <p class="mbr-fonts-style panel-text pr-2 display-5"><strong>Стоимость темы ₽{{ lesson.cost }}</strong></p>
-                                                <div class="mbr-section-btn align-center align-self-center"><a class="btn btn-lg btn-primary display-4" href="#" data-toggle="modal" data-target="#mbr-popup-2s">Получить вебинар №3 за ₽{{ lesson.cost }} </a></div>
+{#                                                <div class="mbr-section-btn align-center align-self-center"><a class="btn btn-lg btn-primary display-4" href="#" data-toggle="modal" data-target="#mbr-popup-2s">Получить вебинар №3 за ₽{{ lesson.cost }} </a></div>#}
+                                                <form method="POST" action="/api/payment/{{ marathon.pk }}"> {% csrf_token %}
+                                                    <div class="mbr-section-btn align-center align-self-center">
+                                                        <button class="btn btn-lg btn-primary display-4" type="submit" name="open_widget" value="{{ lesson.number }}" style="border-radius: 100px">Получить вебинар №{{ lesson.number }} за ₽{{ lesson.cost }} </button></div>
+                                                </form>
+
                                             </div>
                                         {% else %}
 

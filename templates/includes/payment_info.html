@@ -1,0 +1,29 @@
+{% load custom_tags %}
+<section class="content02 cid-s8WRsGW5AR pt-0" id="content02-12">
+
+
+
+
+    <div class="container">
+        <div class="row">
+            <div class="card col-12 col-md-12">
+                <div class="wrapper align-left">
+                    <h3 class="mbr-section-title mbr-bold align-left mbr-fonts-style display-2">Статус платежа</h3>
+                    {% if payment %}
+                        <p class="mbr-section-sub-title mbr-bold align-left mbr-fonts-style display-5">Марафон: {{ payment.lesson.marathon.title }}</p>
+                        <p class="mbr-section-sub-title mbr-bold align-left mbr-fonts-style display-5">Тема: №{{ payment.lesson.number }} {{ payment.lesson.title }}</p>
+                        <p class="mbr-section-sub-title mbr-bold align-left mbr-fonts-style display-5">Сумма: ₽{{ payment.amount }}.00</p>
+                        <p class="mbr-section-sub-title mbr-bold align-left mbr-fonts-style display-5">Статус: {{ payment|full_status }}</p>
+                    {% else %}
+                        <p class="mbr-section-sub-title mbr-bold align-left mbr-fonts-style display-5">Платёж не найден</p>
+                    {% endif %}
+                    <div class="buttons-wrap mb-4">
+                        <div class="mbr-section-btn align-left align-self-center"><a class="btn btn-sm btn-success display-4" href="/me">Перейти к моим темам</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

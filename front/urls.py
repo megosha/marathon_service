@@ -1,4 +1,4 @@
-from django.urls import re_path, path, include
+from django.urls import path
 
 from front import views, api
 

@@ -5,6 +5,9 @@ from datetime import datetime
 
 
 # Create your models here.
+from django.utils import timezone
+
+
 class UpperSetting(models.Model):
     endpoint = models.CharField(max_length=250, blank=True, null=True, verbose_name="Адрес API к сервису")
     metadescr = models.TextField(default='', blank=True, null=True, verbose_name="Meta Description")
@@ -91,10 +94,9 @@ class Lesson(models.Model):
                                       verbose_name="Порядковый номер темы в марафоне")
     title = models.CharField(max_length=250, blank=False, null=False, verbose_name="Название темы/вебинара")
     description = models.TextField(default=None, blank=True, null=True, verbose_name="Комментарий к теме/вебинару")
-    cost = models.DecimalField(default=0, decimal_places=2, max_digits=20, blank=True,
-                                   verbose_name="Стоимость темы (в рублях)")
+    cost = models.PositiveIntegerField(default=0, verbose_name="Стоимость темы (в рублях)")
     date_create = models.DateTimeField(auto_now=True, verbose_name="Дата создания")
-    date_publish = models.DateTimeField(default=datetime.now(), blank=True, null=True, verbose_name="Дата публикации")
+    date_publish = models.DateTimeField(default=timezone.now(), blank=True, null=True, verbose_name="Дата публикации")
 
     class Meta:
         unique_together = ('number', 'marathon')
@@ -112,7 +114,7 @@ class Video(models.Model):
     link = models.CharField(max_length=25, null=True, blank=True, verbose_name="ID видео на YouTube")
     description = models.TextField(default=None, blank=True, null=True, verbose_name="Комментарий к видео")
     date_create = models.DateTimeField(auto_now=True, verbose_name="Дата создания")
-    date_publish = models.DateTimeField(default=datetime.now(), blank=True, null=True, verbose_name="Дата публикации")
+    date_publish = models.DateTimeField(default=timezone.now(), blank=True, null=True, verbose_name="Дата публикации")
     # video = models.FileField(null=True, blank=True, verbose_name="Видеофйал")
 
     class Meta:
@@ -132,18 +134,18 @@ class Video(models.Model):
 
 
 class Payment(models.Model):
-    yuid = models.CharField(max_length=250, blank=True, null=True, verbose_name="Идентификатор платежа в ЯК")
-    # uid = models.PositiveSmallIntegerField(primary_key=True, default=0, blank=True, null=True, verbose_name="Идентификатор платежа в системе")
-    amount = models.DecimalField(default=0, decimal_places=2, max_digits=20, blank=True,
-                                   verbose_name="Сумма платежа")
+    uuid = models.UUIDField(default=uuid.uuid4(), blank=True, primary_key=True, verbose_name="Идентификатор платежа в системе / Ключ идемпотентности")
+    amount = models.PositiveIntegerField(default=0, verbose_name="Сумма платежа")
     account = models.ForeignKey(Account, blank=False, null=False, on_delete=models.DO_NOTHING, verbose_name="Аккаунт")
     lesson = models.ForeignKey(Lesson, blank=False, null=False, on_delete=models.DO_NOTHING, verbose_name="Тема/Вебинар")
     date_pay = models.DateTimeField(auto_now=True, blank=False, null=False, verbose_name="Дата оплаты")
     date_approve = models.DateTimeField(blank=True, null=True, verbose_name="Дата подтверждения платежа")
-    status = models.CharField(max_length=250, blank=True, null=True, verbose_name="Статус платежа в ЯК")
     # mailstatus = models.BooleanField(default=None, blank=True, null=True, verbose_name="Чек отправлен в ЯК")
     request = models.TextField(blank=True, null=True, verbose_name="Запрос в ЯК")
     response = models.TextField(blank=True, null=True, verbose_name="Ответ от ЯК")
+    yuid = models.CharField(max_length=250, blank=True, null=True, verbose_name="Идентификатор платежа в ЯК")
+    status = models.CharField(max_length=250, blank=True, null=True, verbose_name="Статус платежа в ЯК")
+    confirmation_token = models.CharField(max_length=250, blank=True, null=True, verbose_name="Идентификатор платежа в ЯК")
 
     class Meta:
         # unique_together = ('account', 'lesson') - #TODO по истечении двух месяцев повторный платеж

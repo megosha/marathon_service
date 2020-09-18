@@ -330,8 +330,3 @@ class Book(ContextViewMixin):
 
     def get(self, request):
         return self.base(request)
-
-class PaymentReturnUrl(ContextViewMixin):
-    def get(self, request):
-        context = self.make_context(content='страница возврата после оплаты')
-        return render(request, 'general.html.', context=context)
