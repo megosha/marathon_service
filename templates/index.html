@@ -191,6 +191,61 @@
     </div>
 </section>
 
+
+<section class="extVideo cid-s9dMobLaeo my-0" id="extVideo2-1q">
+   <div class="container align-center">
+      <div class="row justify-content-md-center">
+            <div class="mbr-white col-md-12 col-12 col-lg-11">
+               <div class="box1" style="background-image: url('https://img.youtube.com/vi/Xe0n0l80RHk/maxresdefault.jpg'); height: 580px;">
+                   <div class="mbr-media show-modal align-center py-2" data-toggle="modal" data-target=".w1">
+                       <div class="icon-wrap">
+                           <span class="mbr-iconfont mobi-mbri-play mobi-mbri"></span>
+                       </div>
+                   </div>
+               </div>
+           </div>
+{#           <div class="mbr-white col-md-12 col-12 col-lg-6">#}
+{#               <div class="box2">#}
+{#                   <div class="mbr-media show-modal align-center py-2" data-toggle="modal" data-target=".w2">#}
+{#                       <div class="icon-wrap">#}
+{#                           <span class="mbr-iconfont mobi-mbri-play mobi-mbri"></span>#}
+{#                       </div>#}
+{#                   </div>#}
+{#               </div>#}
+{#           </div>#}
+       </div>
+   </div>
+   <div>
+       <div class="modalWindow w1" style="display: none;">
+           <div class="modalWindow-container">
+               <div class="modalWindow-video-container">
+                   <div class="modalWindow-video">
+                       <iframe width="100%" height="100%" frameborder="0" allowfullscreen="1" data-src="https://www.youtube.com/watch?v=Xe0n0l80RHk"></iframe>
+                   </div>
+                   <a class="close" role="button" data-dismiss="modal">
+                       <span aria-hidden="true" class="mbri-close mbr-iconfont closeModal"></span>
+                       <span class="sr-only">Close</span>
+                   </a>
+               </div>
+           </div>
+       </div>
+{#       <div class="modalWindow w2" style="display: none;">#}
+{#           <div class="modalWindow-container">#}
+{#               <div class="modalWindow-video-container">#}
+{#                   <div class="modalWindow-video">#}
+{#                       <iframe width="100%" height="100%" frameborder="0" allowfullscreen="1" data-src="https://www.youtube.com/watch?v=8-e8LSfT6gI"></iframe>#}
+{#                   </div>#}
+{#                   <a class="close" role="button" data-dismiss="modal">#}
+{#                       <span aria-hidden="true" class="mbri-close mbr-iconfont closeModal"></span>#}
+{#                       <span class="sr-only">Close</span>#}
+{#                   </a>#}
+{#               </div>#}
+{#           </div>#}
+{#       </div>#}
+   </div>
+</section>
+
+
 <section class="content07 cid-s9k3IoNohK mbr-parallax-background" id="content07-2f">
     
     <div class="mbr-overlay" style="opacity: 0.7; background-color: rgb(0, 0, 0);">
@@ -897,6 +952,7 @@
   <script src="/assets/touchswipe/jquery.touch-swipe.min.js"></script>
   <script src="/assets/viewportchecker/jquery.viewportchecker.js"></script>
   <script src="/assets/parallax/jarallax.min.js"></script>
+<script src="/assets/playervimeo/vimeo_player.js"></script>
   <script src="/assets/bootstrapcarouselswipe/bootstrap-carousel-swipe.js"></script>
   <script src="/assets/mbr-testimonials-slider/mbr-testimonials-slider.js"></script>
   <script src="/assets/countdown/jquery.countdown.min.js"></script>
@@ -904,28 +960,10 @@
   <script src="/assets/formstyler/jquery.formstyler.min.js"></script>
   <script src="/assets/datepicker/jquery.datetimepicker.full.js"></script>
   <script src="/assets/theme/js/script.js"></script>
+<script src="/assets/pauseVideo/script.js"></script>
 {#  <script src="/assets/formoid.min.js"></script>#}
   <script src="/assets/functions.js"></script>
 
-  
-   <script>
-	function bio(mode){
-        var p = document.getElementsByName('full_bio')[0];
-        if (mode==1){
-            document.getElementsByName('more-bio')[0].innerText = '';
-             p.innerHTML = '<a class="text-primary" onclick="bio(0)">Показать меньше</a>';
-        $("[name='slide_block']").slideDown( "slow" );
-        }
-        else if (mode==0) {
-    		p.innerText = '';
-    		$("[name='slide_block']").slideUp( "slow" );
-		document.getElementsByName('more-bio')[0].innerHTML = 'Показать больше...&nbsp;';
-}
-        else return;
-    }
-        
-        
-</script>
  <div id="scrollToTop" class="scrollToTop mbr-arrow-up"><a style="text-align: center;"><i class="mbr-arrow-up-icon mbr-arrow-up-icon-cm cm-icon cm-icon-smallarrow-up"></i></a></div>
     <input name="animation" type="hidden">
   

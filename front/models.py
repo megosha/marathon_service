@@ -130,13 +130,6 @@ class Video(models.Model):
     def __str__(self):
         return f"{self.lesson.title} -  №{self.number}"
 
-# def set_uid():
-#     all_p = Payment.objects.all().order_by('uid').last()
-#     if not all_p:
-#         return 1
-#     if Payment.objects.filter(uid=all_p+1)
-
-
 
 class Payment(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4(), blank=True, primary_key=True, verbose_name="Идентификатор платежа в системе / Ключ идемпотентности")
