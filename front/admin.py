@@ -1,4 +1,7 @@
+from os import path
+from django.conf import settings
 from django.contrib import admin
+from django.utils.safestring import mark_safe
 
 from front import models
 
@@ -53,11 +56,11 @@ class VideoAdmin(admin.ModelAdmin):
     readonly_fields = ['date_create']
 
 class PaymentAdmin(admin.ModelAdmin):
-    list_display = ['date_pay', 'yuid', 'status', 'account', 'lesson']
-    list_display_links = ['date_pay', 'yuid']
+    list_display = ['date_pay', 'uuid', 'status', 'account', 'lesson']
+    list_display_links = ['date_pay', 'uuid']
     list_filter = ['date_pay', 'status', 'lesson', 'account']
     search_fields = ['account', 'lesson', 'status']
-    readonly_fields = ['date_pay']
+    readonly_fields = ['date_pay', 'icon_tag']
 
 admin.site.register(models.UpperSetting, UpperSettingAdmin)
 admin.site.register(models.Setting, SettingAdmin)

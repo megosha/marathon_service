@@ -1,3 +1,4 @@
+{% load custom_tags %}
 <!DOCTYPE html>
 <html  lang="ru">
 <head>
@@ -8,6 +9,7 @@
   <title>"Движение Вверх" марафон - Личный кабинет</title>
   <link rel="stylesheet" href="/assets/web/assets/mobirise-icons/mobirise-icons.css">
   <link rel="stylesheet" href="/assets/web/assets/mobirise-icons2/mobirise2.css">
+    <link rel="stylesheet" href="/assets/font-awesome/css/font-awesome.css">
   <link rel="stylesheet" href="/assets/tether/tether.min.css">
   <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap-grid.min.css">
@@ -96,12 +98,16 @@
                                 <div class="card">
                                 <div class="card-header" role="tab" id="heading{{ lesson.number }}">
                                     <a role="button" class="collapsed panel-title text-black pr-3" data-toggle="collapse" data-core="" href="#collapse{{ lesson.number }}_26" aria-expanded="false" aria-controls="collaps{{ lesson.number }}">
-                                        <h4 class="mbr-fonts-style display-7"><span class="toggle-icon inactive sign mbr-iconfont"></span><span class="text-primary display-5">Тема №{{ lesson.number }}. </span>{{ lesson.title }}</h4>
+                                        <h4 class="mbr-fonts-style display-7"><span class="toggle-icon inactive sign mbr-iconfont"></span>
+                                            {% if lesson.paid %}<span class="fa-check-circle fa" data-toggle="tooltip" data-placement="top" title="Тема доступна" style="color: #218838"></span>{% else %}<span class="text-warning fa-times-circle fa" data-toggle="tooltip" data-placement="top" title="Тема не приобретена или платёж просрочен"></span>{% endif %}
+                                            <span class="text-primary display-5">Тема №{{ lesson.number }}. </span>{{ lesson.title }}</h4>
                                     </a>
 
                                 </div>
                                 <div id="collapse{{ lesson.number }}_26" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="heading{{ lesson.number }}" data-parent="#bootstrap-accordion_26">
                                     <div class="panel-body">
+{#                                    {{ lesson.new_field|full_status }}#}
+{#                                    {{ lesson.new_field.date_approve }}#}
                                         {% if not lesson.paid %}
                                             <p class="mbr-fonts-style panel-text pr-2 display-4"><strong>
                                                 {% if lesson.expired %}
@@ -120,7 +126,11 @@
 
                                             </div>
                                         {% else %}
-
+{#                                            {% if lesson.cost > 0 %}#}
+{#                                                <p class="mbr-fonts-style panel-text pr-2 display-4">#}
+{#                                                    <span class="text-muted fa-download fa" data-toggle="tooltip" data-placement="top" title="Скачать квитанцию"></span>#}
+{#                                                    Срок платежа истекает<strong></strong></p>#}
+{#                                            {% endif %}#}
                                                <p class="mbr-fonts-style panel-text pr-2 display-4"><strong>{{ lesson.description }}</strong></p>
                                                 {% if lesson.video_set.all %}
                                             <!-- CUSTOM VIDEOS  -->

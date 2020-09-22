@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
 from django.contrib.auth import authenticate, login, logout
-from django.db.models import Exists, OuterRef
+from django.db.models import Exists, OuterRef, F, Q, Value, Subquery
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
@@ -281,6 +281,20 @@ class ResetPassword(ContextViewMixin):
 
 # todo feedback
 class Account(LoginRequiredMixin, ContextViewMixin):
+
+    @staticmethod
+    def values2dict(values: iter, key: str, many: bool = True):
+        values_dict = {}
+        if many:
+            for item in values:
+                if item[key] in values_dict:
+                    values_dict[item[key]].append(item)
+                else:
+                    values_dict[item[key]] = [item]
+        else:
+            for item in values:
+                values_dict[item[key]] = item
+        return values_dict
     # class Account(View):
     # def dispatch(self, request, *args, **kwargs):
     #     if models.Account.objects.filter(user=self.request.user).exists():
@@ -299,18 +313,34 @@ class Account(LoginRequiredMixin, ContextViewMixin):
         account: models.Account = request.user.account
         marathon = request.GET.get('marathon')
         marathon = models.Marathon.objects.filter(pk=marathon).first()
-        marathones = models.Marathon.objects.filter(lesson__payment__account=account).distinct()
+        # marathones = models.Marathon.objects.filter(lesson__payment__account=account).distinct()
+        marathones = models.Marathon.objects.filter().distinct()
         if marathones.count() == 1 and marathon is None:
             marathon = models.Marathon.objects.filter().first()
         if marathon:
             # есть ли актуальный (не просроченный) платеж за урок
             paid_allowed = account.payment_set.filter(lesson=OuterRef('id'),
+                                                      # status='succeeded',
                                                       date_approve__gte=datetime.now() - timedelta(days=62))
             # причина отсутсивя доступа: True если просрочен платеж, False, если платежа не было
             paid_expired = account.payment_set.filter(lesson=OuterRef('id'),
                                                       date_approve__lt=datetime.now() - timedelta(days=62))
+
+            status = account.payment_set.filter(lesson_id=OuterRef('id')).order_by('-date_pay').values('status')[:1]
+
             lessons = models.Lesson.objects.filter(marathon=marathon, date_publish__lte=datetime.now()).annotate(
-                paid=Exists(paid_allowed), expired=Exists(paid_expired)).order_by('number')
+                paid=Exists(paid_allowed), expired=Exists(paid_expired), status=Subquery(status)
+            ).order_by('number')
+
+            # statuses = models.Payment.objects.filter(account=account, lesson__marathon=marathon).values(
+            #     'status', 'lesson_id')
+            # statuses = self.values2dict(statuses, 'lesson_id')
+
+            # lessons = models.Lesson.objects.filter(marathon=marathon, date_publish__lte=datetime.now()).annotate(
+            #     paid=Exists(paid_allowed), expired=Exists(paid_expired)).order_by('number')
+            # for l in lessons:
+            #     payment = account.payment_set.filter(lesson=l, date_approve__gte=datetime.now() - timedelta(days=62)).first()
+            #     l.new_field = payment
         else:
             lessons = []
         context = self.make_context(marathon=marathon,

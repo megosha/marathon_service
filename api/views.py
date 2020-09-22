@@ -5,10 +5,11 @@ import json
 import environ
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.conf import settings
 from django.template.loader import get_template
+from django.utils import timezone
 
 from front import models
 from front.views import ContextViewMixin
@@ -54,6 +55,15 @@ class YandexPayment(LoginRequiredMixin, ContextViewMixin):
             result['error'] = 'Ошибка данных для формирования нового платежа'
             return HttpResponseRedirect('/me')
 
+        if lesson.cost == 0:
+            new_payment = models.Payment.objects.create(account=account,
+                                                        lesson=lesson,
+                                                        date_pay=timezone.now(),
+                                                        date_approve=timezone.now(),
+                                                        status="succeeded")
+            return HttpResponseRedirect(f'/me?marathon={lesson.marathon.pk}')
+
+
         try:
             idempotence_key = uuid.uuid4()
             Configuration.account_id = env('SHOPID')
@@ -84,7 +94,7 @@ class YandexPayment(LoginRequiredMixin, ContextViewMixin):
                             },
                             "vat_code": "1", #TODO    1-Без НДС 2-НДС по ставке 0% 3-НДС по ставке 10% 4-НДС чека по ставке 20% 5-НДС чека по расчетной ставке 10/110 6 	НДС чека по расчетной ставке 20/120
                             "payment_mode": "full_prepayment",
-                            "payment_subject": "service",
+                            "payment_subject": "intellectual_activity",
                             "save_payment_method": False,
                             # "receipt_phone":""
                         }

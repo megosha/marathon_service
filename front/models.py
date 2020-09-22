@@ -2,10 +2,15 @@ import uuid
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime
+from django.conf import settings
+from django.utils import timezone
+from django.utils.safestring import mark_safe
+
+from os import path
+from front.make_invoice import create_pdf
 
 
 # Create your models here.
-from django.utils import timezone
 
 
 class UpperSetting(models.Model):
@@ -96,7 +101,7 @@ class Lesson(models.Model):
     description = models.TextField(default=None, blank=True, null=True, verbose_name="Комментарий к теме/вебинару")
     cost = models.PositiveIntegerField(default=0, verbose_name="Стоимость темы (в рублях)")
     date_create = models.DateTimeField(auto_now=True, verbose_name="Дата создания")
-    date_publish = models.DateTimeField(default=timezone.now(), blank=True, null=True, verbose_name="Дата публикации")
+    date_publish = models.DateTimeField(default=timezone.now, blank=True, null=True, verbose_name="Дата публикации")
 
     class Meta:
         unique_together = ('number', 'marathon')
@@ -114,7 +119,7 @@ class Video(models.Model):
     link = models.CharField(max_length=25, null=True, blank=True, verbose_name="ID видео на YouTube")
     description = models.TextField(default=None, blank=True, null=True, verbose_name="Комментарий к видео")
     date_create = models.DateTimeField(auto_now=True, verbose_name="Дата создания")
-    date_publish = models.DateTimeField(default=timezone.now(), blank=True, null=True, verbose_name="Дата публикации")
+    date_publish = models.DateTimeField(default=timezone.now, blank=True, null=True, verbose_name="Дата публикации")
     # video = models.FileField(null=True, blank=True, verbose_name="Видеофйал")
 
     class Meta:
@@ -145,7 +150,8 @@ class Payment(models.Model):
     response = models.TextField(blank=True, null=True, verbose_name="Ответ от ЯК")
     yuid = models.CharField(max_length=250, blank=True, null=True, verbose_name="Идентификатор платежа в ЯК")
     status = models.CharField(max_length=250, blank=True, null=True, verbose_name="Статус платежа в ЯК")
-    confirmation_token = models.CharField(max_length=250, blank=True, null=True, verbose_name="Идентификатор платежа в ЯК")
+    confirmation_token = models.CharField(max_length=250, blank=True, null=True, verbose_name="confirmation_token")
+    invoice = models.CharField(max_length=250, blank=True, null=True, verbose_name="Квитанция")
 
     class Meta:
         # unique_together = ('account', 'lesson') - #TODO по истечении двух месяцев повторный платеж
@@ -154,6 +160,17 @@ class Payment(models.Model):
 
     def __str__(self):
         return f"account.pk: {self.account.pk} -  №{self.pk}"
+
+    def save(self, *args, **kwargs):
+        if not self.invoice and self.status == 'succeeded':
+            self.invoice = create_pdf(self)
+        super(Payment, self).save(*args, **kwargs)
+
+    def icon_tag(self):
+        if not (self.uuid and self.invoice):
+            return ''
+        return mark_safe(f'<a href="{path.join(settings.MEDIA_URL, "invoice", self.uuid.__str__())}.pdf" target="_blank">Квитанция {self.uuid}</a>')
+
 
 #
 #
