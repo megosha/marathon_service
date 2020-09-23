@@ -34,6 +34,7 @@ def sendmail(subject, message, recipient_list, from_email=None, fail_silently=Fa
                   recipient_list=recipient_list, fail_silently=fail_silently, html_message=html_message)
     except Exception as err:
         # todo Logging
+        print(err)
         return False
     else:
         return True

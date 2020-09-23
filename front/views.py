@@ -208,7 +208,6 @@ class Logout(View):
 
 
 class RemoveAccount(LoginRequiredMixin, ContextViewMixin):
-    # todo ставить признак, удалять если не был совершён вход в течении 2 недель
     def post(self, request):
         if models.Account.objects.filter(user=self.request.user).exists():
             subject = 'Удаление профиля на платформе марафона "Движение Вверх"'
