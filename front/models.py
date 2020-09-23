@@ -22,6 +22,7 @@ class UpperSetting(models.Model):
     shopid_test = models.CharField(max_length=50, blank=True, null=True, verbose_name="ID тестового магазина в ЯК")
     yandex_api_key_test = models.CharField(max_length=250, blank=True, null=True, verbose_name="yandex_api_key_test")
     test_mode = models.BooleanField(default=False, verbose_name="Тестовый режим ЯК")
+    return_url = models.CharField(max_length=250, blank=True, null=True, verbose_name="return_url для ЯК")
 
 class Setting(models.Model):
     website = models.URLField(blank=True, null=True, verbose_name="Адрес сайта")

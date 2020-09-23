@@ -30,6 +30,7 @@ try:
     else:
         yandex_api_key = upper_settings.yandex_api_key
         shopid = upper_settings.shopid
+    return_url = upper_settings.return_url
 except:
     base_dir = settings.BASE_DIR
 
@@ -37,6 +38,7 @@ except:
     env.read_env(path.join(base_dir, '.env'))
     yandex_api_key = env('YANDEX_API_KEY')
     shopid = env('SHOPID')
+    return_url = env('RETURN_URL')
 
 
 
@@ -140,7 +142,7 @@ class WidgetRender(LoginRequiredMixin, ContextViewMixin):
             return render(request, 'general.html', context=context)
             #todo
         else:
-            context = self.make_context(confirmation_token=payment.confirmation_token)
+            context = self.make_context(confirmation_token=payment.confirmation_token, return_url=return_url)
             request.session['payment'] = f"{uuid}"
             return render(request, 'widget_yandex.html', context=context)
 
