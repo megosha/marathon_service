@@ -3,3 +3,6 @@ marathon/settings.py
 .env
 /static/
 /requests.http
+/front/migr_backup2/
+/front/migr_backup/
+/front/migrations/
