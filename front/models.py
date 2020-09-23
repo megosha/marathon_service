@@ -17,6 +17,11 @@ class UpperSetting(models.Model):
     endpoint = models.CharField(max_length=250, blank=True, null=True, verbose_name="Адрес API к сервису")
     metadescr = models.TextField(default='', blank=True, null=True, verbose_name="Meta Description")
     metakeywords = models.TextField(default='', blank=True, null=True, verbose_name="Meta Keyword")
+    shopid = models.CharField(max_length=50, blank=True, null=True, verbose_name="ID магазина в ЯК")
+    yandex_api_key = models.CharField(max_length=250, blank=True, null=True, verbose_name="yandex_api_key")
+    shopid_test = models.CharField(max_length=50, blank=True, null=True, verbose_name="ID тестового магазина в ЯК")
+    yandex_api_key_test = models.CharField(max_length=250, blank=True, null=True, verbose_name="yandex_api_key_test")
+    test_mode = models.BooleanField(default=False, verbose_name="Тестовый режим ЯК")
 
 class Setting(models.Model):
     website = models.URLField(blank=True, null=True, verbose_name="Адрес сайта")
@@ -138,13 +143,14 @@ class Payment(models.Model):
     lesson = models.ForeignKey(Lesson, blank=False, null=False, on_delete=models.DO_NOTHING, verbose_name="Тема/Вебинар")
     date_pay = models.DateTimeField(auto_now=True, blank=False, null=False, verbose_name="Дата оплаты")
     date_approve = models.DateTimeField(blank=True, null=True, verbose_name="Дата подтверждения платежа")
-    # mailstatus = models.BooleanField(default=None, blank=True, null=True, verbose_name="Чек отправлен в ЯК")
     request = models.TextField(blank=True, null=True, verbose_name="Запрос в ЯК")
     response = models.TextField(blank=True, null=True, verbose_name="Ответ от ЯК")
     yuid = models.CharField(max_length=250, blank=True, null=True, verbose_name="Идентификатор платежа в ЯК")
-    status = models.CharField(max_length=250, blank=True, null=True, verbose_name="Статус платежа в ЯК")
     confirmation_token = models.CharField(max_length=250, blank=True, null=True, verbose_name="confirmation_token")
     invoice = models.CharField(max_length=250, blank=True, null=True, verbose_name="Квитанция")
+    status = models.CharField(max_length=250, blank=True, null=True, verbose_name="Статус платежа в ЯК")
+    # status_mail_invoice = models.BooleanField(default=None, blank=True, null=True, verbose_name="Квитанция отправлена отправлена")
+    status_mail_lesson = models.BooleanField(default=None, blank=True, null=True, verbose_name="Напоминание в день урока отправлено")
 
     class Meta:
         # unique_together = ('account', 'lesson') - #TODO по истечении двух месяцев повторный платеж
@@ -165,7 +171,8 @@ class Payment(models.Model):
         return mark_safe(f'<a href="{path.join(settings.MEDIA_URL, "invoice", self.uuid.__str__())}.pdf" target="_blank">Квитанция {self.uuid}</a>')
 
 
-#
-#
-# class Logging():
-#     pass
+class Logging():
+    date = models.DateTimeField(auto_now=True, blank=False, null=False, verbose_name="Дата действия")
+    action = models.TextField(blank=True, null=True, verbose_name="Действие")
+    input_data = models.TextField(blank=True, null=True, verbose_name="Данные на входе")
+    output_data = models.TextField(blank=True, null=True, verbose_name="Данные на выходе")

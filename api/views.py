@@ -21,10 +21,24 @@ from yandex_checkout.domain.common.base_object import BaseObject
 # Create your views here.
 
 
-base_dir = settings.BASE_DIR
+try:
+    upper_settings = models.UpperSetting.objects.get()
+    test = upper_settings.test_mode
+    if test:
+        yandex_api_key = upper_settings.yandex_api_key_test
+        shopid = upper_settings.shopid_test
+    else:
+        yandex_api_key = upper_settings.yandex_api_key
+        shopid = upper_settings.shopid
+except:
+    base_dir = settings.BASE_DIR
 
-env = environ.Env()
-env.read_env(path.join(base_dir, '.env'))
+    env = environ.Env()
+    env.read_env(path.join(base_dir, '.env'))
+    yandex_api_key = env('YANDEX_API_KEY')
+    shopid = env('SHOPID')
+
+
 
 
 class YandexPayment(LoginRequiredMixin, ContextViewMixin):
@@ -66,8 +80,8 @@ class YandexPayment(LoginRequiredMixin, ContextViewMixin):
 
         try:
             idempotence_key = uuid.uuid4()
-            Configuration.account_id = env('SHOPID')
-            Configuration.secret_key = env('YANDEX_API_KEY_TEST')
+            Configuration.account_id = shopid
+            Configuration.secret_key = yandex_api_key
             payment_params = {
                 "amount": {
                     "value": f"{lesson.cost}.00",
@@ -109,7 +123,7 @@ class YandexPayment(LoginRequiredMixin, ContextViewMixin):
                                                         amount=lesson.cost,
                                                         account=account,
                                                         lesson=lesson,
-                                                        request=f"{env('SHOPID')}\n{env('YANDEX_API_KEY_TEST')}\n{payment_params}\n{idempotence_key}",
+                                                        request=f"{shopid}\n{yandex_api_key}\n{payment_params}\n{idempotence_key}",
                                                         response=f"{payment_dict}",
                                                         yuid=payment.id,
                                                         status=payment.status,
