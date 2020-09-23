@@ -884,17 +884,17 @@
                             </a>
                         </div>
                     {% endif %}
-                    {% if settings.soc_vk %}
+                    {% if settings.soc_tm %}
                         <div class="soc-item">
-                            <a href="{{ settings.soc_vk }}" target="_blank">
-                                <div class="mbr-iconfont mbr-iconfont-social socicon-vkontakte socicon" style="color: rgb(255, 255, 255); fill: rgb(255, 255, 255);" media-simple="true"></div>
+                            <a href="{{ settings.soc_tm }}" target="_blank">
+                                <div class="mbr-iconfont mbr-iconfont-social socicon-telegram socicon" style="color: rgb(255, 255, 255); fill: rgb(255, 255, 255);" media-simple="true"></div>
                             </a>
                         </div>
                     {% endif %}
-                    {% if settings.soc_vk %}
+                    {% if settings.soc_wa and user is not None %}
                         <div class="soc-item">
-                            <a href="{{ settings.soc_fb }}" target="_blank">
-                                <div class="mbr-iconfont mbr-iconfont-social socicon-facebook socicon" style="color: rgb(255, 255, 255); fill: rgb(255, 255, 255);" media-simple="true"></div>
+                            <a href="{{ settings.soc_wa }}" target="_blank">
+                                <div class="mbr-iconfont mbr-iconfont-social socicon-whatsapp socicon" style="color: rgb(255, 255, 255); fill: rgb(255, 255, 255);" media-simple="true"></div>
                             </a>
                         </div>
                     {% endif %}

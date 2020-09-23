@@ -28,8 +28,8 @@ class Setting(models.Model):
     contact_phone = models.CharField(max_length=18, blank=True, null=True, verbose_name="Контактный телефон")
     contact_mail = models.EmailField(blank=True, null=True, verbose_name="Контактный Email")
     soc_igm = models.URLField(blank=True, null=True, verbose_name="Ссылка на Instagram")
-    soc_vk = models.URLField(blank=True, null=True, verbose_name="Ссылка на Вконтакте")
-    soc_fb = models.URLField(blank=True, null=True, verbose_name="Ссылка на Facebook")
+    soc_tm = models.URLField(blank=True, null=True, verbose_name="Ссылка на Telegram")
+    soc_wa = models.URLField(blank=True, null=True, verbose_name="Ссылка на WhatsApp")
 
 
 
