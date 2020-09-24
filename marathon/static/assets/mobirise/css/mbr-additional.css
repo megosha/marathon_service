@@ -1456,6 +1456,8 @@ a {
 @media (max-width: 991px) {
   .cid-s8QOdW7ljC .custom-item {
     text-align: left!important;
+    justify-content: left!important;
+    padding-left: 15px;
   }
 }
 .cid-s8QOdW7ljC .ico {
@@ -1467,7 +1469,7 @@ a {
   margin-right: 14px;
 }
 .cid-s8QOdW7ljC .card {
-  margin-bottom: 130px !important;
+  margin-bottom: 50px !important;
 }
 .cid-s8QOdW7ljC .card .img-wrapper {
   overflow: hidden;
@@ -1483,7 +1485,7 @@ a {
 }
 @media (max-width: 1200px) {
   .cid-s8QOdW7ljC .card {
-    margin-bottom: 50px !important;
+    margin-bottom: 20px !important;
   }
 }
 .cid-s8QOdW7ljC .card .card-wrapper {
@@ -2357,9 +2359,9 @@ a {
   }
 }
 @media (max-width: 576px) {
-  .cid-s8RciAEHn9 .form-group {
-    max-width: 350px;
-  }
+  /*.cid-s8RciAEHn9 .form-group {*/
+  /*  max-width: 350px;*/
+  /*}*/
   .cid-s8RciAEHn9 .card {
     padding: 2rem 1rem;
   }
