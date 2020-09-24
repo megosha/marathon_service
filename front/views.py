@@ -294,21 +294,11 @@ class Account(LoginRequiredMixin, ContextViewMixin):
             for item in values:
                 values_dict[item[key]] = item
         return values_dict
-    # class Account(View):
-    # def dispatch(self, request, *args, **kwargs):
-    #     if models.Account.objects.filter(user=self.request.user).exists():
-    #         return super().dispatch(request, *args, **kwargs)
-    #     else:
-    #         return HttpResponseRedirect('/')
-
-    # def base(self, request, form=None, context=None):
-    #     if not models.Account.objects.filter(user=self.request.user).exists():
-    #         return HttpResponseRedirect('/')
-    #     return render(request, 'account_ready.html', context=context)
 
     def get(self, request, form=None):
         if not models.Account.objects.filter(user=self.request.user).exists():
             return HttpResponseRedirect('/')
+        context = {}
         account: models.Account = request.user.account
         marathon = request.GET.get('marathon')
         marathon = models.Marathon.objects.filter(pk=marathon).first()
@@ -317,39 +307,41 @@ class Account(LoginRequiredMixin, ContextViewMixin):
         if marathones.count() == 1 and marathon is None:
             marathon = models.Marathon.objects.filter().first()
         if marathon:
-            # есть ли актуальный (не просроченный) платеж за урок
-            paid_allowed = account.payment_set.filter(lesson=OuterRef('id'),
-                                                      # status='succeeded',
-                                                      date_approve__gte=datetime.now() - timedelta(days=62))
-            # причина отсутсивя доступа: True если просрочен платеж, False, если платежа не было
-            paid_expired = account.payment_set.filter(lesson=OuterRef('id'),
-                                                      date_approve__lt=datetime.now() - timedelta(days=62))
+            lessons = models.Lesson.objects.filter(marathon=marathon).order_by('number')
+            payments = models.Payment.objects.filter(account=account, marathon=marathon)
+            if payments:
+                # есть ли актуальный (не просроченный) платеж за марафон
+                payment_valid = payments.filter(date_approve__gte=datetime.now() - timedelta(days=62)).order_by('-date_pay').first()
+                # есть ли просроченный платеж за марафон
+                payment_expired = payments.filter(date_approve__lt=datetime.now() - timedelta(days=62)).order_by('-date_pay').first()
+                context = self.make_context(payment_valid=payment_valid, payment_expired=payment_expired)
 
-            status = account.payment_set.filter(lesson_id=OuterRef('id')).order_by('-date_pay').values('status')[:1]
 
-            lessons = models.Lesson.objects.filter(marathon=marathon, date_publish__lte=datetime.now()).annotate(
-                paid=Exists(paid_allowed), expired=Exists(paid_expired), status=Subquery(status)
-            ).order_by('number')
 
-            # statuses = models.Payment.objects.filter(account=account, lesson__marathon=marathon).values(
-            #     'status', 'lesson_id')
-            # statuses = self.values2dict(statuses, 'lesson_id')
-
+            # # есть ли актуальный (не просроченный) платеж за урок
+            # paid_allowed = account.payment_set.filter(lesson=OuterRef('id'),
+            #                                           # status='succeeded',
+            #                                           date_approve__gte=datetime.now() - timedelta(days=62))
+            # # причина отсутсивя доступа: True если просрочен платеж, False, если платежа не было
+            # paid_expired = account.payment_set.filter(lesson=OuterRef('id'),
+            #                                           date_approve__lt=datetime.now() - timedelta(days=62))
+            #
+            # status = account.payment_set.filter(lesson_id=OuterRef('id')).order_by('-date_pay').values('status')[:1]
+            #
             # lessons = models.Lesson.objects.filter(marathon=marathon, date_publish__lte=datetime.now()).annotate(
-            #     paid=Exists(paid_allowed), expired=Exists(paid_expired)).order_by('number')
-            # for l in lessons:
-            #     payment = account.payment_set.filter(lesson=l, date_approve__gte=datetime.now() - timedelta(days=62)).first()
-            #     l.new_field = payment
+            #     paid=Exists(paid_allowed), expired=Exists(paid_expired), status=Subquery(status)
+            # ).order_by('number')
+
+
         else:
             lessons = []
-        context = self.make_context(marathon=marathon,
-                                    lessons=lessons,
-                                    marathones=marathones)
+        context = self.make_context(context=context, marathon=marathon, marathones=marathones, lessons=lessons)
         return render(request, 'account_ready.html', context=context)
 
     # def post(self, request):
     #     """ для отзывов """
     #     return self.base(request, form=form)
+
 
 class Book(ContextViewMixin):
     def base(self, request):

@@ -24,21 +24,13 @@ class UpperSetting(models.Model):
     test_mode = models.BooleanField(default=False, verbose_name="Тестовый режим ЯК")
     return_url = models.CharField(max_length=250, blank=True, null=True, verbose_name="return_url для ЯК")
 
-class Setting(models.Model):
-    website = models.URLField(blank=True, null=True, verbose_name="Адрес сайта")
-    contact_phone = models.CharField(max_length=18, blank=True, null=True, verbose_name="Контактный телефон")
-    contact_mail = models.EmailField(blank=True, null=True, verbose_name="Контактный Email")
-    soc_igm = models.URLField(blank=True, null=True, verbose_name="Ссылка на Instagram")
-    soc_tm = models.URLField(blank=True, null=True, verbose_name="Ссылка на Telegram")
-    soc_wa = models.URLField(blank=True, null=True, verbose_name="Ссылка на WhatsApp")
-
-
 
 class Marathon(models.Model):
     title = models.CharField(max_length=250, blank=False, null=False, verbose_name="Название темы/вебинара")
+    cost = models.PositiveIntegerField(default=0, verbose_name="Стоимость марафона (в рублях)")
     date_start = models.DateTimeField(default=None, blank=True, null=True, verbose_name="Дата старта марафона")
     date_create = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name="Дата создания")
-    promo = models.TextField(null=True, blank=True, verbose_name="Ссылка на YouTube-видео (Промо-ролик)")
+    promo = models.CharField(max_length=100, null=True, blank=True, verbose_name="Ссылка на YouTube-видео (Промо-ролик)")
     description = models.TextField(verbose_name="Комментарий/Описание", default=None, blank=True, null=True)
 
     class Meta:
@@ -47,6 +39,17 @@ class Marathon(models.Model):
 
     def __str__(self):
         return f"{self.title}"
+
+
+class Setting(models.Model):
+    website = models.URLField(blank=True, null=True, verbose_name="Адрес сайта")
+    contact_phone = models.CharField(max_length=18, blank=True, null=True, verbose_name="Контактный телефон")
+    contact_mail = models.EmailField(blank=True, null=True, verbose_name="Контактный Email")
+    soc_igm = models.URLField(blank=True, null=True, verbose_name="Ссылка на Instagram")
+    soc_tm = models.URLField(blank=True, null=True, verbose_name="Ссылка на Telegram")
+    soc_wa = models.URLField(blank=True, null=True, verbose_name="Ссылка на WhatsApp")
+    fake_cost = models.PositiveIntegerField(default=2500, verbose_name="Стоимость марафона (в рублях) до скидки")
+    main_marathon = models.ForeignKey(Marathon, blank=True, null=True, on_delete=models.DO_NOTHING, verbose_name="Марафон на главной")
 
 
 class Account(models.Model):
@@ -104,8 +107,9 @@ class Lesson(models.Model):
     number = models.PositiveSmallIntegerField(null=False, blank=False,
                                       verbose_name="Порядковый номер темы в марафоне")
     title = models.CharField(max_length=250, blank=False, null=False, verbose_name="Название темы/вебинара")
+    free = models.BooleanField(default=False, verbose_name="Тема доступна без покупки марафона")
     description = models.TextField(default=None, blank=True, null=True, verbose_name="Комментарий к теме/вебинару")
-    cost = models.PositiveIntegerField(default=0, verbose_name="Стоимость темы (в рублях)")
+    # cost = models.PositiveIntegerField(default=0, verbose_name="Стоимость темы (в рублях)")
     date_create = models.DateTimeField(auto_now=True, verbose_name="Дата создания")
     date_publish = models.DateTimeField(default=timezone.now, blank=True, null=True, verbose_name="Дата публикации")
 
@@ -125,7 +129,7 @@ class Video(models.Model):
     link = models.CharField(max_length=25, null=True, blank=True, verbose_name="ID видео на YouTube")
     description = models.TextField(default=None, blank=True, null=True, verbose_name="Комментарий к видео")
     date_create = models.DateTimeField(auto_now=True, verbose_name="Дата создания")
-    date_publish = models.DateTimeField(default=timezone.now, blank=True, null=True, verbose_name="Дата публикации")
+    # date_publish = models.DateTimeField(default=timezone.now, blank=True, null=True, verbose_name="Дата публикации")
     # video = models.FileField(null=True, blank=True, verbose_name="Видеофйал")
 
     class Meta:
@@ -141,7 +145,8 @@ class Payment(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4(), blank=True, primary_key=True, verbose_name="Идентификатор платежа в системе / Ключ идемпотентности")
     amount = models.PositiveIntegerField(default=0, verbose_name="Сумма платежа")
     account = models.ForeignKey(Account, blank=False, null=False, on_delete=models.DO_NOTHING, verbose_name="Аккаунт")
-    lesson = models.ForeignKey(Lesson, blank=False, null=False, on_delete=models.DO_NOTHING, verbose_name="Тема/Вебинар")
+    # lesson = models.ForeignKey(Lesson, blank=False, null=False, on_delete=models.DO_NOTHING, verbose_name="Тема/Вебинар")
+    marathon = models.ForeignKey(Marathon, default=None, blank=False, null=False, on_delete=models.DO_NOTHING, verbose_name="Марафон")
     date_pay = models.DateTimeField(auto_now=True, blank=False, null=False, verbose_name="Дата оплаты")
     date_approve = models.DateTimeField(blank=True, null=True, verbose_name="Дата подтверждения платежа")
     request = models.TextField(blank=True, null=True, verbose_name="Запрос в ЯК")

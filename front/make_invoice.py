@@ -57,8 +57,7 @@ def create_pdf(payment):
     pdf.set_font('DejaVu', '', 8)
     spacing = 1
     data = [['Товар/услуга', 'Описание', 'Стоимость', 'Количество', 'Сумма'],
-            [f'Марафон "{payment.lesson.marathon.title}", '
-             f'Вебинар №{payment.lesson.number}',
+            [f'Марафон "{payment.marathon.title}", '
              f'Персональная двухмесячная подписка на срок с {payment.date_pay.strftime("%d.%m.%Y")} по'
              f' {(payment.date_pay + timedelta(days=62)).strftime("%d.%m.%Y")}',
              f'{payment.amount}.00', '1', f'{payment.amount}.00 Руб']

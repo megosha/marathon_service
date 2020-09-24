@@ -80,13 +80,36 @@
 <section class="accordion1 cid-s9dQTcaqKT" id="accordion01-1r">
 
     <div class="container">
-        <div class="row">
-            <div class="col-12 col-md-12 title-text">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-12 ">
                 <h3 class="mbr-section-title mbr-bold align-center mbr-fonts-style display-2">
                     Марафон&nbsp;<span>"{{ marathon.title }}"</span></h3>
                 <h4 class="mbr-section-subtitle pb-1 align-center mbr-light mbr-fonts-style display-7">{{ marathon.description }}</h4>
-                <p class="mbr-section-subtitle pb-1 align-center mbr-light mbr-fonts-style display-4">Здесь находятся все Ваши вебинары, а также вебинары, которые Вы можете приобрести, щёлкнув по соответствующей вкладке</p>
             </div>
+            {% if not payment_valid %}
+                {% if payment_expired %}
+                    <p class="mbr-section-subtitle pb-1 align-center mbr-light mbr-fonts-style display-4">Двухмесячный срок подписки на марафон истек.</p>
+                {% else %}
+                    <p class="mbr-fonts-style panel-text pr-2 display-5"><strong>Стоимость марафона {{ marathon.cost }}₽</strong></p>
+                    <p class="mbr-fonts-style display-4 text-muted">Внимание! Если Вы уже оплатили марафон, но доступ к нему не появился, <b><a href="/#accordion01-a" class="text-primary">обратитесь к ответам на наиболее частые вопросы на главной странице сайта</a>.</b></p>
+
+                        <form method="POST" action="/api/payment/{{ marathon.pk }}"> {% csrf_token %}
+                            <div class="mbr-section-btn align-center align-self-center">
+                                <button class="btn btn-lg btn-primary display-4" type="submit" style="border-radius: 100px">Получить марафон за {{ marathon.cost }}₽</button></div>
+                        </form>
+                {% endif %}
+            {% else %}
+                    <span class="mbr-section-subtitle pt-2 align-center mbr-light mbr-fonts-style display-4 text-muted">Здесь находятся все вебинары марафона. Сроки выхода вебинаров могут быть изменены. Вы будете проинформированы о выходе вебинара предварительно за день.</span>
+                    <span class="align-left mbr-light mbr-fonts-style display-4 small">
+                        <br>Статус платежа: {{ payment_valid|full_status }}
+
+                    <br><a href="/invoice/{{ payment_valid.uuid }}.pdf" target="_blank"><span class="fa fa-font-awesome fa-download"></span>Скачать квитанцию</a>
+                <br>Срок подписки истекает: {{ payment_valid.date_approve|date:"d.m.Y" }}
+
+                </span>
+
+            {% endif %}
+
         </div>
         <div class="row">
             <div class="col-lg-12">
@@ -97,40 +120,15 @@
 
                                 <div class="card">
                                 <div class="card-header" role="tab" id="heading{{ lesson.number }}">
-                                    <a role="button" class="collapsed panel-title text-black pr-3" data-toggle="collapse" data-core="" href="#collapse{{ lesson.number }}_26" aria-expanded="false" aria-controls="collaps{{ lesson.number }}">
+                                    <a role="button" class="collapsed panel-title text-black pr-3 {% if not payment_valid and not lesson.free %}inactive{% endif %}" data-toggle="collapse" data-core="" href="#collapse{{ lesson.number }}_26" aria-expanded="false" aria-controls="collaps{{ lesson.number }}">
                                         <h4 class="mbr-fonts-style display-7"><span class="toggle-icon inactive sign mbr-iconfont"></span>
-                                            {% if lesson.paid %}<span class="fa-check-circle fa" data-toggle="tooltip" data-placement="top" title="Тема доступна" style="color: #218838"></span>{% else %}<span class="text-warning fa-times-circle fa" data-toggle="tooltip" data-placement="top" title="Тема не приобретена или платёж просрочен"></span>{% endif %}
-                                            <span class="text-primary display-5">Тема №{{ lesson.number }}. </span>{{ lesson.title }}</h4>
+                                            <span class="text-primary display-5">Тема №{{ lesson.number }}. </span>{{ lesson.title }}. Дата выхода: {{ lesson.date_publish|date:"d.m.Y" }}</h4>
                                     </a>
 
                                 </div>
+                                {% if payment_valid.status == 'succeeded' or  lesson.free %}
                                 <div id="collapse{{ lesson.number }}_26" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="heading{{ lesson.number }}" data-parent="#bootstrap-accordion_26">
                                     <div class="panel-body">
-{#                                    {{ lesson.new_field|full_status }}#}
-{#                                    {{ lesson.new_field.date_approve }}#}
-                                        {% if not lesson.paid %}
-                                            <p class="mbr-fonts-style panel-text pr-2 display-4"><strong>
-                                                {% if lesson.expired %}
-                                                    Срок дествия двухмесячного доступа к теме истёк.
-                                                {% else %}
-                                                    Нет доступа к теме. Но Вы можете его приобрести.&nbsp;
-                                                <br>Внимание! Если Вы уже оплатили этот вебинар, но доступ к нему не появился, <b><a href="/#accordion01-a" class="text-primary">обратитесь к ответам на наиболее частые вопросы на главной странице сайта</a>.</b></strong></p>
-                                            {% endif %}
-                                            <div class="buttons-wrap mt-0">
-                                                <p class="mbr-fonts-style panel-text pr-2 display-5"><strong>Стоимость темы ₽{{ lesson.cost }}</strong></p>
-{#                                                <div class="mbr-section-btn align-center align-self-center"><a class="btn btn-lg btn-primary display-4" href="#" data-toggle="modal" data-target="#mbr-popup-2s">Получить вебинар №3 за ₽{{ lesson.cost }} </a></div>#}
-                                                <form method="POST" action="/api/payment/{{ marathon.pk }}"> {% csrf_token %}
-                                                    <div class="mbr-section-btn align-center align-self-center">
-                                                        <button class="btn btn-lg btn-primary display-4" type="submit" name="open_widget" value="{{ lesson.number }}" style="border-radius: 100px">Получить вебинар №{{ lesson.number }} за ₽{{ lesson.cost }} </button></div>
-                                                </form>
-
-                                            </div>
-                                        {% else %}
-{#                                            {% if lesson.cost > 0 %}#}
-{#                                                <p class="mbr-fonts-style panel-text pr-2 display-4">#}
-{#                                                    <span class="text-muted fa-download fa" data-toggle="tooltip" data-placement="top" title="Скачать квитанцию"></span>#}
-{#                                                    Срок платежа истекает<strong></strong></p>#}
-{#                                            {% endif %}#}
                                                <p class="mbr-fonts-style panel-text pr-2 display-4"><strong>{{ lesson.description }}</strong></p>
                                                 {% if lesson.video_set.all %}
                                             <!-- CUSTOM VIDEOS  -->
@@ -174,9 +172,9 @@
                                                 </div>
                                                                                      <!-- CUSTOM VIDEOS  END  -->
                                                 {% endif %}
-                                        {% endif %}
                                     </div>
                                 </div>
+                                {% endif %}
                             </div>
 
                             {% empty %}

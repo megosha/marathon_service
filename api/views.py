@@ -49,7 +49,7 @@ class YandexPayment(LoginRequiredMixin, ContextViewMixin):
             return HttpResponseRedirect('/')
         return HttpResponseRedirect('/me')
 
-    def post(self, request, marathon):
+    def post(self, request, marathon_id):
         user = self.request.user
         if not models.Account.objects.filter(user=user).exists():
             return HttpResponseRedirect('/')
@@ -57,13 +57,13 @@ class YandexPayment(LoginRequiredMixin, ContextViewMixin):
         account = user.account
         result = {}
 
-        lesson_num = request.POST.get('open_widget')
+        # lesson_num = request.POST.get('open_widget')
 
         try:
-            lesson = models.Lesson.objects.get(number=lesson_num, marathon=marathon)
+            marathon = models.Marathon.objects.get(pk=marathon_id)
             # есть ли актуальный (не просроченный) платеж за урок
             earlyer_pay = models.Payment.objects.filter(
-                account=account, lesson=lesson, date_approve__gte=datetime.datetime.now() - datetime.timedelta(days=62)
+                account=account, marathon=marathon, date_approve__gte=datetime.datetime.now() - datetime.timedelta(days=62)
             ).exists()
             if earlyer_pay:
                 raise Exception('Payment exists')
@@ -71,13 +71,13 @@ class YandexPayment(LoginRequiredMixin, ContextViewMixin):
             result['error'] = 'Ошибка данных для формирования нового платежа'
             return HttpResponseRedirect('/me')
 
-        if lesson.cost == 0:
-            new_payment = models.Payment.objects.create(account=account,
-                                                        lesson=lesson,
-                                                        date_pay=timezone.now(),
-                                                        date_approve=timezone.now(),
-                                                        status="succeeded")
-            return HttpResponseRedirect(f'/me?marathon={lesson.marathon.pk}')
+        # if marathon.cost == 0:
+        #     new_payment = models.Payment.objects.create(account=account,
+        #                                                 marathon=marathon,
+        #                                                 date_pay=timezone.now(),
+        #                                                 date_approve=timezone.now(),
+        #                                                 status="succeeded")
+        #     return HttpResponseRedirect(f'/me?marathon={marathon.pk}')
 
 
         try:
@@ -86,14 +86,14 @@ class YandexPayment(LoginRequiredMixin, ContextViewMixin):
             Configuration.secret_key = yandex_api_key
             payment_params = {
                 "amount": {
-                    "value": f"{lesson.cost}.00",
+                    "value": f"{marathon.cost}.00",
                     "currency": "RUB"
                 },
                 "confirmation": {
                     "type": "embedded"
                 },
                 "capture": True,
-                "description": f"Марафон {lesson.marathon.title[:75]}, Урок №{lesson.number}",
+                "description": f"Марафон {marathon.title[:75]}",
                 "receipt": {
                     "customer": {
                         "full_name": f"{account.user.get_full_name()}",
@@ -102,10 +102,10 @@ class YandexPayment(LoginRequiredMixin, ContextViewMixin):
                     },
                     "items": [
                         {
-                            "description": f"Марафон {lesson.marathon.title[:75]}, Урок №{lesson.number}",
+                            "description": f"Марафон {marathon.title[:75]}",
                             "quantity": "1.00",
                             "amount": {
-                                "value": f"{lesson.cost}.00",
+                                "value": f"{marathon.cost}.00",
                                 "currency": "RUB"
                             },
                             "vat_code": "1", #TODO    1-Без НДС 2-НДС по ставке 0% 3-НДС по ставке 10% 4-НДС чека по ставке 20% 5-НДС чека по расчетной ставке 10/110 6 	НДС чека по расчетной ставке 20/120
@@ -122,9 +122,9 @@ class YandexPayment(LoginRequiredMixin, ContextViewMixin):
             pass #todo
         else:
             new_payment = models.Payment.objects.create(uuid=idempotence_key,
-                                                        amount=lesson.cost,
+                                                        amount=marathon.cost,
                                                         account=account,
-                                                        lesson=lesson,
+                                                        marathon=marathon,
                                                         request=f"{shopid}\n{yandex_api_key}\n{payment_params}\n{idempotence_key}",
                                                         response=f"{payment_dict}",
                                                         yuid=payment.id,
