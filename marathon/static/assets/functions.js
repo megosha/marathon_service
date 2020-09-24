@@ -35,11 +35,11 @@ function bio(mode){
         if (mode==1){
             document.getElementById('more-bio').innerText = '';
              p.innerHTML = '<a class="text-primary" onclick="bio(0)">Показать меньше</a>';
-        $("[name='slide_block']").slideDown( "slow" );
+        $("#slide_block").slideDown( "slow" );
         }
         else if (mode==0) {
     		p.innerText = '';
-    		$("[name='slide_block']").slideUp( "slow" );
+    		$("#slide_block").slideUp( "slow" );
 		document.getElementById('more-bio').innerHTML = 'Показать больше...&nbsp;';
 }
         else return;
