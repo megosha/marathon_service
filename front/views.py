@@ -1,4 +1,6 @@
+
 from datetime import datetime, timedelta
+from django.utils import timezone
 
 from django.contrib.auth import authenticate, login, logout
 from django.db.models import Exists, OuterRef, F, Q, Value, Subquery
@@ -6,7 +8,7 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseNotFound
 from django.shortcuts import render
 from django.template.loader import get_template
 
@@ -14,13 +16,15 @@ from django.views import View
 
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+from django.views.static import serve
 
 from front import models, forms, functions
 
 
 # import environ
-# from django.conf import settings as sett
-# from os import path
+from django.conf import settings as cnf
+from os import path
 
 
 # base_dir = sett.BASE_DIR
@@ -30,6 +34,19 @@ from front import models, forms, functions
 
 
 # Create your views here.
+
+@login_required
+def get_invoice(request, filename):
+    try:
+        payment = request.user.account.payment_set.all().filter(uuid=filename)
+    except:
+        return HttpResponseNotFound()
+    if payment:
+        load_path = path.join(cnf.MEDIA_ROOT, 'invoice')
+        if path.isfile(path.join(load_path, f"{filename}.pdf")):
+            return serve(request, f"{filename}.pdf", load_path)
+    return HttpResponseNotFound()
+
 
 class ContextViewMixin(View):
     def make_context(self, context=None, **kwargs):
@@ -311,31 +328,19 @@ class Account(LoginRequiredMixin, ContextViewMixin):
             payments = models.Payment.objects.filter(account=account, marathon=marathon)
             if payments:
                 # есть ли актуальный (не просроченный) платеж за марафон
-                payment_valid = payments.filter(date_approve__gte=datetime.now() - timedelta(days=62)).order_by('-date_pay').first()
+                payment_valid = payments.filter(date_approve__gte=datetime.now() - timedelta(days=62)).order_by(
+                    '-date_pay').first()
                 # есть ли просроченный платеж за марафон
-                payment_expired = payments.filter(date_approve__lt=datetime.now() - timedelta(days=62)).order_by('-date_pay').first()
+                payment_expired = payments.filter(date_approve__lt=datetime.now() - timedelta(days=62)).order_by(
+                    '-date_pay').first()
+
                 context = self.make_context(payment_valid=payment_valid, payment_expired=payment_expired)
-
-
-
-            # # есть ли актуальный (не просроченный) платеж за урок
-            # paid_allowed = account.payment_set.filter(lesson=OuterRef('id'),
-            #                                           # status='succeeded',
-            #                                           date_approve__gte=datetime.now() - timedelta(days=62))
-            # # причина отсутсивя доступа: True если просрочен платеж, False, если платежа не было
-            # paid_expired = account.payment_set.filter(lesson=OuterRef('id'),
-            #                                           date_approve__lt=datetime.now() - timedelta(days=62))
-            #
-            # status = account.payment_set.filter(lesson_id=OuterRef('id')).order_by('-date_pay').values('status')[:1]
-            #
-            # lessons = models.Lesson.objects.filter(marathon=marathon, date_publish__lte=datetime.now()).annotate(
-            #     paid=Exists(paid_allowed), expired=Exists(paid_expired), status=Subquery(status)
-            # ).order_by('number')
-
 
         else:
             lessons = []
-        context = self.make_context(context=context, marathon=marathon, marathones=marathones, lessons=lessons)
+        current_date = timezone.now()
+        context = self.make_context(context=context, marathon=marathon, marathones=marathones, lessons=lessons,
+                                    current_date=current_date)
         return render(request, 'account_ready.html', context=context)
 
     # def post(self, request):

@@ -13,7 +13,8 @@ urlpatterns = [
     path('api/account_deny/<str:uuid>_<str:login>', api.AccountDeny.as_view()),
     path('accountdeny', api.RenderDeny.as_view()),
     path('book', views.Book.as_view()),
+    path('get_invoice/<str:filename>', views.get_invoice),
 
-    path('test', views.Test.as_view()),
+    # path('test', views.Test.as_view()),
 ]
 

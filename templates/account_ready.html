@@ -99,16 +99,18 @@
                         </form>
                 {% endif %}
             {% else %}
-                    <span class="mbr-section-subtitle pt-2 align-center mbr-light mbr-fonts-style display-4 text-muted">Здесь находятся все вебинары марафона. Сроки выхода вебинаров могут быть изменены. Вы будете проинформированы о выходе вебинара предварительно за день.</span>
-                    <span class="align-left mbr-light mbr-fonts-style display-4 text-small">
-                        <br>Статус платежа: {{ payment_valid|full_status }}
+                <div class="col-12 col-md-12 ">
+                    <span class="mbr-section-subtitle pt-2 align-left mbr-light mbr-fonts-style display-4 text-muted">Здесь находятся все вебинары марафона. Сроки выхода вебинаров могут быть изменены. Вы будете проинформированы о выходе вебинара предварительно за день.</span>
+                    <p class="mbr-light mbr-fonts-style display-4 text-small text-muted mt-2">
+                        Статус платежа: "{{ payment_valid|full_status }}"
 
-                    <br><a href="/invoice/{{ payment_valid.uuid }}.pdf" target="_blank"><span class="fa fa-awesome fa-download"></span>  Скачать квитанцию</a>
-                <br>Срок подписки истекает: {{ payment_valid.date_approve|date:"d.m.Y" }}
+                <br>{% if payment_valid.date_approve|deltatime:'62' is not None %}Срок подписки истекает: {{ payment_valid.date_approve|deltatime:'62'|date:"d.m.Y" }}{% endif %}
+                        <br><a href="/get_invoice/{{ payment_valid.uuid }}" target="_blank"><span class="fa fa-awesome fa-download"></span>  Скачать квитанцию</a>
 
-                </span>
-
+                </p>
+                </div>
             {% endif %}
+
 
         </div>
         <div class="row">
@@ -120,13 +122,23 @@
 
                                 <div class="card">
                                 <div class="card-header" role="tab" id="heading{{ lesson.number }}">
-                                    <a role="button" class="collapsed panel-title text-black pr-3 {% if not payment_valid and not lesson.free %}inactive {% endif %}" data-toggle="collapse" data-core="" href="#collapse{{ lesson.number }}_26" aria-expanded="false" aria-controls="collaps{{ lesson.number }}">
+                                    <a role="button" class="collapsed panel-title text-black pr-3
+                                       {% if lesson.date_publish > current_date %}
+                                            inactive cursor_default
+                                       {% elif not lesson.free %}
+                                            {% if not payment_valid or payment_valid.status != 'succeeded'%}
+                                            inactive cursor_default
+                                            {% endif %}
+                                        {% endif %}"
+                                       data-toggle="collapse" data-core="" href="#collapse{{ lesson.number }}_26" aria-expanded="false" aria-controls="collaps{{ lesson.number }}">
                                         <h4 class="mbr-fonts-style display-7"><span class="toggle-icon inactive sign mbr-iconfont"></span>
                                             <span class="text-primary display-5">Тема №{{ lesson.number }}. </span>{{ lesson.title }}. Дата выхода: {{ lesson.date_publish|date:"d.m.Y" }}</h4>
                                     </a>
 
                                 </div>
-                                {% if payment_valid.status == 'succeeded' or  lesson.free %}
+                                {% if lesson.date_publish <= current_date %}
+                                    {% if lesson.free or payment_valid.status == 'succeeded' %}
+
                                 <div id="collapse{{ lesson.number }}_26" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="heading{{ lesson.number }}" data-parent="#bootstrap-accordion_26">
                                     <div class="panel-body">
                                                <p class="mbr-fonts-style panel-text pr-2 display-4"><strong>{{ lesson.description }}</strong></p>
@@ -174,6 +186,7 @@
                                                 {% endif %}
                                     </div>
                                 </div>
+                                {% endif %}
                                 {% endif %}
                             </div>
 

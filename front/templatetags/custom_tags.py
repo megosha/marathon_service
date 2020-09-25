@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django import template
 
 register = template.Library()
@@ -26,4 +28,11 @@ def full_status(payment):
             'waiting_for_capture': 'Платёж оплачен, деньги авторизованы и ожидают списания',
             'succeeded': 'Платёж успешно завершён',
              'canceled': 'Платёж отменён'}
-    return state.get(status)
+    return state.get(status, 'Неизвестный статус')
+
+@register.filter()
+def deltatime(dt, deltadays):
+    try:
+        return dt + timedelta(days=int(deltadays))
+    except:
+        return None

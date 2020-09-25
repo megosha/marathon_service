@@ -50,6 +50,9 @@ class Setting(models.Model):
     soc_wa = models.URLField(blank=True, null=True, verbose_name="Ссылка на WhatsApp")
     fake_cost = models.PositiveIntegerField(default=2500, verbose_name="Стоимость марафона (в рублях) до скидки")
     main_marathon = models.ForeignKey(Marathon, blank=True, null=True, on_delete=models.DO_NOTHING, verbose_name="Марафон на главной")
+    invoice_fio = models.CharField(max_length=100, default="Торопчин Артём Викторович", blank=True, null=True, verbose_name="ФИО для квитанции")
+    invoice_phone = models.CharField(max_length=50, default="", blank=True, null=True, verbose_name="Телефон для квитанции")
+    invoice_email = models.CharField(max_length=50, default="", blank=True, null=True, verbose_name="Email для квитанции")
 
 
 class Account(models.Model):

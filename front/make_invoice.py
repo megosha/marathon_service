@@ -2,16 +2,18 @@ from datetime import datetime, timedelta
 from os import path
 from fpdf import FPDF, HTMLMixin
 
-from django.conf import settings
+from django.conf import settings as cnf
 
+from front import models
 
-media_dir = settings.MEDIA_ROOT
+media_dir = cnf.MEDIA_ROOT
 
 class CustomPDF(FPDF):
     pass
 
 
 def create_pdf(payment):
+    settings = models.Setting.objects.filter().first()
     # if not payment:
     #     payment = Payment.objects.filter().first()
     pdf_path = path.join(media_dir, 'invoice', f'{payment.uuid}.pdf')
@@ -25,13 +27,16 @@ def create_pdf(payment):
     pdf.set_font('DejaVu', '', 12)
     # self.set_font('Arial', 'B', 15)
     # Добавляем адрес
+    pdf.image(path.join(cnf.STATIC_ROOT, 'assets', 'images', 'atorop_logo.png'), 10, 8, 33)
     offset = pdf.w / 2.5 + 55
     pdf.cell(offset)
-    pdf.cell(0, 5, 'Иванов Иван Ианович', ln=1)
+    pdf.cell(0, 5, f'{settings.invoice_fio}', ln=1)
     pdf.cell(offset)
-    pdf.cell(0, 5, '9132131232', ln=1)
+    pdf.cell(0, 5, f'{settings.invoice_phone}', ln=1)
     pdf.cell(offset)
-    pdf.cell(0, 5, 'email@email.com', ln=1)
+    pdf.cell(0, 5, f'{settings.invoice_email}', ln=1)
+    pdf.cell(offset)
+    pdf.cell(0, 5, f'{settings.website}', ln=1)
     # Line break Разрыв линии
     pdf.ln(20)
     pdf.set_font('DejaVu', '', 16)
@@ -56,8 +61,8 @@ def create_pdf(payment):
     # pdf.ln(5)
     pdf.set_font('DejaVu', '', 8)
     spacing = 1
-    data = [['Товар/услуга', 'Описание', 'Стоимость', 'Количество', 'Сумма'],
-            [f'Марафон "{payment.marathon.title}", '
+    data = [['Наименование', 'Описание', 'Стоимость', 'Количество', 'Сумма'],
+            [f'Марафон "{payment.marathon.title}"',
              f'Персональная двухмесячная подписка на срок с {payment.date_pay.strftime("%d.%m.%Y")} по'
              f' {(payment.date_pay + timedelta(days=62)).strftime("%d.%m.%Y")}',
              f'{payment.amount}.00', '1', f'{payment.amount}.00 Руб']
@@ -74,7 +79,10 @@ def create_pdf(payment):
             # offset = pdf.x + col_width
             # pdf.multi_cell(col_width, row_height * spacing, item, 1, 0)
             offset = pdf.x + col_widths[j]
-            if i == 1 and j > 1: row_height = pdf.font_size * 4
+            if i == 1 and j != 1:
+                row_height = pdf.font_size * 4
+            else:
+                row_height = pdf.font_size * 2
             pdf.multi_cell(col_widths[j], row_height * spacing, item, 1, 0)
             pdf.x = offset
         pdf.ln(row_height * spacing)

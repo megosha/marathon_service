@@ -63,7 +63,7 @@ class YandexPayment(LoginRequiredMixin, ContextViewMixin):
             marathon = models.Marathon.objects.get(pk=marathon_id)
             # есть ли актуальный (не просроченный) платеж за урок
             earlyer_pay = models.Payment.objects.filter(
-                account=account, marathon=marathon, date_approve__gte=datetime.datetime.now() - datetime.timedelta(days=62)
+                account=account, marathon=marathon, date_approve__gte=timezone.now() - datetime.timedelta(days=62)
             ).exists()
             if earlyer_pay:
                 raise Exception('Payment exists')
@@ -163,7 +163,7 @@ class PaymentReturnUrl(ContextViewMixin):
                     if payment.status != payment_info.status:
                         payment.status = payment_info.status
                         if payment_info.status == 'succeeded':
-                            payment.date_approve = datetime.datetime.now()
+                            payment.date_approve = timezone.now()
                         payment.save()
                     # content = f"Статус платежа {payment.lesson.marathon.title}, тема №{payment.lesson.number}: {payment.status}"
         form_html = get_template('includes/payment_info.html').render(context={'payment': payment},
@@ -189,7 +189,7 @@ class YandexNotify(ContextViewMixin):
         if payment_obj and payment_obj.status != payment.status:
             payment_obj.status = payment.status
             if payment.status == 'succeeded':
-                payment_obj.date_approve = datetime.datetime.now()
+                payment_obj.date_approve = timezone.now()
             payment_obj.save()
 
         return HttpResponse(status=200)
