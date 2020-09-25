@@ -576,7 +576,9 @@ a.custom-hover:hover {
   height: 50%;
   transform: rotate(-12deg);
 }
-
+.cursor_default {
+  cursor: default
+}
 .mbr-plan-header.bg-primary .mbr-plan-subtitle,
 .mbr-plan-header.bg-primary .mbr-plan-price-desc {
   color: #ffffff;
