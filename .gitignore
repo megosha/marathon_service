@@ -5,4 +5,4 @@ marathon/settings.py
 /requests.http
 /front/migr_backup2/
 /front/migr_backup/
-/front/migrations/
+
