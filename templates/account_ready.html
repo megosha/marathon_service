@@ -94,10 +94,10 @@
                 {% endif %}
                 <p class="mbr-fonts-style display-4 text-muted">Внимание! Если Вы уже оплатили марафон, но доступ к нему не появился, <b><a href="/#accordion01-a" class="text-primary">обратитесь к ответам на наиболее частые вопросы на главной странице сайта</a>.</b></p>
 
-                        <form method="POST" action="/api/payment/{{ marathon.pk }}"> {% csrf_token %}
-                            <div class="mbr-section-btn align-center align-self-center">
-                                <button class="btn btn-lg btn-primary display-4" type="submit" style="border-radius: 100px">Получить марафон за {{ marathon.cost }}₽</button></div>
-                        </form>
+{#                        <form method="POST" action="/api/payment/{{ marathon.pk }}"> {% csrf_token %}#}
+{#                            <div class="mbr-section-btn align-center align-self-center">#}
+{#                                <button class="btn btn-lg btn-primary display-4" type="submit" style="border-radius: 100px">Получить марафон за {{ marathon.cost }}₽</button></div>#}
+{#                        </form>#}
             {% else %}
                 <div class="col-12 col-md-12 ">
                     <span class="mbr-section-subtitle pt-2 align-left mbr-light mbr-fonts-style display-4 text-muted">Здесь находятся все вебинары марафона. Сроки выхода вебинаров могут быть изменены. Вы будете проинформированы о выходе вебинара предварительно за день.</span>
