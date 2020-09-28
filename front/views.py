@@ -22,6 +22,7 @@ from django.views.static import serve
 from front import models, forms, functions
 
 
+
 # import environ
 from django.conf import settings as cnf
 from os import path
@@ -86,7 +87,8 @@ class Index(ContextViewMixin):
         context = self.make_context(form=form,
                                     reviews=reviews,
                                     settings=settings,
-                                    feedback=feedback)
+                                    feedback=feedback,
+                                    GOOGLE_RECAPTCHA_SITE_KEY=cnf.RECAPTCHA_PUBLIC_KEY)
         return render(request, 'index.html', context=context)
 
     def get(self, request, form=None):
@@ -98,7 +100,8 @@ class Index(ContextViewMixin):
             fields = {'firstname': 'Имя', 'contact': 'Контакты', 'message': 'Сообщение'}
             message = ''
             for k, v in form.cleaned_data.items():
-                message += f'{fields.get(k)}: "{v}"\n'
+                if k != 'captcha':
+                    message += f'{fields.get(k)}: "{v}"\n'
             subject = 'Новое сообщение по обратной связи  марафона "Движение Вверх"'
             settings = models.Setting.objects.filter().first()
             if not settings:

@@ -90,6 +90,14 @@
 <label for="ageconfirm-extForm2-p" class="form-check-label display-7">Подтверждаю, что мне уже есть 18 лет</label>
 </div>
 </div>
+<div class="col-lg-12 col-md-12 col-sm-12 form-group">
+        {{ form.captcha }}
+        {% if form.captcha.errors %}
+        <div class="alert alert-warning col-12 rounded p-0 m-0">
+            <span class="mbr-fonts-style subtext display-4 text-light p-0 m-0">{{ form.captcha.errors }}</span>
+        </div>
+        {% endif %}
+    </div>
 <div class="col-md-12 input-group-btn mt-2">
 <button type="submit" class="btn btn-primary btn-form btn-bgr display-4">Подтвердить</button>
 </div>

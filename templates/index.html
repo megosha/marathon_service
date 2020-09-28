@@ -1052,7 +1052,7 @@
                                  <div data-form-type="formoid">
                     
 <!--Formbuilder Form-->
-<form action="" method="POST" class="mbr-form form-with-styler mt-4" data-form-title="Mobirise Form"><input type="hidden" name="email" data-form-email="true" value="3a4LnDG1SEUzQSL0jfLHHtWD6+Ip7g1pj5b/pVqg9UrwEhyVf7fWT/9Lnuo4OwBhPANNAzPoS0fG3Xr2iUvo2NLR9S3DwDDbgDhHVw+bsSmDKxX1KjYdtGlHApbRxnHw">
+<form action="/#feedback-label" method="POST" class="mbr-form form-with-styler mt-4" data-form-title="Mobirise Form"><input type="hidden" name="email" data-form-email="true" value="3a4LnDG1SEUzQSL0jfLHHtWD6+Ip7g1pj5b/pVqg9UrwEhyVf7fWT/9Lnuo4OwBhPANNAzPoS0fG3Xr2iUvo2NLR9S3DwDDbgDhHVw+bsSmDKxX1KjYdtGlHApbRxnHw">
 {% csrf_token %}
 <div class="row">
 {% if feedback %}
@@ -1093,6 +1093,14 @@
     {% endif %}
 </div>
     <p class="mbr-text mbr-regular align-left mbr-fonts-style text-small display-4">Внимание! Введёные Вами персональные данные никуда не передаются и используются только для обратной связи.</p>
+    <div class="col-lg-12 col-md-12 col-sm-12 form-group">
+        {{ form.captcha }}
+        {% if form.captcha.errors %}
+        <div class="alert alert-warning col-12 rounded p-0 m-0">
+            <span class="mbr-fonts-style subtext display-4 text-light p-0 m-0">{{ form.captcha.errors }}</span>
+        </div>
+        {% endif %}
+    </div>
 <div class="col-12 input-group-btn mbr-section-btn"><button type="submit" class="btn btn-form btn-success display-4">Отправить вопрос</button></div>
 </div>
 </form><!--Formbuilder Form-->
@@ -1178,6 +1186,8 @@
 <script src="/assets/pauseVideo/script.js"></script>
 {#  <script src="/assets/formoid.min.js"></script>#}
   <script src="/assets/functions.js"></script>
+
+
 
  <div id="scrollToTop" class="scrollToTop mbr-arrow-up"><a style="text-align: center;"><i class="mbr-arrow-up-icon mbr-arrow-up-icon-cm cm-icon cm-icon-smallarrow-up"></i></a></div>
     <input name="animation" type="hidden">

@@ -1,3 +1,5 @@
+from captcha.fields import ReCaptchaField
+from captcha.widgets import ReCaptchaV3
 from django import forms
 
 
@@ -13,6 +15,7 @@ class RegisterAccount(forms.Form):
         attrs={'placeholder': 'Email', "class": "form-control text-multiple", }))
     ageconfirm = forms.BooleanField(required=True, widget=forms.CheckboxInput(
         attrs={'type': 'checkbox', "class": "form-check-input display-7"}))
+    captcha = ReCaptchaField()
 
 
 class Login(forms.Form):
@@ -20,12 +23,14 @@ class Login(forms.Form):
         attrs={'placeholder': 'Логин', "class": "form-control input display-7", }))
     password = forms.CharField(required=True, widget=forms.PasswordInput(
         attrs={'type': 'password', 'placeholder': 'Пароль', "class": "form-control display-7"}))
+    captcha = ReCaptchaField()
 
 
 class ResetPWD(forms.Form):
     email = forms.EmailField(required=True,
                              widget=forms.EmailInput(
                                  attrs={"class": "form-control input display-7", 'placeholder': 'E-mail'}))
+    captcha = ReCaptchaField()
 
 
 class Feedback(forms.Form):
@@ -38,3 +43,4 @@ class Feedback(forms.Form):
     message = forms.CharField(required=True, max_length=1204, widget=forms.Textarea(
         attrs={'type': 'text', 'placeholder': 'Ваш вопрос или сообщение', "class": "form-control display-7",
                "rows": "2"}))
+    captcha = ReCaptchaField()
