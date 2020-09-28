@@ -796,6 +796,10 @@
                                 <div class="user_image">
                                     <img src="{{ review.custom_photo.url }}" alt="" title="">
                                 </div>
+                            {% elif review.account.photo %}
+                                <div class="user_image">
+                                    <img src="{{ review.account.photo.url }}" alt="" title="">
+                                </div>
                             {% endif %}
                         <div class="user_text">
                             <span class="left-top mbr-iconfont fa-quote-left fa"></span>
@@ -805,10 +809,10 @@
                             <div class="user_name mbr-fonts-style mbr-white display-7">
                                 {{ review.custom_user }}
                             </div>
-                            {% if review.custom_city %}
-                            <div class="user_desk mbr-light mbr-fonts-style mbr-white display-4">
-                                {{ review.custom_city }}</div>
-                            {% endif %}
+{#                            {% if review.custom_city %}#}
+{#                            <div class="user_desk mbr-light mbr-fonts-style mbr-white display-4">#}
+{#                                {{ review.custom_city }}</div>#}
+{#                            {% endif %}#}
                         </div>
                     </div>
                     {% endif %}
