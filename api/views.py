@@ -161,6 +161,7 @@ class PaymentReturnUrl(ContextViewMixin):
                     pass  # todo
                 else:
                     if payment.status != payment_info.status:
+                        models.Payment.objects.filter(pk=payment.pk).update(status=payment_info.status)
                         payment.status = payment_info.status
                         if payment_info.status == 'succeeded':
                             payment.date_approve = timezone.now()
@@ -187,6 +188,7 @@ class YandexNotify(ContextViewMixin):
 
         payment_obj = models.Payment.objects.filter(yuid=payment.id).first()
         if payment_obj and payment_obj.status != payment.status:
+            models.Payment.objects.filter(pk=payment_obj.pk).update(status=payment.status)
             payment_obj.status = payment.status
             if payment.status == 'succeeded':
                 payment_obj.date_approve = timezone.now()

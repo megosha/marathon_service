@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+</head>
+<body>
+<table border="0" cellpadding="0" cellspacing="0" style="margin: 0;padding: 0;" width="100%">
+    <tr>
+        <td align="center" valign="top">
+            <table border="0" cellpadding="0" cellspacing="0" style="margin: 0; padding: 0;"
+                   width="650">
+                <tr>
+                    <td height="24"></td>
+                </tr>
+                <tr>
+                    <td width="31">
+                    <td width="588">
+                        <table border="0" cellpadding="0" cellspacing="0" style="margin: 0; padding: 0;" width="100%">
+                            <tr>
+                                <td style="padding: 0; margin: 0;" width="39.285714285714%">
+                                    {% if settings %}
+                                        <a href="{{ site }}" target="_blank" style="text-decoration: none; font-size: 35px; font-weight: bold; color: #000;">
+                                            Марафон <span style="color: #ff513c;">"Движение Вверх"</span>
+                                        </a>
+                                    {% else %}
+                                        <span style="font-size: 35px; font-weight: bold; color: #000;">
+                                            Марафон <span style="color: #ff513c;">"Движение Вверх"</span>
+                                        </span>
+                                    {% endif %}
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td colspan="3" height="25"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="padding: 0; margin: 0; text-align: left; font-size: 24px; font-weight: bold; line-height:50px; color: #000; font-family: Arial, Helvetica, sans-serif;">
+                                 Здравствуйте! Спешим Вам сообщить
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="3" style="font-family: Arial, Helvetica, sans-serif; color: #000; text-decoration: none; font-size: 16px; line-height: 29px;">
+                                    {{ message|safe }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" height="20"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    <table border="0" cellpadding="0" cellspacing="0" width="80px" height="100%" style="width:80px;">
+                                        <tr>
+                                            <td style="border-top: 3px solid #b8b8b8;"></td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" height="20"></td>
+                            </tr>
+                            <tr>
+                                {% if settings %}
+                                    <td colspan="3" style="font-family: Arial, Helvetica, sans-serif; color: #000; text-decoration: none; font-size: 16px; line-height: 29px;">
+                                        <p>Более подробная информация в личном кабинете<br />
+                                            Ссылка для входа в личный кабинет:<br />
+                                            <a href="{{ settings.website }}/login" target="_blank" style="font-weight: bold; color: #000">{{ settings.website }}/login</a>
+                                        </p>
+                                    </td>
+                                {% endif %}
+                            </tr>
+                            <tr>
+                                <td colspan="3" height="30"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="border-top: 3px solid #b8b8b8;"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" height="43"></td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td width="31">
+                </tr>
+                <tr>
+                    <td width="31">
+                    <td width="588">
+                        <table border="0" cellpadding="0" cellspacing="0" style="margin: 0; padding: 0;" width="100%">
+                            <tr>
+                                {% if settings %}
+                                    <td width="333" style="text-align: left;">
+                                        <a href="tel:{{ settings.contact_phone }}" style="font-weight: bold; color: #000; font-size: 18px; text-decoration: none; font-family: Arial, Helvetica, sans-serif;">{{ settings.contact_phone }}</a>
+                                    </td>
+                                    <td width="333" style="text-align: right;">
+                                        <a href="mailto:{{ settings.contact_mail }}" style="font-weight: bold; color: #000; font-size: 18px; text-decoration: none; font-family: Arial, Helvetica, sans-serif;">{{ settings.contact_mail }}</a>
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        </table>
+                    </td>
+                    <td width="31">
+                </tr>
+                <tr>
+                    <td height="52"></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
