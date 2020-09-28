@@ -775,6 +775,10 @@
                                 <div class="user_image">
                                     <img src="{{ review.account.photo.url }}" alt="" title="">
                                 </div>
+                            {% elif review.custom_photo %}
+                                <div class="user_image">
+                                    <img src="{{ review.custom_photo.url }}" alt="" title="">
+                                </div>
                             {% endif %}
                         <div class="user_text">
                             <span class="left-top mbr-iconfont fa-quote-left fa"></span>
@@ -795,10 +799,6 @@
                             {% if review.custom_photo %}
                                 <div class="user_image">
                                     <img src="{{ review.custom_photo.url }}" alt="" title="">
-                                </div>
-                            {% elif review.account.photo %}
-                                <div class="user_image">
-                                    <img src="{{ review.account.photo.url }}" alt="" title="">
                                 </div>
                             {% endif %}
                         <div class="user_text">
