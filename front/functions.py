@@ -23,6 +23,13 @@ def generate_code(length=16):
     bool_range = range(2)
     code = ''.join(map(lambda x: random.choice(NUMBERS) if random.choice(bool_range) else str.upper(
         random.choice(LETTERS)) if random.choice(bool_range) else random.choice(LETTERS), range(length)))
+    # code = '33662345'
+    invalid_code = code.isdigit() or code.isalpha() or code.islower() or code.isupper()
+    if invalid_code:
+        while invalid_code:
+            code = ''.join(map(lambda x: random.choice(NUMBERS) if random.choice(bool_range) else str.upper(
+                random.choice(LETTERS)) if random.choice(bool_range) else random.choice(LETTERS), range(length)))
+            invalid_code = code.isdigit() or code.isalpha() or code.islower() or code.isupper()
     return code
 
 

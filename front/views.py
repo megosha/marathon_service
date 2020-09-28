@@ -140,12 +140,12 @@ class Register(ContextViewMixin):
             firstname = form.cleaned_data.get("firstname")
             lastname = form.cleaned_data.get("lastname")
             phone = form.cleaned_data.get("phone")
-            email = form.cleaned_data.get("email")
+            email = (form.cleaned_data.get("email")).strip().lower()
             ageconfirm = form.cleaned_data.get("ageconfirm")
             if not ageconfirm:
                 form.errors['ageconfirm'] = "Этот флажок должен быть установлен"
             else:
-                user, new = models.User.objects.get_or_create(username=email)
+                user, new = models.User.objects.get_or_create(username__iexact=email)
                 if not new:
                     form.errors['custom'] = f"Пользователь с почтой {email} уже зарегистрирован"
                 else:
@@ -203,7 +203,7 @@ class Login(ContextViewMixin):
     def post(self, request):
         form = forms.Login(request.POST)
         if form.is_valid():
-            username = form.cleaned_data.get("login")
+            username = (form.cleaned_data.get("login")).strip().lower()
             password = form.cleaned_data.get("password")
             user = authenticate(username=username, password=password)
             if user:
@@ -262,8 +262,8 @@ class ResetPassword(ContextViewMixin):
         if request.user.is_authenticated: return HttpResponseRedirect('/me')
         form = forms.ResetPWD(request.POST)
         if form.is_valid():
-            email = form.cleaned_data['email']
-            account = models.Account.objects.filter(user__email=email).first()
+            email = (form.cleaned_data['email']).strip().lower()
+            account = models.Account.objects.filter(user__email__iexact=email).first()
             if not account:
                 form.errors['custom'] = "Пользователь с таким email не найден."
             else:
@@ -280,7 +280,6 @@ class ResetPassword(ContextViewMixin):
                                     "password": password,
                                     "settings": settings}
                     html_message = render_to_string('mail/reset.html', mail_context)
-                    # plain_message = strip_tags(html_message)
                     send_email = functions.sendmail(subject=subject, message=html_message, recipient_list=email)
                     if not send_email:
                         form.errors['custom'] = "Ошибка при сбросе пароля. Повторите попытку позднее."
