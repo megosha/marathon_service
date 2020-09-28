@@ -1,3 +1,4 @@
+{% load custom_tags %}
 <!DOCTYPE html>
 <html  lang="ru">
 <head>
@@ -99,7 +100,7 @@
                         <br>
 
                     <b>ЧТО ДЕЛАТЬ?</b> <br>
-                    Плюнуть на все и плыть по течению, как большинство людей или взять себя в руки и направиться к правильному источнику?! Выбрал второе. Было нелегко, но всё-таки смог!
+                    <span class="mbr-text mbr-regular mbr-fonts-style display-4">Плюнуть на все и плыть по течению, как большинство людей, или взять себя в руки и направиться к правильному источнику?! Выбрал второе. Было нелегко, но всё-таки смог!</span>
                     <br><br><b>СПУСТЯ 15 лет ...</b>
                     <ul class="my-0 mbr-text mbr-regular mbr-fonts-style display-4">
                         <li>Образование и опыт в сферах лидерства, управления, развития, мотивации, семейного консультирования (лучшие школы и учителя России, Зарубежья)</li>
@@ -122,7 +123,7 @@
                     <br>
                     ЗНАЮ СВОЁ ПРЕДНАЗНАЧЕНИЕ: ПОМОЧЬ ЧЕЛОВЕКУ ПОДНЯТЬСЯ НА ТОТ УРОВЕНЬ, О КОТОРОМ ОН И НЕ МЕЧТАЛ.
                         <br><br>
-                    Я практик и реалист. Готов прямо сейчас начать переворачивать Вашу жизнь новыми ощущениями и повысить Ваши показатели в самоопределении, лидерстве, формировании команды, и бонусом, в семейном счастье.
+                        <span class="mbr-text mbr-regular mbr-fonts-style display-4">Я практик и реалист. Готов прямо сейчас начать переворачивать Вашу жизнь новыми ощущениями и повысить Ваши показатели в самоопределении, лидерстве, формировании команды, и, бонусом, в семейном счастье.</span>
                         </span>
                         <span id="full_bio"></span>
                     </p>
@@ -203,7 +204,7 @@
                             <div class="line"></div>
                         </div>
                         <p class="mbr-text mbr-fonts-style display-7">Более
-500 личных консультаций</p>
+1000 личных консультаций</p>
                         
                     </div>
                 </div>
@@ -214,38 +215,40 @@
     </div>
 </section>
 
+{% if settings.main_marathon.promo %}
+<section class="extVideo cid-s9dMobLaeo my-0" id="extVideo2-1q">
+   <div class="container align-center">
+      <div class="row justify-content-md-center">
+            <div class="mbr-white col-md-12 col-12 col-lg-11">
+{#               <div class="box1" style="background-image: url('https://img.youtube.com/vi/{{ settings.main_marathon.promo }}/maxresdefault.jpg'); height: 580px;">#}
+               <div class="box1" style="background-image: url('/assets/images/promo.jpg'); height: 580px;">
+                   <div class="mbr-media show-modal align-center py-2" data-toggle="modal" data-target=".w1">
+                       <div class="icon-wrap">
+                           <span class="mbr-iconfont mobi-mbri-play mobi-mbri"></span>
+                       </div>
+                   </div>
+               </div>
+           </div>
 
-{#<section class="extVideo cid-s9dMobLaeo my-0" id="extVideo2-1q">#}
-{#   <div class="container align-center">#}
-{#      <div class="row justify-content-md-center">#}
-{#            <div class="mbr-white col-md-12 col-12 col-lg-11">#}
-{#               <div class="box1" style="background-image: url('https://img.youtube.com/vi/Xe0n0l80RHk/maxresdefault.jpg'); height: 580px;">#}
-{#                   <div class="mbr-media show-modal align-center py-2" data-toggle="modal" data-target=".w1">#}
-{#                       <div class="icon-wrap">#}
-{#                           <span class="mbr-iconfont mobi-mbri-play mobi-mbri"></span>#}
-{#                       </div>#}
-{#                   </div>#}
-{#               </div>#}
-{#           </div>#}
-{##}
-{#       </div>#}
-{#   </div>#}
-{#   <div>#}
-{#       <div class="modalWindow w1" style="display: none;">#}
-{#           <div class="modalWindow-container">#}
-{#               <div class="modalWindow-video-container">#}
-{#                   <div class="modalWindow-video">#}
-{#                       <iframe width="100%" height="100%" frameborder="0" allowfullscreen="1" data-src="https://www.youtube.com/watch?v=Xe0n0l80RHk"></iframe>#}
-{#                   </div>#}
-{#                   <a class="close" role="button" data-dismiss="modal">#}
-{#                       <span aria-hidden="true" class="mbri-close mbr-iconfont closeModal"></span>#}
-{#                       <span class="sr-only">Close</span>#}
-{#                   </a>#}
-{#               </div>#}
-{#           </div>#}
-{#       </div>#}
-{#   </div>#}
-{#</section>#}
+       </div>
+   </div>
+   <div>
+       <div class="modalWindow w1" style="display: none;">
+           <div class="modalWindow-container">
+               <div class="modalWindow-video-container">
+                   <div class="modalWindow-video">
+                       <iframe width="100%" height="100%" frameborder="0" allowfullscreen="1" data-src="https://www.youtube.com/watch?v={{ settings.main_marathon.promo }}"></iframe>
+                   </div>
+                   <a class="close" role="button" data-dismiss="modal">
+                       <span aria-hidden="true" class="mbri-close mbr-iconfont closeModal"></span>
+                       <span class="sr-only">Close</span>
+                   </a>
+               </div>
+           </div>
+       </div>
+   </div>
+</section>
+{% endif %}
 
 
 {#<section class="content07 cid-s9k3IoNohK mbr-parallax-background" id="content07-2f">#}
@@ -289,7 +292,7 @@
 {#</section>#}
 
 
-<section class="accordion1 cid-rZqao4M7ed" id="accordion02-a">
+<section class="accordion1 cid-rZqao4M7ed mt-0 pt-2" id="accordion02-a">
 
 
 
@@ -336,10 +339,10 @@
                                 <div id="collapse1_22" class="panel-collapse noScroll collapse " role="tabpanel" aria-labelledby="heading1" data-parent="#bootstrap-accordion_02">
                                     <div class="panel-body">
                                         <ul class="mbr-fonts-style panel-text pr-2 display-4 font-weight-bold">
-                                            <li>«Своё» Дело</li>
+                                            <li>«Своё» дело</li>
                                             <li>Диагностика своего предназначения</li>
-                                            <li>Личная Миссия и роль в жизни</li>
-                                            <li>Перезагрузка и Новый старт</li>
+                                            <li>Личная миссия и роль в жизни</li>
+                                            <li>Перезагрузка и новый старт</li>
                                             <li>Разговор со своим будущим</li>
                                             <li>Голос тела</li>
                                         </ul>
@@ -384,7 +387,7 @@
                                         <ul class="mbr-fonts-style panel-text pr-2 display-4 font-weight-bold">
                                             <li>Расчищаем путь к успеху</li>
                                             <li>Препятствия больше не проблема</li>
-                                            <li>Правильные и не правильные действия</li>
+                                            <li>Правильные и неправильные действия</li>
                                             <li>Цель и стратегия твоего успеха</li>
                                             <li>Чистка эфира</li>
                                             <li>Заправка</li>
@@ -470,7 +473,7 @@
                                         <ul class="mbr-fonts-style panel-text pr-2 display-4 font-weight-bold">
                                             <li>Как пройти кризисы</li>
                                             <li>Вернуть страсть</li>
-                                            <li>В чем Защита отношений</li>
+                                            <li>В чем защита отношений</li>
                                             <li>Интересные лайфхаки</li>
                                         </ul>
 {#                                        <p class="mbr-fonts-style panel-text pr-2 display-4"></p>#}
@@ -742,7 +745,7 @@
                 <h4 class="mbr-section-title mbr-bold mbr-white mbr-fonts-style display-2">Стоимость {% if settings.fake_cost %}<b class="old-price">{{ settings.fake_cost }}₽</b>{% endif %} <span>{{ settings.main_marathon.cost }}₽</span></h4>
             {% endif %}
             <div class="mbr-section-btn align-center align-self-center">
-                <a class="btn btn-sm btn-success display-4" href="/register">Участвовать в марафоне</a></div>
+                <a class="btn btn-sm btn-success display-4" href="/register">Участвовать</a></div>
 
         </div>
 
@@ -781,10 +784,10 @@
                             <div class="user_name mbr-fonts-style mbr-white display-7">
                                 {{ review.account.user.first_name }}
                             </div>
-                            {% if review.account.city %}
-                            <div class="user_desk mbr-light mbr-fonts-style mbr-white display-4">
-                                {{ review.account.city }}</div>
-                            {% endif %}
+{#                            {% if review.account.city %}#}
+{#                            <div class="user_desk mbr-light mbr-fonts-style mbr-white display-4">#}
+{#                                {{ review.account.city }}</div>#}
+{#                            {% endif %}#}
                         </div>
                     </div>
                     {% else %}
@@ -829,16 +832,15 @@
     </div>
 </section>
 
+{% if settings.main_marathon.date_start >= current_date %}
 <section class="content02 cid-s8Rk8bH0Nl" id="content02-h">
-
-    
 
     
     <div class="container">
         <div class="row">
             <div class="card col-12 col-md-12">
                 <div class="wrapper align-left">
-                    <h4 class="mbr-section-subtitle pb-1 align-left mbr-regular mbr-fonts-style display-5">СТАРТ 1 ОКТЯБРЯ</h4>
+                    <h4 class="mbr-section-subtitle pb-1 align-left mbr-regular mbr-fonts-style display-5">СТАРТ {{ settings.main_marathon.date_start }}</h4>
                     <h3 class="mbr-section-title mbr-bold align-left mbr-fonts-style display-2"><span>ДО НАЧАЛА</span>&nbsp;<span>МАРАФОНА</span>&nbsp</h3>
                     
                     
@@ -848,6 +850,7 @@
         </div>
     </div>
 </section>
+
 
 <section class="extCountdown cid-s8RiXIrv1F" id="extCountdown4-f">
     
@@ -864,10 +867,12 @@
         <div class="hoursCountdown col-xs-3 col-sm-3 col-md-3" title="Час."></div> 
         <div class="minutesCountdown col-xs-3 col-sm-3 col-md-3" title="Мин."></div> 
         <div class="secondsCountdown col-xs-3 col-sm-3 col-md-3" title="Сек."></div>
-        <div class="countdown pt-5 mt-2" data-due-date="2020/10/1 19:00">
+{#        <div class="countdown pt-5 mt-2" data-due-date="2020/10/1 19:00">#}
+        <div class="countdown pt-5 mt-2" data-due-date="{{ settings.main_marathon.date_start|date:'Y/m/d H:i' }}">
         </div>
     </div>
 </section>
+{% endif %}
 
 <section class="accordion1 cid-rZqao4M7ed" id="accordion01-a">
 
@@ -941,7 +946,7 @@
                                 </div>
                                 <div id="collapse4_12" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingFour" data-parent="#bootstrap-accordion_12">
                                     <div class="panel-body">
-                                        <p class="mbr-fonts-style panel-text pr-2 display-4">По любому вопросу Вам помогут модераторы тренинга. Напишите свой вопрос в чат марафона и мы поможем найти решение.<br></p>
+                                        <p class="mbr-fonts-style panel-text pr-2 display-4">По любому вопросу Вам помогут модераторы тренинга. Напишите свой вопрос <a href="/#feedback-label">в форму обратной связи</a> и мы поможем найти решение.<br></p>
                                     </div>
                                 </div>
                             </div>
@@ -972,7 +977,7 @@
                                 <div id="collapse7_12" class="panel-collapse noScroll collapse " role="tabpanel" aria-labelledby="headingOne" data-parent="#bootstrap-accordion_12">
                                     <div class="panel-body">
                                         <p class="mbr-fonts-style panel-text pr-2 display-4">
-                                            В день вебинара мы пришлём Вам напоминание и ссылку с доступом.</p>
+                                            В день вебинара мы пришлём Вам напоминание на указанный при регистрации email.</p>
                                     </div>
                                 </div>
                             </div>
@@ -1026,7 +1031,7 @@
                                 <div id="collapse11_12" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingFive" data-parent="#bootstrap-accordion_12">
                                     <div class="panel-body">
                                         <p class="mbr-fonts-style panel-text pr-2 display-4">
-                                            Обратная связь на нашем курсе - это возможность задавать вопросы по курсу кураторам либо Артёму лично. Обратная связь – это урок «День вопросов», который проходит по воскресеньям. Вы задаете письменно вопросы в комментариях к уроку, или в чат службы поддержки на самом сайте ответ можно ожидать в течение нескольких дней. Если вам нужна личная консультация Артёма то вопросы задаются в whatsapp также по воскресеньям с 8 до 20:00. Там же он присылает Вам ответ.</p>
+                                            Обратная связь на нашем курсе - это возможность задавать вопросы по курсу кураторам либо Артёму лично. Обратная связь – это урок «День вопросов», который проходит по воскресеньям. Вы задаете письменно вопросы <a href="/#feedback-label">в форме обратной связи</a> на самом сайте. Ответ можно ожидать в течение нескольких дней. Если вам нужна личная консультация Артёма то вопросы задаются в <a href="/#map02-d" data-toggle="tooltip" data-placement="top" title='Доступен в разделе "Контакты" только для участников марафона'>whatsapp <span class="fa fa-awesome fa-question-circle-o"></span></a> также по воскресеньям с 8 до 20:00. Там же он присылает Вам ответ.</p>
                                     </div>
                                 </div>
                             </div>
@@ -1129,7 +1134,7 @@
                             </a>
                         </div>
                     {% endif %}
-                    {% if settings.soc_wa and user is not None %}
+                    {% if settings.soc_wa and user is not None and user.account.payment_set.last.date_approve|deltatime:'62' >= current_date %}
                         <div class="soc-item">
                             <a href="{{ settings.soc_wa }}" target="_blank">
                                 <div class="mbr-iconfont mbr-iconfont-social socicon-whatsapp socicon" style="color: rgb(255, 255, 255); fill: rgb(255, 255, 255);" media-simple="true"></div>

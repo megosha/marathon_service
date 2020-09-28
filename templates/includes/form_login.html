@@ -33,7 +33,14 @@
 <form action="" method="POST" class="mbr-form form-with-styler" data-form-title="Mobirise Form"><input type="hidden" name="email" data-form-email="true" value="SWwCdaILHwl1DJ2p2WRRV5TYZX0VJgKWN/aJNyCu2s0T+usiO0hxrXsZwP/2fR5gsIMEtdz/ZKMgBewbNCtC/CUnl5kdSbR0H0I/DEoZ+jsauOd9sW1K/JY3+Of+FYer">
 {% csrf_token %}
     <div class="form-row">
-<div hidden="hidden" data-form-alert="" class="alert alert-success col-12"></div>
+{#<div hidden="hidden" data-form-alert="" class="alert alert-success col-12"></div>#}
+{% if registry %}
+{#        <div class="alert alert-success col-12 rounded p-1 m-0">#}
+        <div class="alert col-12 rounded p-1 m-0">
+            <span class="mbr-fonts-style text-light p-1 display-5"><span class="text-primary">Внимание!</span> {{ registry|safe }}</span>
+            <p class="mbr-fonts-style text-light p-1 mb-4 display-4">* если письмо не пришло в течении 20 минут, проверьте папку "Спам".</p>
+        </div>
+{% endif %}
 {#<div hidden="hidden" data-form-alert-danger="" class="alert alert-danger col-12">#}
     {% if form.errors.custom %}
         <div class="alert alert-warning col-12 rounded p-0 m-0">
@@ -43,7 +50,7 @@
 </div>
 <div class="dragArea form-row">
 <div class="col-md-12">
-<h4 class="mbr-fonts-style mb-4 mbr-fonts-style display-5">{% if registry %}{{ registry }}{% else %}Для входа, введите Ваш логин и пароль и нажмите "Войти"{% endif %}</h4>
+<h4 class="mbr-fonts-style mb-4 mbr-fonts-style display-5">{% if not registry %}Для входа, введите Ваш логин и пароль и нажмите "Войти"{% endif %}</h4>
 </div>
 <div class="col-md-12 form-group" data-for="login">
     {{ form.login }}

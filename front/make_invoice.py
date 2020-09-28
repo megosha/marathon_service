@@ -51,7 +51,7 @@ def create_pdf(payment):
     pdf.cell(45)
     pdf.cell(0, 5, f'{payment.account.user.last_name} {payment.account.user.first_name}', ln=1)
     pdf.cell(10)
-    pdf.cell(pdf.w / 2.5, 5, f'Номер заказа: {payment.uuid}')
+    pdf.cell(pdf.w / 2.5, 5, f'Идентификатор заказа: {payment.uuid}')
     pdf.cell(45)
     pdf.cell(0, 5, f'{payment.account.phone}', ln=1)
     pdf.cell(10)

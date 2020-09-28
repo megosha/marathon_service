@@ -4,7 +4,7 @@ import random
 import environ
 from os import path
 
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMultiAlternatives
 from django.conf import settings
 
 
@@ -26,18 +26,42 @@ def generate_code(length=16):
     return code
 
 
-def sendmail(subject, message, recipient_list, from_email=None, fail_silently=False, html_message=None):
-    if from_email is None:
-        from_email = env('FROM_EMAIL')
+def send_email(email: str or list, subject: str, body: str = None, from_email=None, attach: list = None):
+    if type(email) == str:
+        email = [email]
+    if type(attach) == str:
+        attach = [attach]
+    mail = EmailMultiAlternatives(subject, body, from_email, email)
+    mail.content_subtype = "html"
+    if attach:
+        for file in attach:
+            if isinstance(file, str):
+                try:
+                    mail.attach_file(path.join(settings.MEDIA_ROOT, 'invoice', file))
+                except Exception as e:
+                    print(e)
+                    pass
     try:
-        send_mail(subject=subject, message=message, from_email=from_email,
-                  recipient_list=recipient_list, fail_silently=fail_silently, html_message=html_message)
-    except Exception as err:
-        # todo Logging
-        print(err)
+        mail.send(fail_silently=False)
+    except Exception as ex:
+        print(ex)
         return False
     else:
         return True
+
+def sendmail(subject, message, recipient_list, from_email=None, attach=None):
+    if from_email is None:
+        from_email = env('FROM_EMAIL')
+    return send_email(recipient_list, subject, message, from_email, attach)
+    # try:
+    #     send_mail(subject=subject, message=message, from_email=from_email,
+    #               recipient_list=recipient_list, fail_silently=fail_silently, html_message=html_message)
+    # except Exception as err:
+    #     # todo Logging
+    #     print(err)
+    #     return False
+    # else:
+    #     return True
 
 
 

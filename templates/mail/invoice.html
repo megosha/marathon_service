@@ -1,3 +1,4 @@
+{% load custom_tags %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -38,15 +39,16 @@
                                 <td colspan="3" height="25"></td>
                             </tr>
                             <tr>
-                                <td colspan="3" style="padding: 0; margin: 0; text-align: left; font-size: 24px; font-weight: bold; line-height:50px; color: #000; font-family: Arial, Helvetica, sans-serif;">Здравствуйте!</td>
+                                <td colspan="3" style="padding: 0; margin: 0; text-align: left; font-size: 24px; font-weight: bold; line-height:50px; color: #000; font-family: Arial, Helvetica, sans-serif;">
+                                 Квитанция
+                                </td>
                             </tr>
 
                             <tr>
                                 <td colspan="3" style="font-family: Arial, Helvetica, sans-serif; color: #000; text-decoration: none; font-size: 16px; line-height: 29px;">
-                                    <p>Вы удалили аккаунт в личном кабинете марафона "Движение Вверх"</p>
-
-{#                                    <p style="font-weight: bold;">Для входа в личный кабинет используйте следующие данные:</p>#}
-
+                                    <p>Вы приобрели подписку на марафон "{{ payment.marathon.title }}"</p>
+                                    <p>Сумма: ₽{{ payment.amount }}.00</p>
+                                    <p>Статус: {{ payment|full_status }}</p>
                                 </td>
                             </tr>
                             <tr>
@@ -67,8 +69,10 @@
                             <tr>
                                 {% if settings %}
                                     <td colspan="3" style="font-family: Arial, Helvetica, sans-serif; color: #000; text-decoration: none; font-size: 16px; line-height: 29px;">
-                                            С уважением, администрация сайта
-                                            <a href="{{ settings.website }}" target="_blank" style="font-weight: bold; color: #000">{{ settings.website }}</a>
+                                        <p>Более подробная информация в личном кабинете<br />
+                                            Ссылка для входа в личный кабинет:<br />
+                                            <a href="{{ settings.website }}/login" target="_blank" style="font-weight: bold; color: #000">{{ settings.website }}/login</a>
+                                        </p>
                                     </td>
                                 {% endif %}
                             </tr>

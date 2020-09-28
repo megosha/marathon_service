@@ -11,7 +11,8 @@ from django.conf import settings
 from django.template.loader import get_template
 from django.utils import timezone
 
-from front import models
+
+from front import models, functions
 from front.views import ContextViewMixin
 
 
@@ -39,8 +40,6 @@ except:
     yandex_api_key = env('YANDEX_API_KEY')
     shopid = env('SHOPID')
     return_url = env('RETURN_URL')
-
-
 
 
 class YandexPayment(LoginRequiredMixin, ContextViewMixin):
@@ -133,6 +132,7 @@ class YandexPayment(LoginRequiredMixin, ContextViewMixin):
             return HttpResponseRedirect(f'/api/payment/widget/{idempotence_key}')
         return HttpResponseRedirect(f'/me')
 
+
 class WidgetRender(LoginRequiredMixin, ContextViewMixin):
     def get(self, request, uuid):
         try:
@@ -164,7 +164,7 @@ class PaymentReturnUrl(ContextViewMixin):
                         payment.status = payment_info.status
                         if payment_info.status == 'succeeded':
                             payment.date_approve = timezone.now()
-                        payment.save()
+                        payment.save() #TODO UNCOMMENT and makemigrations
                     # content = f"Статус платежа {payment.lesson.marathon.title}, тема №{payment.lesson.number}: {payment.status}"
         form_html = get_template('includes/payment_info.html').render(context={'payment': payment},
                                                                         request=request)

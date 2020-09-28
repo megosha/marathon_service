@@ -51,6 +51,7 @@ def get_invoice(request, filename):
 class ContextViewMixin(View):
     def make_context(self, context=None, **kwargs):
         if not context: context = {}
+        context['current_date'] = timezone.now()
         if self.request.user.is_authenticated and models.Account.objects.filter(user=self.request.user).exists():
             context['user'] = self.request.user
         else:
@@ -151,13 +152,10 @@ class Register(ContextViewMixin):
                     password = functions.generate_code(length=8)
                     user.set_password(password)
                     user.save()
-                    # # todo вынести привязку привязку марафона в оплату темы марафона
-                    # marathone = models.Marathon.objects.filter().first()
                     account = models.Account.objects.create(user=user, phone=phone)
 
                     created = models.Account.objects.filter(user=user, phone=phone).exists()
                     if created:
-                        # account.marathone.add(marathone)
                         subject = 'Регистрация на платформе марафона "Движение Вверх"'
                         settings = models.Setting.objects.filter().first()
                         mail_context = {"login": email,
@@ -165,16 +163,15 @@ class Register(ContextViewMixin):
                                         "settings": settings,
                                         "account": account}
                         html_message = render_to_string('mail/registration.html', mail_context)
-                        plain_message = strip_tags(html_message)
-                        send_email = functions.sendmail(subject=subject, message=plain_message, recipient_list=[email],
-                                                        html_message=html_message)
+                        # plain_message = strip_tags(html_message)
+                        send_email = functions.sendmail(subject=subject, message=html_message, recipient_list=[email])
                         if not send_email:
                             account.registry_sent = False
                             account.save()
                         else:
                             account.registry_sent = True
                             account.save()
-                            request.session['registry'] = f'Данные для входа в личный кабинет отправлены на {email}'
+                            request.session['registry'] = f'Данные для входа в личный кабинет отправлены на <span class="text-primary">{email}</span>'
                             return HttpResponseRedirect('/login')
                     else:
                         user.delete()
@@ -232,10 +229,9 @@ class RemoveAccount(LoginRequiredMixin, ContextViewMixin):
             mail_context = {"login": self.request.user.email,
                             "settings": settings}
             html_message = render_to_string('mail/remove.html', mail_context)
-            plain_message = strip_tags(html_message)
-            send_email = functions.sendmail(subject=subject, message=plain_message,
-                                            recipient_list=[self.request.user.email],
-                                            html_message=html_message)
+            # plain_message = strip_tags(html_message)
+            send_email = functions.sendmail(subject=subject, message=html_message,
+                                            recipient_list=[self.request.user.email])
             if not send_email:
                 return JsonResponse({'sendmail': send_email})
                 # todo писать в таблицу ошибок или логов
@@ -281,9 +277,8 @@ class ResetPassword(ContextViewMixin):
                                     "password": password,
                                     "settings": settings}
                     html_message = render_to_string('mail/reset.html', mail_context)
-                    plain_message = strip_tags(html_message)
-                    send_email = functions.sendmail(subject=subject, message=plain_message, recipient_list=[email],
-                                                    html_message=html_message)
+                    # plain_message = strip_tags(html_message)
+                    send_email = functions.sendmail(subject=subject, message=html_message, recipient_list=email)
                     if not send_email:
                         form.errors['custom'] = "Ошибка при сбросе пароля. Повторите попытку позднее."
                         # todo писать в таблицу ошибок или логов
@@ -338,9 +333,8 @@ class Account(LoginRequiredMixin, ContextViewMixin):
 
         else:
             lessons = []
-        current_date = timezone.now()
-        context = self.make_context(context=context, marathon=marathon, marathones=marathones, lessons=lessons,
-                                    current_date=current_date)
+        # current_date = timezone.now()
+        context = self.make_context(context=context, marathon=marathon, marathones=marathones, lessons=lessons)
         return render(request, 'account_ready.html', context=context)
 
     # def post(self, request):

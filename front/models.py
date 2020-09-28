@@ -3,11 +3,14 @@ from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime
 from django.conf import settings
+from django.template.loader import render_to_string
 from django.utils import timezone
+from django.utils.html import strip_tags
 from django.utils.safestring import mark_safe
 
 from os import path
 from front.make_invoice import create_pdf
+from front.functions import sendmail
 
 
 # Create your models here.
@@ -136,6 +139,7 @@ class Video(models.Model):
     # video = models.FileField(null=True, blank=True, verbose_name="Видеофйал")
 
     class Meta:
+        ordering = ["number"]
         unique_together = ('number', 'lesson')
         verbose_name = "Видео"
         verbose_name_plural = "Видео"
@@ -147,7 +151,7 @@ class Video(models.Model):
 class Payment(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4(), blank=True, primary_key=True, verbose_name="Идентификатор платежа в системе / Ключ идемпотентности")
     amount = models.PositiveIntegerField(default=0, verbose_name="Сумма платежа")
-    account = models.ForeignKey(Account, blank=False, null=False, on_delete=models.DO_NOTHING, verbose_name="Аккаунт")
+    account = models.ForeignKey(Account, blank=True, null=True, on_delete=models.SET_NULL, verbose_name="Аккаунт")
     # lesson = models.ForeignKey(Lesson, blank=False, null=False, on_delete=models.DO_NOTHING, verbose_name="Тема/Вебинар")
     marathon = models.ForeignKey(Marathon, default=None, blank=False, null=False, on_delete=models.DO_NOTHING, verbose_name="Марафон")
     date_pay = models.DateTimeField(auto_now=True, blank=False, null=False, verbose_name="Дата оплаты")
@@ -158,7 +162,7 @@ class Payment(models.Model):
     confirmation_token = models.CharField(max_length=250, blank=True, null=True, verbose_name="confirmation_token")
     invoice = models.CharField(max_length=250, blank=True, null=True, verbose_name="Квитанция")
     status = models.CharField(max_length=250, blank=True, null=True, verbose_name="Статус платежа в ЯК")
-    # status_mail_invoice = models.BooleanField(default=None, blank=True, null=True, verbose_name="Квитанция отправлена отправлена")
+    status_mail_invoice = models.BooleanField(default=None, blank=True, null=True, verbose_name="Квитанция отправлена")
     status_mail_lesson = models.BooleanField(default=None, blank=True, null=True, verbose_name="Напоминание в день урока отправлено")
 
     class Meta:
@@ -170,8 +174,19 @@ class Payment(models.Model):
         return f"account.pk: {self.account.pk} -  №{self.pk}"
 
     def save(self, *args, **kwargs):
-        if not self.invoice and self.status == 'succeeded':
-            self.invoice = create_pdf(self)
+        if self.status == 'succeeded':
+            if not self.invoice:
+                self.invoice = create_pdf(self)
+            if not self.status_mail_invoice:
+                sett = Setting.objects.filter().first()
+                mail_context = {"settings": sett, 'payment':self}
+                html_message = render_to_string('mail/invoice.html', mail_context)
+                send_email = sendmail(subject=f'Оплата подписки на марафон "{self.marathon.title}"',
+                                                recipient_list=[self.account.user.email],
+                                                message=html_message, attach=f'{uuid}.pdf')
+                self.status_mail_invoice = send_email
+        # if not self.invoice and self.status == 'succeeded':
+        #     self.invoice = create_pdf(self)
         super(Payment, self).save(*args, **kwargs)
 
     def icon_tag(self):

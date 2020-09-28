@@ -92,12 +92,12 @@
                 {% else %}
                     <p class="mbr-fonts-style panel-text pr-2 display-5"><strong>Стоимость марафона {{ marathon.cost }}₽</strong></p>
                 {% endif %}
-                <p class="mbr-fonts-style display-4 text-muted">Внимание! Если Вы уже оплатили марафон, но доступ к нему не появился, <b><a href="/#accordion01-a" class="text-primary">обратитесь к ответам на наиболее частые вопросы на главной странице сайта</a>.</b></p>
+                <p class="mbr-fonts-style display-4 text-muted px-3">Внимание! Если Вы уже оплатили марафон, но доступ к нему не появился, <b><a href="/#accordion01-a" class="text-primary">обратитесь к ответам на наиболее частые вопросы на главной странице сайта</a>.</b></p>
 
-{#                        <form method="POST" action="/api/payment/{{ marathon.pk }}"> {% csrf_token %}#}
-{#                            <div class="mbr-section-btn align-center align-self-center">#}
-{#                                <button class="btn btn-lg btn-primary display-4" type="submit" style="border-radius: 100px">Получить марафон за {{ marathon.cost }}₽</button></div>#}
-{#                        </form>#}
+                        <form method="POST" action="/api/payment/{{ marathon.pk }}"> {% csrf_token %}
+                            <div class="mbr-section-btn align-center align-self-center">
+                                <button class="btn btn-lg btn-primary display-4" type="submit" style="border-radius: 100px">Получить марафон за {{ marathon.cost }}₽</button></div>
+                        </form>
             {% else %}
                 <div class="col-12 col-md-12 ">
                     <span class="mbr-section-subtitle pt-2 align-left mbr-light mbr-fonts-style display-4 text-muted">Здесь находятся все вебинары марафона. Сроки выхода вебинаров могут быть изменены. Вы будете проинформированы о выходе вебинара предварительно за день.</span>
@@ -132,7 +132,9 @@
                                         {% endif %}"
                                        data-toggle="collapse" data-core="" href="#collapse{{ lesson.number }}_26" aria-expanded="false" aria-controls="collaps{{ lesson.number }}">
                                         <h4 class="mbr-fonts-style display-7"><span class="toggle-icon inactive sign mbr-iconfont"></span>
-                                            <span class="text-primary display-5">Тема №{{ lesson.number }}. </span>{{ lesson.title }}. Дата выхода: {{ lesson.date_publish|date:"d.m.Y" }}</h4>
+                                            <span class="text-primary display-5">Тема №{{ lesson.number }}. </span>
+                                            {{ lesson.title }}.
+                                            {% if lesson.date_publish > current_date %}Дата выхода: {{ lesson.date_publish|date:"d.m.Y" }} {% endif %}</h4>
                                     </a>
 
                                 </div>
@@ -150,8 +152,10 @@
                                                         <div class="row justify-content-md-center">
                                                             {% for video in lesson.video_set.all %}
                                                             <div class="mbr-white col-md-12 col-12 col-lg-6">
-                                                                <p class="mbr-fonts-style panel-text pr-2 display-4">{{ video.description }}</p>
-                                                                <div class="box1" style="background-image: url('https://img.youtube.com/vi/{{ video.link }}/maxresdefault.jpg');">
+                                                                {% if video.description %}<p class="mbr-fonts-style panel-text pr-2 display-4">{{ video.description }}</p>
+                                                                {% else %}<p class="mbr-fonts-style panel-text pr-2 display-4">&nbsp;</p>{% endif %}
+{#                                                                <div class="box1" style="background-image: url('https://img.youtube.com/vi/{{ video.link }}/maxresdefault.jpg');">#}
+                                                                <div class="box1" style="background-image: url('/assets/images/online-3412498_1920.jpg');">
                                                                     <div class="mbr-media show-modal align-center py-2" data-toggle="modal" data-target=".w{{ video.number }}">
                                                                         <div class="icon-wrap">
                                                                             <span class="mobi-mbri-play mobi-mbri"></span>
