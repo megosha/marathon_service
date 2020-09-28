@@ -56,7 +56,7 @@ class VideoAdmin(admin.ModelAdmin):
     readonly_fields = ['date_create']
 
 class PaymentAdmin(admin.ModelAdmin):
-    list_display = ['date_pay', 'uuid', 'status', 'account', 'marathon']
+    list_display = ['date_pay', 'uuid', 'status', 'account', 'marathon', 'status_mail_invoice', 'status_mail_lesson']
     list_display_links = ['date_pay', 'uuid']
     list_filter = ['date_pay', 'status', 'marathon', 'account']
     search_fields = ['account', 'marathon', 'status']
