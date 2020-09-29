@@ -844,7 +844,8 @@
         <div class="row">
             <div class="card col-12 col-md-12">
                 <div class="wrapper align-left">
-                    <h4 class="mbr-section-subtitle pb-1 align-left mbr-regular mbr-fonts-style display-5">СТАРТ {{ settings.main_marathon.date_start }}</h4>
+{#                    <h4 class="mbr-section-subtitle pb-1 align-left mbr-regular mbr-fonts-style display-5">СТАРТ {{ settings.main_marathon.date_start }}</h4>#}
+                    <h4 class="mbr-section-subtitle pb-1 align-left mbr-regular mbr-fonts-style display-5">СТАРТ {{ settings.main_marathon.date_start|date:"d E H:i e"|upper }}</h4>
                     <h3 class="mbr-section-title mbr-bold align-left mbr-fonts-style display-2"><span>ДО НАЧАЛА</span>&nbsp;<span>МАРАФОНА</span>&nbsp</h3>
                     
                     
@@ -925,7 +926,7 @@
                                 <div id="collapse2_12" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingTwo" data-parent="#bootstrap-accordion_12">
                                     <div class="panel-body">
                                         <p class="mbr-fonts-style panel-text pr-2 display-4">
-                                            Все вебинары начинаются в 19:00 по МСК. Вебинар каждые пять дней.</p>
+                                            Все вебинары начинаются в 16:00 по МСК. Вебинар каждые пять дней.</p>
                                     </div>
                                 </div>
                             </div>
