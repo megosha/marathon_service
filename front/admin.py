@@ -20,7 +20,7 @@ class SettingAdmin(admin.ModelAdmin):
 class AccountAdmin(admin.ModelAdmin):
     list_display = ['user', 'phone', 'approved', 'registry_sent', 'date_registry', 'description']
     list_display_links = ['user']
-    list_filter = ['date_registry']
+    list_filter = ['date_registry', 'approved', 'registry_sent']
     search_fields = ['user', 'phone', 'description']
     readonly_fields = ['date_registry']
 
@@ -56,7 +56,7 @@ class VideoAdmin(admin.ModelAdmin):
     readonly_fields = ['date_create']
 
 class PaymentAdmin(admin.ModelAdmin):
-    list_display = ['date_pay', 'uuid', 'status', 'account', 'marathon', 'status_mail_invoice', 'status_mail_lesson']
+    list_display = ['date_pay', 'uuid', 'status', 'account', 'marathon', 'status_mail_invoice']
     list_display_links = ['date_pay', 'uuid']
     list_filter = ['date_pay', 'status', 'marathon', 'status_mail_invoice',]
     search_fields = ['account', 'marathon', 'status']

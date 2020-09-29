@@ -102,11 +102,13 @@
                 <div class="col-12 col-md-12 ">
                     <span class="mbr-section-subtitle pt-2 align-left mbr-light mbr-fonts-style display-4 text-muted">Здесь находятся все вебинары марафона. Сроки выхода вебинаров могут быть изменены. Вы будете проинформированы о выходе вебинара предварительно за день.</span>
                     <p class="mbr-light mbr-fonts-style display-4 text-small text-muted mt-2">
+                        <span class="fa fa-awesome fa-info-circle text-primary"></span>
                         Статус платежа: "{{ payment_valid|full_status }}"
 
-                <br>{% if payment_valid.date_approve|deltatime:'62' is not None %}Срок подписки истекает: {{ payment_valid.date_approve|deltatime:'62'|date:"d.m.Y" }}{% endif %}
+                {% if payment_valid.status == "succeeded" %}
+                        <br><span class="fa fa-awesome fa-calendar-times-o text-primary"></span> {% if payment_valid.date_approve|deltatime:'62' is not None %}Срок подписки истекает: {{ payment_valid.date_approve|deltatime:'62'|date:"d.m.Y" }}{% endif %}
                         <br><a href="/get_invoice/{{ payment_valid.uuid }}" target="_blank"><span class="fa fa-awesome fa-download"></span>  Скачать квитанцию</a>
-
+                {% endif %}
                 </p>
                 </div>
             {% endif %}
