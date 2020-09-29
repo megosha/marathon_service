@@ -165,7 +165,7 @@ class PaymentReturnUrl(ContextViewMixin):
                         payment.status = payment_info.status
                         if payment_info.status == 'succeeded':
                             payment.date_approve = timezone.now()
-                        payment.save() #TODO UNCOMMENT and makemigrations
+                        payment.save()
                     # content = f"Статус платежа {payment.lesson.marathon.title}, тема №{payment.lesson.number}: {payment.status}"
         form_html = get_template('includes/payment_info.html').render(context={'payment': payment},
                                                                         request=request)

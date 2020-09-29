@@ -15,6 +15,16 @@ from front.functions import sendmail
 
 # Create your models here.
 
+# statuses = {'pending': 'Платёж создан (в обработке)',
+#             'waiting_for_capture': 'Платёж оплачен, деньги авторизованы и ожидают списания',
+#             'succeeded': 'Платёж успешно завершён',
+#              'canceled': 'Платёж отменён'}
+statuses = ((1, 'pending'),
+            (2, 'waiting_for_capture'),
+            (3, 'canceled'),
+            (4, 'succeeded'),
+            )
+
 def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/<marathon.name>/<lesson.number.*>
     try:
