@@ -145,13 +145,16 @@ class Register(ContextViewMixin):
             if not ageconfirm:
                 form.errors['ageconfirm'] = "Этот флажок должен быть установлен"
             else:
-                user, new = models.User.objects.get_or_create(username__iexact=email)
-                if not new:
+                # user, new = models.User.objects.get_or_create(username__iexact=email)
+                user_exists = models.User.objects.filter(username__iexact=email).exists()
+                if user_exists:
                     form.errors['custom'] = f"Пользователь с почтой {email} уже зарегистрирован"
                 else:
-                    user.first_name = firstname
-                    user.last_name = lastname
-                    user.email = email
+                    user = models.User.objects.create(username=email,
+                                                      first_name=firstname,
+                                                      last_name=lastname,
+                                                      email=email
+                                                      )
                     password = functions.generate_code(length=8)
                     user.set_password(password)
                     user.save()

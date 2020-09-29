@@ -8,6 +8,7 @@ from front import models
 from front.functions import sendmail
 
 
+
 def news():
     emails = list(models.Account.objects.all().exclude(user__username='mv').values_list('user__email', flat=True))
     subject = 'Новости марафона "Движение Вверх"'
@@ -20,3 +21,11 @@ def news():
         send_email = sendmail(subject=subject, message=html_message, recipient_list=emails)
     except:
         pass
+
+def tolower():
+    users = models.User.objects.all().exclude(is_superuser=True)
+    for user in users:
+        lower_data = (user.email).strip().lower()
+        user.email = lower_data
+        user.username = lower_data
+        user.save()
