@@ -49,6 +49,18 @@ def get_invoice(request, filename):
     return HttpResponseNotFound()
 
 
+@login_required
+def get_hometask(request, marathon_pk, lesson_number):
+    try:
+        lesson = models.Lesson.objects.filter(marathon__pk=marathon_pk, number=lesson_number).first()
+        hometask_file = lesson.hometask_file.file.name
+    except:
+        return HttpResponseNotFound()
+    else:
+        if path.isfile(hometask_file):
+            return serve(request, f"{hometask_file}", '/')
+        return HttpResponseNotFound()
+
 class ContextViewMixin(View):
     def make_context(self, context=None, **kwargs):
         if not context: context = {}

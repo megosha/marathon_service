@@ -15,6 +15,13 @@ from front.functions import sendmail
 
 # Create your models here.
 
+def user_directory_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/<marathon.name>/<lesson.number.*>
+    try:
+        return f'hometasks/{instance.marathon.pk}/{instance.number}.{filename[filename.rfind(".") + 1:]}'
+    except:
+        return f'hometasks/{instance.marathon.pk}/{instance.number}.{filename}'
+
 
 class UpperSetting(models.Model):
     endpoint = models.CharField(max_length=250, blank=True, null=True, verbose_name="Адрес API к сервису")
@@ -70,7 +77,7 @@ class Account(models.Model):
     description = models.TextField(verbose_name="Комментарий", default=None, blank=True, null=True)
     photo = models.FileField(upload_to='images/avatars/', blank=True, verbose_name="Аватар")
     city = models.CharField(max_length=100, blank=True, null=True, verbose_name="Город")
-    marathone = models.ManyToManyField('Marathon', blank=True, verbose_name="Марафоны")
+    # marathone = models.ManyToManyField('Marathon', blank=True, verbose_name="Марафоны")
 
     class Meta:
         verbose_name = "Аккаунт"
@@ -115,6 +122,8 @@ class Lesson(models.Model):
     title = models.CharField(max_length=250, blank=False, null=False, verbose_name="Название темы/вебинара")
     free = models.BooleanField(default=False, verbose_name="Тема доступна без покупки марафона")
     description = models.TextField(default=None, blank=True, null=True, verbose_name="Комментарий к теме/вебинару")
+    hometask = models.TextField(default=None, blank=True, null=True, verbose_name="Домашнее задание по теме/вебинару")
+    hometask_file = models.FileField(upload_to=user_directory_path, null=True, blank=True, verbose_name="Файл Домашнего задания по теме/вебинару")
     # cost = models.PositiveIntegerField(default=0, verbose_name="Стоимость темы (в рублях)")
     date_create = models.DateTimeField(auto_now=True, verbose_name="Дата создания")
     date_publish = models.DateTimeField(default=timezone.now, blank=True, null=True, verbose_name="Дата публикации")
@@ -163,7 +172,7 @@ class Payment(models.Model):
     invoice = models.CharField(max_length=250, blank=True, null=True, verbose_name="Квитанция")
     status = models.CharField(max_length=250, blank=True, null=True, verbose_name="Статус платежа в ЯК")
     status_mail_invoice = models.BooleanField(default=None, blank=True, null=True, verbose_name="Квитанция отправлена")
-    status_mail_lesson = models.BooleanField(default=None, blank=True, null=True, verbose_name="Напоминание в день урока отправлено")
+    # status_mail_lesson = models.BooleanField(default=None, blank=True, null=True, verbose_name="Напоминание в день урока отправлено")
 
     class Meta:
         # unique_together = ('account', 'lesson') - #TODO по истечении двух месяцев повторный платеж

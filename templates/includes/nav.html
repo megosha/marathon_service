@@ -48,7 +48,15 @@
                         Мои курсы</a>
                 </li>
             {% endif %}
+            {% if user.is_staff %}
+                <li class="nav-item">
+                    <a class="nav-link link text-white text-primary display-7 " href="/admin_panel" target="_blank"><span class="fa fa-awesome fa-gears display-5 text-light"></span></a>
+                </li>
+            {% endif %}
             </ul>
+
+
+
 {#        {% if user is not None %}#}
 {#            <div class="icons-menu">#}
 {#                <div class="soc-item">#}

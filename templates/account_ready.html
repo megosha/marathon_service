@@ -145,7 +145,18 @@
 
                                 <div id="collapse{{ lesson.number }}_26" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="heading{{ lesson.number }}" data-parent="#bootstrap-accordion_26">
                                     <div class="panel-body">
-                                               <p class="mbr-fonts-style panel-text pr-2 display-4"><strong>{{ lesson.description }}</strong></p>
+                                               <div class="mbr-fonts-style panel-text pr-2 display-4 py-0 my-0">
+                                                   <strong>{{ lesson.description|linebreaks }}</strong></div>
+                                                {% if lesson.hometask or lesson.hometask_file %}
+                                                    <p class="mbr-fonts-style panel-text pr-2 display-4 py-0 my-0 font-weight-bold">
+                                                    <span class="text-primary">Домашнее задание:</span>
+                                                        {% if lesson.hometask %}{{ lesson.hometask }}{% endif %}
+                                                        {% if lesson.hometask_file %}
+                                                            <br><a href="/get_hometask/{{ lesson.marathon.pk }}-{{ lesson.number }}" target="_blank"><span class="fa fa-awesome fa-download"></span>  Скачать домашнее задание</a>
+
+                                                        {% endif %}
+                                                    </p>
+                                                {% endif %}
                                                 {% if lesson.video_set.all %}
                                             <!-- CUSTOM VIDEOS  -->
                                                 <div class="extVideo cid-s9dMobLaeo" id="extVideo2-1q" style="background-color: transparent">

@@ -14,6 +14,7 @@ urlpatterns = [
     path('accountdeny', api.RenderDeny.as_view()),
     path('book', views.Book.as_view()),
     path('get_invoice/<str:filename>', views.get_invoice),
+    path('get_hometask/<int:marathon_pk>-<int:lesson_number>', views.get_hometask),
 
     # path('test', views.Test.as_view()),
 ]
