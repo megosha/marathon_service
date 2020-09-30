@@ -19,6 +19,8 @@ import environ
 
 app.conf.task_default_queue = 'default'
 
+sett = models.Setting.objects.filter().first()
+
 
 @app.task(name="front.tasks.check_payment_status", ignore_result=True)
 def check_payment_status():
@@ -70,7 +72,7 @@ def check_invoice_sent():
         payment.save()
 
 
-def form_mail(lessons, text, only_not_paid=False):
+def form_mail(lessons, text, subject, add_time=False, only_not_paid=False):
     for lesson in lessons:
         accounts = models.Account.objects.prefetch_related('payment_set', 'payment_set__marathon__lesson_set').all()
         lesson.marathon.payment_set.all().values('account', 'status', 'date_approve')
@@ -88,8 +90,8 @@ def form_mail(lessons, text, only_not_paid=False):
         # mail2 = f'<p>Не пропустите новую тему №{lesson.number} <b>"{lesson.title}"</b>!</p>' \
         #         f'<p>В личном кабинете <b>{lesson.date_publish.strftime("%d.%m.%Y")} в {lesson.date_publish.strftime("%H:%M")} МСК</b>!</p>' \
         #         '<p>Вы ещё успеваете приобрести подписку на все темы марафона на сайте!</p>'
-        sett = models.Setting.objects.filter().first()
-        subject = 'Новости марафона "Движение Вверх"'
+        # if add_time:
+        #     text += f'<b>Завтра в {lesson.date_publish.strftime("%H:%M")} по моск. времени</b>'
         mail_context = {"settings": sett, "message": text}
         html_message = render_to_string('mail/new_lesson_notify.html', mail_context)
 
@@ -108,8 +110,12 @@ def mass_email_send_day_before():
     """
     lessons = models.Lesson.objects.filter(date_publish__date=(timezone.now() + timedelta(days=1)).date())
     if lessons:
-        text = f'<p>Осталось сделать последний шаг. Места ограничены! Не отдайте свой успех другому!</p>'
-        form_mail(lessons, text, only_not_paid=True)
+        subject = 'Ура завтра начало марафона успеха'
+        text = f'<p>Вы стали участником марафона. Осталось сделать последний шаг. ' \
+               f'Места ограничены! Не отдайте свой успех другому!</p>' \
+               f'<p><a href="{sett.website}" target="_blank" style="font-weight: bold; color: #000">{sett.website}</a></p>' \
+               f'Завтра в 16:00 по моск. времени'
+        form_mail(lessons, text, subject, add_time=True, only_not_paid=True)
 
 
 @app.task(name="front.tasks.mass_email_send_today", ignore_result=True)
@@ -119,5 +125,6 @@ def mass_email_send_today():
     """
     lessons = models.Lesson.objects.filter(date_publish__date=timezone.now().date())
     if lessons:
+        subject = 'Новости марафона "Движение Вверх"'
         text = f'<p>Не пропустите тему! Уже сегодня в 16:00 МСК</p>'
-        form_mail(lessons, text)
+        form_mail(lessons, text, subject)
