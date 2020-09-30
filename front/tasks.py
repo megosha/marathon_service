@@ -70,7 +70,7 @@ def check_invoice_sent():
         payment.save()
 
 
-def form_mail(lessons):
+def form_mail(lessons, text, only_not_paid=False):
     for lesson in lessons:
         accounts = models.Account.objects.prefetch_related('payment_set', 'payment_set__marathon__lesson_set').all()
         lesson.marathon.payment_set.all().values('account', 'status', 'date_approve')
@@ -83,21 +83,22 @@ def form_mail(lessons):
             else:
                 accounts_other.append(account.user.email)
 
-        subject = 'Новый вебинар марафона "Движение Вверх"'
-        mail1 = f'<p>Не пропустите тему №{lesson.number} <b>"{lesson.title}"</b>!</p>' \
-                f'<p>В личном кабинете <b>{lesson.date_publish.strftime("%d.%m.%Y")} в {lesson.date_publish.strftime("%H:%M")} МСК</b>!</p>'
-        mail2 = f'<p>Не пропустите новую тему №{lesson.number} <b>"{lesson.title}"</b>!</p>' \
-                f'<p>В личном кабинете <b>{lesson.date_publish.strftime("%d.%m.%Y")} в {lesson.date_publish.strftime("%H:%M")} МСК</b>!</p>' \
-                '<p>Вы ещё успеваете приобрести подписку на все темы марафона на сайте!</p>'
+        # mail1 = f'<p>Не пропустите тему №{lesson.number} <b>"{lesson.title}"</b>!</p>' \
+        #         f'<p>В личном кабинете <b>{lesson.date_publish.strftime("%d.%m.%Y")} в {lesson.date_publish.strftime("%H:%M")} МСК</b>!</p>'
+        # mail2 = f'<p>Не пропустите новую тему №{lesson.number} <b>"{lesson.title}"</b>!</p>' \
+        #         f'<p>В личном кабинете <b>{lesson.date_publish.strftime("%d.%m.%Y")} в {lesson.date_publish.strftime("%H:%M")} МСК</b>!</p>' \
+        #         '<p>Вы ещё успеваете приобрести подписку на все темы марафона на сайте!</p>'
         sett = models.Setting.objects.filter().first()
-        mail_context = {"settings": sett, "message": mail1}
+        subject = 'Новости марафона "Движение Вверх"'
+        mail_context = {"settings": sett, "message": text}
         html_message = render_to_string('mail/new_lesson_notify.html', mail_context)
-        for email in accounts_payd:
-            send_email = sendmail(subject=subject, message=html_message, recipient_list=[email])
-        mail_context = {"settings": sett, "message": mail2}
-        html_message = render_to_string('mail/news.html', mail_context)
+
         for email in accounts_other:
             send_email = sendmail(subject=subject, message=html_message, recipient_list=[email])
+
+        if not only_not_paid:
+            for email in accounts_payd:
+                send_email = sendmail(subject=subject, message=html_message, recipient_list=[email])
 
 
 @app.task(name="front.tasks.mass_email_send_before", ignore_result=True)
@@ -107,7 +108,8 @@ def mass_email_send_day_before():
     """
     lessons = models.Lesson.objects.filter(date_publish__date=(timezone.now() + timedelta(days=1)).date())
     if lessons:
-        form_mail(lessons)
+        text = f'<p>Осталось сделать последний шаг. Места ограничены! Не отдайте свой успех другому!</p>'
+        form_mail(lessons, text, only_not_paid=True)
 
 
 @app.task(name="front.tasks.mass_email_send_today", ignore_result=True)
@@ -117,4 +119,5 @@ def mass_email_send_today():
     """
     lessons = models.Lesson.objects.filter(date_publish__date=timezone.now().date())
     if lessons:
-        form_mail(lessons)
+        text = f'<p>Не пропустите тему! Уже сегодня в 16:00 МСК</p>'
+        form_mail(lessons, text)
