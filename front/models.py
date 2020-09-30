@@ -198,17 +198,25 @@ class Payment(models.Model):
         if self.status == 'succeeded':
             if not self.invoice:
                 self.invoice = create_pdf(self)
-                sett = Setting.objects.filter().first()
-                mail_context = {"settings": sett, 'payment':self}
-                html_message = render_to_string('mail/invoice.html', mail_context)
-                send_email = sendmail(subject=f'Оплата подписки на марафон "{self.marathon.title}"',
-                                                recipient_list=[self.account.user.email],
-                                                message=html_message, attach=f'{self.uuid}.pdf')
-                self.status_mail_invoice = send_email
-        # if not self.invoice and self.status == 'succeeded':
-        #     self.invoice = create_pdf(self)
+                self.send_invoice()
+                # sett = Setting.objects.filter().first()
+                # mail_context = {"settings": sett, 'payment':self}
+                # html_message = render_to_string('mail/invoice.html', mail_context)
+                # send_email = sendmail(subject=f'Оплата подписки на марафон "{self.marathon.title}"',
+                #                                 recipient_list=[self.account.user.email],
+                #                                 message=html_message, attach=f'{self.uuid}.pdf')
+                # self.status_mail_invoice = send_email
         super(Payment, self).save(*args, **kwargs)
 
+
+    def send_invoice(self):
+        sett = Setting.objects.filter().first()
+        mail_context = {"settings": sett, 'payment': self}
+        html_message = render_to_string('mail/invoice.html', mail_context)
+        send_email = sendmail(subject=f'Оплата подписки на марафон "{self.marathon.title}"',
+                              recipient_list=[self.account.user.email],
+                              message=html_message, attach=f'{self.uuid}.pdf')
+        self.status_mail_invoice = send_email
 
     def icon_tag(self):
         if not (self.uuid and self.invoice):

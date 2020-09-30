@@ -13,6 +13,9 @@ from front.functions import sendmail
 from marathon.celery import app
 
 from yandex_checkout import Configuration, Payment, WebhookNotification
+from django.conf import settings
+from os import path
+import environ
 
 app.conf.task_default_queue = 'default'
 
@@ -23,17 +26,37 @@ def check_payment_status():
     периодическая проверка неконечных статусов платежа, с момента создания которых прошел час
     (в течении часа пользователю доступен виджет оплаты в статусе -pending-)
     """
-    payments = models.Payment.objects.filter(date_pay__gte=timezone.now() + timedelta(hours=1)).exclude(
-        status__in=['succeeded', 'canceled'])
+    payments = models.Payment.objects.exclude(account__isnull=True, status__in=['succeeded', 'canceled'])
     if payments:
+        try:
+            upper_settings = models.UpperSetting.objects.get()
+            test = upper_settings.test_mode
+            if test:
+                yandex_api_key = upper_settings.yandex_api_key_test
+                shopid = upper_settings.shopid_test
+            else:
+                yandex_api_key = upper_settings.yandex_api_key
+                shopid = upper_settings.shopid
+        except:
+            base_dir = settings.BASE_DIR
+
+            env = environ.Env()
+            env.read_env(path.join(base_dir, '.env'))
+            yandex_api_key = env('YANDEX_API_KEY')
+            shopid = env('SHOPID')
+        Configuration.account_id = shopid
+        Configuration.secret_key = yandex_api_key
         for payment in payments:
-            payment_info = Payment.find_one(payment.yuid)
-            if payment.status != payment_info.status:
-                models.Payment.objects.filter(pk=payment.pk).update(status=payment_info.status)
-                payment.status = payment_info.status
-                if payment_info.status == 'succeeded':
-                    payment.date_approve = timezone.now()
-                payment.save()
+            try:
+                payment_info = Payment.find_one(payment.yuid)
+                if payment.status != payment_info.status:
+                    models.Payment.objects.filter(pk=payment.pk).update(status=payment_info.status)
+                    payment.status = payment_info.status
+                    if payment_info.status == 'succeeded':
+                        payment.date_approve = timezone.now()
+                    payment.save()
+            except Exception as ex:
+                print(ex)
 
 
 @app.task(name="front.tasks.check_invoice_sent", ignore_result=True)
@@ -41,8 +64,9 @@ def check_invoice_sent():
     """
         периодическая проверка неотправленных чеков
     """
-    payments = models.Payment.objects.filter(invoice__isnull=False).exclude(status_mail_invoice=False)
+    payments = models.Payment.objects.filter(invoice__isnull=False).exclude(status_mail_invoice=True)
     for payment in payments:
+        payment.send_invoice()
         payment.save()
 
 
