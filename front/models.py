@@ -137,6 +137,8 @@ class Lesson(models.Model):
     # cost = models.PositiveIntegerField(default=0, verbose_name="Стоимость темы (в рублях)")
     date_create = models.DateTimeField(auto_now=True, verbose_name="Дата создания")
     date_publish = models.DateTimeField(default=timezone.now, blank=True, null=True, verbose_name="Дата публикации")
+    # status_mail_lesson = models.BooleanField(default=None, blank=True, null=True, verbose_name="Напоминание в день урока отправлено")
+    # mail_lesson_not_recieve = models.TextField(default=None, blank=True, null=True, verbose_name="Напоминание не получили")
 
     class Meta:
         unique_together = ('number', 'marathon')
@@ -206,6 +208,7 @@ class Payment(models.Model):
         # if not self.invoice and self.status == 'succeeded':
         #     self.invoice = create_pdf(self)
         super(Payment, self).save(*args, **kwargs)
+
 
     def icon_tag(self):
         if not (self.uuid and self.invoice):
