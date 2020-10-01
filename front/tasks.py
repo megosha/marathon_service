@@ -91,7 +91,7 @@ def form_mail(lessons, text, subject, add_time=False, only_not_paid=False):
         #         f'<p>В личном кабинете <b>{lesson.date_publish.strftime("%d.%m.%Y")} в {lesson.date_publish.strftime("%H:%M")} МСК</b>!</p>' \
         #         '<p>Вы ещё успеваете приобрести подписку на все темы марафона на сайте!</p>'
         # if add_time:
-        #     text += f'<b>Завтра в {lesson.date_publish.strftime("%H:%M")} по моск. времени</b>'
+        #     text += f'<b>Завтра в {timezone.localtime(lesson.date_publish).strftime("%H:%M")} по моск. времени</b>'
         mail_context = {"settings": sett, "message": text}
         html_message = render_to_string('mail/new_lesson_notify.html', mail_context)
 
@@ -114,7 +114,7 @@ def mass_email_send_day_before():
         text = f'<p>Вы стали участником марафона. Осталось сделать последний шаг. ' \
                f'Места ограничены! Не отдайте свой успех другому!</p>' \
                f'<p><a href="{sett.website}" target="_blank" style="font-weight: bold; color: #000">{sett.website}</a></p>' \
-               f'Завтра в 16:00 по моск. времени'
+               # f'Завтра в 16:00 по моск. времени'
         form_mail(lessons, text, subject, add_time=True, only_not_paid=True)
 
 
@@ -125,6 +125,7 @@ def mass_email_send_today():
     """
     lessons = models.Lesson.objects.filter(date_publish__date=timezone.now().date())
     if lessons:
-        subject = 'Новости марафона "Движение Вверх"'
-        text = f'<p>Не пропустите тему! Уже сегодня в 16:00 МСК</p>'
+        subject = 'Марафон "Движение Вверх"'
+        text = f'<p>Уже сегодня ты узнаешь, к чему ты призван, в каком направлении развиваться. ' \
+               f'Старт в 16:00 по (моск.времени). Не откладывай на завтра, твой успех тебя ждёт!</p>'
         form_mail(lessons, text, subject)
