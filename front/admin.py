@@ -4,7 +4,24 @@ from django.contrib import admin
 from django.utils.safestring import mark_safe
 
 from front import models
+from front.views import AdminCustom
 
+from django.conf.urls import url
+from django.contrib import admin
+
+
+# class CustomAdminSite(admin.AdminSite):
+#
+#     def get_urls(self):
+#         urls = super(CustomAdminSite, self).get_urls()
+#         custom_urls = [
+#             url(r'desired/path$', self.admin_view(AdminCustom), name="preview"),
+#         ]
+#         return urls + custom_urls
+#
+# class TemplateAdmin(admin.ModelAdmin):
+#     change_form_template = 'admin/preview_template.html'
+# admin.site.register(models.FakeModel, TemplateAdmin)
 
 # Register your models here.
 class UpperSettingAdmin(admin.ModelAdmin):

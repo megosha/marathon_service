@@ -367,3 +367,8 @@ class Book(ContextViewMixin):
 
     def get(self, request):
         return self.base(request)
+
+#
+# class AdminCustom(LoginRequiredMixin, View):
+#     def get(self, request):
+#         pass

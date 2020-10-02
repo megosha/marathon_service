@@ -97,6 +97,11 @@ class Account(models.Model):
         return f"{self.user.get_full_name()}"
 
 
+# class FakeModel(models.Model):
+#     class Meta:
+#         app_label = 'front'
+
+
 class ReviewKind(models.Model):
     kind = models.CharField(max_length=250, blank=True, null=True, verbose_name="Тип отзыва")
 

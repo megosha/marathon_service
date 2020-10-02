@@ -129,3 +129,22 @@ def mass_email_send_today():
         text = f'<p>Уже сегодня ты узнаешь, к чему ты призван, в каком направлении развиваться. ' \
                f'Старт в 16:00 по (моск.времени). Не откладывай на завтра, твой успех тебя ждёт!</p>'
         form_mail(lessons, text, subject)
+
+
+@app.task(name="front.tasks.mass_email_send_today", ignore_result=True)
+def mass_notify_for_not_paid():
+    """
+        периодическая отправка напоминаний о покупке марафона, зарегистрировавшимся
+    """
+
+    subject = 'Марафон "Движение Вверх"'
+    text = f'<p>Вы прошли удачно регистрацию на марафон успеха. ' \
+               f'Первый урок «Точка опоры» уже ждёт вас в вашем личном кабинете ' \
+               f'<a href="{sett.website}" target="_blank" style="font-weight: bold; color: #000">{sett.website}</a></p>' \
+               f'<p>Не останавливайтесь!</p>'
+    emails = models.Account.objects.exclude(payment__status="succeeded").values_list('user__email', flat=True).distinct()
+    mail_context = {"settings": sett, "message": text}
+    html_message = render_to_string('mail/new_lesson_notify.html', mail_context)
+
+    for email in emails:
+        send_email = sendmail(subject=subject, message=html_message, recipient_list=email)
