@@ -131,7 +131,7 @@ def mass_email_send_today():
         form_mail(lessons, text, subject)
 
 
-@app.task(name="front.tasks.mass_email_send_today", ignore_result=True)
+@app.task(name="front.tasks.mass_notify_for_not_paid", ignore_result=True)
 def mass_notify_for_not_paid():
     """
         периодическая отправка напоминаний о покупке марафона, зарегистрировавшимся
@@ -139,12 +139,64 @@ def mass_notify_for_not_paid():
 
     subject = 'Марафон "Движение Вверх"'
     text = f'<p>Вы прошли удачно регистрацию на марафон успеха. ' \
-               f'Первый урок «Точка опоры» уже ждёт вас в вашем личном кабинете ' \
-               f'<a href="{sett.website}" target="_blank" style="font-weight: bold; color: #000">{sett.website}</a></p>' \
-               f'<p>Не останавливайтесь!</p>'
+           f'Первый урок «Точка опоры» уже ждёт вас в вашем личном кабинете ' \
+           f'<a href="{sett.website}" target="_blank" style="font-weight: bold; color: #000">{sett.website}</a></p>' \
+           f'<p>Не останавливайтесь!</p>'
     emails = models.Account.objects.exclude(payment__status="succeeded").values_list('user__email', flat=True).distinct()
     mail_context = {"settings": sett, "message": text}
     html_message = render_to_string('mail/new_lesson_notify.html', mail_context)
 
     for email in emails:
         send_email = sendmail(subject=subject, message=html_message, recipient_list=email)
+
+
+@app.task(name="front.tasks.start_mailing", ignore_result=True)
+def start_mailing(pk):
+    """
+        рассылка
+    """
+    log = models.Logging.objects.create(action="start_mailing", input_data=pk)
+    try:
+        mailing = models.Mailing.objects.get(pk=pk)
+
+        if mailing.recipient == mailing.PAYED:
+            if mailing.marathon:
+                qset = models.Account.objects.filter(marathon=mailing.marathon, payment__status="succeeded",
+                                                     payment__date_approve__gte=timezone.now() - timedelta(days=62))
+            else:
+                qset = models.Account.objects.filter(payment__status="succeeded",
+                                                     payment__date_approve__gte=timezone.now() - timedelta(days=62))
+        elif mailing.recipient == mailing.NOT_PAYED:
+            if mailing.marathon:
+                qset = models.Account.objects.exclude(marathon=mailing.marathon, payment__status="succeeded",
+                                                      payment__date_approve__gte=timezone.now() - timedelta(days=62))
+            else:
+                qset = models.Account.objects.exclude(payment__status="succeeded",
+                                                      payment__date_approve__gte=timezone.now() - timedelta(days=62))
+        else:
+            qset = models.Account.objects.all()
+
+        emails = qset.values_list('user__email', flat=True).distinct()
+        mail_context = {"settings": sett, "message": mailing.message}
+        html_message = render_to_string('mail/new_lesson_notify.html', mail_context)
+        attach = [mailing.attach.path] if mailing.attach else None
+
+        for email in emails:
+            send_mail.delay(
+                subject=mailing.subject, message=html_message, recipient_list=email, attach=attach
+            )
+    except Exception as exc:
+        log.output_data = exc
+        log.result = log.FAIL
+    else:
+        log.result = log.SUCCESS
+    finally:
+        log.save()
+
+
+@app.task(name="front.tasks.send_mail", ignore_result=True)
+def send_mail(subject, message, recipient_list, from_email=None, attach: iter=None):
+    """
+        отправка письма
+    """
+    sendmail(subject, message, recipient_list, from_email, attach)

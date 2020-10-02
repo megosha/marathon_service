@@ -1,27 +1,16 @@
-from os import path
-from django.conf import settings
-from django.contrib import admin
-from django.utils.safestring import mark_safe
-
 from front import models
-# from front.views import AdminCustom
-
-from django.conf.urls import url
 from django.contrib import admin
 
 
-# class CustomAdminSite(admin.AdminSite):
-#
-#     def get_urls(self):
-#         urls = super(CustomAdminSite, self).get_urls()
-#         custom_urls = [
-#             url(r'desired/path$', self.admin_view(AdminCustom), name="preview"),
-#         ]
-#         return urls + custom_urls
-#
-# class TemplateAdmin(admin.ModelAdmin):
-#     change_form_template = 'admin/preview_template.html'
-# admin.site.register(models.FakeModel, TemplateAdmin)
+@admin.register(models.Logging)
+class LoggingAdmin(admin.ModelAdmin):
+    list_display = ['date', 'action', 'result']
+
+
+@admin.register(models.Mailing)
+class MailingAdmin(admin.ModelAdmin):
+    list_display = ['date', 'recipient', 'subject']
+
 
 # Register your models here.
 class UpperSettingAdmin(admin.ModelAdmin):

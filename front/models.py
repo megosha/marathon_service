@@ -1,14 +1,14 @@
 import uuid
+from os import path
+
+from celery import Celery
 from django.db import models
 from django.contrib.auth.models import User
-from datetime import datetime
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils import timezone
-from django.utils.html import strip_tags
 from django.utils.safestring import mark_safe
 
-from os import path
 from front.make_invoice import create_pdf
 from front.functions import sendmail
 
@@ -97,9 +97,31 @@ class Account(models.Model):
         return f"{self.user.get_full_name()}"
 
 
-# class FakeModel(models.Model):
-#     class Meta:
-#         app_label = 'front'
+class Mailing(models.Model):
+    PAYED = 1
+    NOT_PAYED = 2
+    ALL = 3
+    RECIPIENTS = (
+        (PAYED, "Оплатившие"),
+        (NOT_PAYED, "Не оплатившие"),
+        (ALL, "Все")
+    )
+    date = models.DateTimeField("Дата рассылки")
+    recipient = models.SmallIntegerField("Получатели", choices=RECIPIENTS, default=ALL)
+    marathon = models.ForeignKey(Marathon, verbose_name="Марафон", on_delete=models.CASCADE, null=True, blank=True)
+    subject = models.CharField("Тема письма", max_length=250, default="")
+    message = models.TextField("Сообщение", default="")
+    attach = models.FileField("Вложение", blank=True)
+
+    class Meta:
+        app_label = 'front'
+        verbose_name = "Рассылка"
+        verbose_name_plural = "Рассылки"
+
+    def save(self, *args, **kwargs):
+        super(Mailing, self).save(*args, **kwargs)
+        from front.tasks import start_mailing
+        start_mailing.apply_async([self.pk], eta=self.date)
 
 
 class ReviewKind(models.Model):
@@ -229,8 +251,17 @@ class Payment(models.Model):
         return mark_safe(f'<a href="{path.join(settings.MEDIA_URL, "invoice", self.uuid.__str__())}.pdf" target="_blank">Квитанция {self.uuid}</a>')
 
 
-class Logging():
+class Logging(models.Model):
+    CREATED = 0
+    SUCCESS = 1
+    FAIL = 2
+    RESULT = (
+        (CREATED, "Создано"),
+        (SUCCESS, "Успешно"),
+        (FAIL, "Ошибка"),
+    )
     date = models.DateTimeField(auto_now=True, blank=False, null=False, verbose_name="Дата действия")
     action = models.TextField(blank=True, null=True, verbose_name="Действие")
     input_data = models.TextField(blank=True, null=True, verbose_name="Данные на входе")
     output_data = models.TextField(blank=True, null=True, verbose_name="Данные на выходе")
+    result = models.SmallIntegerField(choices=RESULT, default=CREATED)
