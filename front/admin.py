@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.utils.safestring import mark_safe
 
 from front import models
-from front.views import AdminCustom
+# from front.views import AdminCustom
 
 from django.conf.urls import url
 from django.contrib import admin
