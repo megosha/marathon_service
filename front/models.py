@@ -1,4 +1,5 @@
 import uuid
+from datetime import timedelta
 from os import path
 
 from celery import Celery
@@ -121,6 +122,8 @@ class Mailing(models.Model):
     def save(self, *args, **kwargs):
         super(Mailing, self).save(*args, **kwargs)
         from front.tasks import start_mailing
+        if self.date <= timezone.now():
+            self.date = timezone.now() + timedelta(seconds=10)
         start_mailing.apply_async([self.pk], eta=self.date)
 
 
