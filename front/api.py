@@ -10,18 +10,28 @@ from front.views import ContextViewMixin
 class AccountDeny(View):
     def get(self, request, uuid, login):
         return_url = "/accountdeny"
+        log = models.Logging.objects.create(action="Удаление профиля по API", input_data=f"{login}\n{uuid}")
         try:
             account = models.Account.objects.get(uuid=uuid)
         except  models.Account.MultipleObjectsReturned:
-            account = models.Account.objects.filter(uuid=uuid, user__email=login)
+            account = models.Account.objects.filter(uuid=uuid, user__email=login).first()
             if account:
                 account.user.delete()
+                log.result = log.SUCCESS
+                log.save()
             else:
+                log.result = log.FAIL
+                log.output_data = "пользователь по параметрам удаления не найден"
+                log.save()
                 return HttpResponseRedirect(f'{return_url}')
-        except:
-            pass
+        except Exception as err:
+            log.result = log.FAIL
+            log.output_data = f"{err}"
+            log.save()
         else:
             account.user.delete()
+            log.result = log.SUCCESS
+            log.save()
         return HttpResponseRedirect(f'{return_url}')
 
 class RenderDeny(ContextViewMixin):

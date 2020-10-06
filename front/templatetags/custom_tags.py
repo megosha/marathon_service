@@ -36,3 +36,12 @@ def deltatime(dt, deltadays):
         return dt + timedelta(days=int(deltadays))
     except:
         return None
+
+
+@register.filter()
+def title_general(title):
+    return str(title).upper()[:str(title).rfind(' ')]
+
+@register.filter()
+def title_last(title):
+    return str(title).upper()[str(title).rfind(' ')+1:]

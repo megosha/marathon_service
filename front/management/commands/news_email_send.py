@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand
 from django.template.loader import render_to_string
 
 from front import models
-from front.functions import sendmail
+# from front.functions import sendmail
 
 # class Request():
 #     user = None
@@ -19,6 +19,6 @@ class Command(BaseCommand):
         html_message = render_to_string('mail/news.html', mail_context)
         for email in emails:
             try:
-                send_email = sendmail(subject=subject, message=html_message, recipient_list=[email])
+                send_email = models.sendmail(subject=subject, message=html_message, recipient_list=[email])
             except:
                 pass

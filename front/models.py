@@ -1,7 +1,9 @@
 import uuid
 from datetime import timedelta
 from os import path
+import environ
 
+from django.core.mail import EmailMultiAlternatives
 from celery import Celery
 from django.db import models
 from django.contrib.auth.models import User
@@ -11,10 +13,17 @@ from django.utils import timezone
 from django.utils.safestring import mark_safe
 
 from front.make_invoice import create_pdf
-from front.functions import sendmail
+
+# from front.functions import sendmail
 
 
 # Create your models here.
+
+base_dir = settings.BASE_DIR
+# medis_dir = settings.MEDIA_ROOT
+
+env = environ.Env()
+env.read_env(path.join(base_dir, '.env'))
 
 # statuses = {'pending': 'Платёж создан (в обработке)',
 #             'waiting_for_capture': 'Платёж оплачен, деньги авторизованы и ожидают списания',
@@ -26,12 +35,54 @@ statuses = ((1, 'pending'),
             (4, 'succeeded'),
             )
 
+
 def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/<marathon.name>/<lesson.number.*>
     try:
         return f'hometasks/{instance.marathon.pk}/{instance.number}.{filename[filename.rfind(".") + 1:]}'
     except:
         return f'hometasks/{instance.marathon.pk}/{instance.number}.{filename}'
+
+
+def sendmail(subject, message, recipient_list, from_email=None, attach: iter = None):
+    if from_email is None:
+        from_email = env('FROM_EMAIL')
+    if type(recipient_list) == str:
+        recipient_list = [recipient_list]
+    if type(attach) == str:
+        attach = [attach]
+    mail = EmailMultiAlternatives(subject, message, from_email, recipient_list)
+    mail.content_subtype = "html"
+    if attach:
+        for file in attach:
+            if isinstance(file, str):
+                try:
+                    mail.attach_file(path.join(settings.MEDIA_ROOT, 'invoice', file))
+                except Exception as e:
+                    print(e)
+                    pass
+    log = Logging.objects.create(action="Отправка письма",
+                                 input_data=f"{subject}\n{from_email}\n{recipient_list}")
+    try:
+        mail.send(fail_silently=False)
+    except Exception as ex:
+        log.result = log.FAIL
+        log.output_data = f"{ex}"
+        log.save()
+        print(ex)
+        return False
+    else:
+        log.result = log.SUCCESS
+        log.save()
+        return True
+    # try:
+    #     send_mail(subject=subject, message=message, from_email=from_email,
+    #               recipient_list=recipient_list, fail_silently=fail_silently, html_message=html_message)
+    # except Exception as err:
+    #     print(err)
+    #     return False
+    # else:
+    #     return True
 
 
 class UpperSetting(models.Model):
@@ -51,7 +102,8 @@ class Marathon(models.Model):
     cost = models.PositiveIntegerField(default=0, verbose_name="Стоимость марафона (в рублях)")
     date_start = models.DateTimeField(default=None, blank=True, null=True, verbose_name="Дата старта марафона")
     date_create = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name="Дата создания")
-    promo = models.CharField(max_length=100, null=True, blank=True, verbose_name="Ссылка на YouTube-видео (Промо-ролик)")
+    promo = models.CharField(max_length=100, null=True, blank=True,
+                             verbose_name="Ссылка на YouTube-видео (Промо-ролик)")
     description = models.TextField(verbose_name="Комментарий/Описание", default=None, blank=True, null=True)
 
     class Meta:
@@ -70,10 +122,14 @@ class Setting(models.Model):
     soc_tm = models.URLField(blank=True, null=True, verbose_name="Ссылка на Telegram")
     soc_wa = models.URLField(blank=True, null=True, verbose_name="Ссылка на WhatsApp")
     fake_cost = models.PositiveIntegerField(default=2500, verbose_name="Стоимость марафона (в рублях) до скидки")
-    main_marathon = models.ForeignKey(Marathon, blank=True, null=True, on_delete=models.DO_NOTHING, verbose_name="Марафон на главной")
-    invoice_fio = models.CharField(max_length=100, default="Торопчин Артём Викторович", blank=True, null=True, verbose_name="ФИО для квитанции")
-    invoice_phone = models.CharField(max_length=50, default="", blank=True, null=True, verbose_name="Телефон для квитанции")
-    invoice_email = models.CharField(max_length=50, default="", blank=True, null=True, verbose_name="Email для квитанции")
+    main_marathon = models.ForeignKey(Marathon, blank=True, null=True, on_delete=models.DO_NOTHING,
+                                      verbose_name="Марафон на главной")
+    invoice_fio = models.CharField(max_length=100, default="Торопчин Артём Викторович", blank=True, null=True,
+                                   verbose_name="ФИО для квитанции")
+    invoice_phone = models.CharField(max_length=50, default="", blank=True, null=True,
+                                     verbose_name="Телефон для квитанции")
+    invoice_email = models.CharField(max_length=50, default="", blank=True, null=True,
+                                     verbose_name="Email для квитанции")
 
 
 class Account(models.Model):
@@ -81,13 +137,14 @@ class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     phone = models.CharField(max_length=18, blank=False, null=False, verbose_name="Контактный телефон")
     approved = models.BooleanField(default=False, blank=True, null=True,
-                                        verbose_name="Статус подтверждения аккаунта (совершен вход в ЛК)")
+                                   verbose_name="Статус подтверждения аккаунта (совершен вход в ЛК)")
     registry_sent = models.BooleanField(default=None, blank=True, null=True,
                                         verbose_name="Письмо о регистрации отправлено")
     date_registry = models.DateTimeField(auto_now=True, verbose_name="Дата регистрации")
     description = models.TextField(verbose_name="Комментарий", default=None, blank=True, null=True)
     photo = models.FileField(upload_to='images/avatars/', blank=True, verbose_name="Аватар")
     city = models.CharField(max_length=100, blank=True, null=True, verbose_name="Город")
+
     # marathone = models.ManyToManyField('Marathon', blank=True, verbose_name="Марафоны")
 
     class Meta:
@@ -139,8 +196,10 @@ class ReviewKind(models.Model):
 
 
 class Feedback(models.Model):
-    account = models.ForeignKey(Account, blank=True, null=True, on_delete=models.SET_NULL, verbose_name="Аккаунт на сайте")
-    kind = models.ForeignKey(ReviewKind, default=None, blank=True, null=True, on_delete=models.SET_NULL, verbose_name="Тип отзыва")
+    account = models.ForeignKey(Account, blank=True, null=True, on_delete=models.SET_NULL,
+                                verbose_name="Аккаунт на сайте")
+    kind = models.ForeignKey(ReviewKind, default=None, blank=True, null=True, on_delete=models.SET_NULL,
+                             verbose_name="Тип отзыва")
     feedback = models.TextField(null=True, blank=True, verbose_name="Отзыв")
     date_create = models.DateTimeField(auto_now=True, verbose_name="Дата создания отзыва")
     custom_user = models.CharField(max_length=250, blank=True, null=True, verbose_name="Имя (ручное добавление)")
@@ -158,15 +217,17 @@ class Feedback(models.Model):
 class Lesson(models.Model):
     marathon = models.ForeignKey(Marathon, blank=True, null=True, on_delete=models.CASCADE, verbose_name="Марафон")
     number = models.PositiveSmallIntegerField(null=False, blank=False,
-                                      verbose_name="Порядковый номер темы в марафоне")
+                                              verbose_name="Порядковый номер темы в марафоне")
     title = models.CharField(max_length=250, blank=False, null=False, verbose_name="Название темы/вебинара")
     free = models.BooleanField(default=False, verbose_name="Тема доступна без покупки марафона")
     description = models.TextField(default=None, blank=True, null=True, verbose_name="Комментарий к теме/вебинару")
     hometask = models.TextField(default=None, blank=True, null=True, verbose_name="Домашнее задание по теме/вебинару")
-    hometask_file = models.FileField(upload_to=user_directory_path, null=True, blank=True, verbose_name="Файл Домашнего задания по теме/вебинару")
+    hometask_file = models.FileField(upload_to=user_directory_path, null=True, blank=True,
+                                     verbose_name="Файл Домашнего задания по теме/вебинару")
     # cost = models.PositiveIntegerField(default=0, verbose_name="Стоимость темы (в рублях)")
     date_create = models.DateTimeField(auto_now=True, verbose_name="Дата создания")
     date_publish = models.DateTimeField(default=timezone.now, blank=True, null=True, verbose_name="Дата публикации")
+
     # status_mail_lesson = models.BooleanField(default=None, blank=True, null=True, verbose_name="Напоминание в день урока отправлено")
     # mail_lesson_not_recieve = models.TextField(default=None, blank=True, null=True, verbose_name="Напоминание не получили")
 
@@ -182,10 +243,11 @@ class Lesson(models.Model):
 class Video(models.Model):
     lesson = models.ForeignKey(Lesson, blank=True, null=True, on_delete=models.CASCADE, verbose_name="Тема/Вебинар")
     number = models.PositiveSmallIntegerField(null=False, blank=False,
-                                      verbose_name="Порядковый номер видео (номер отображения в уроке)")
+                                              verbose_name="Порядковый номер видео (номер отображения в уроке)")
     link = models.CharField(max_length=25, null=True, blank=True, verbose_name="ID видео на YouTube")
     description = models.TextField(default=None, blank=True, null=True, verbose_name="Комментарий к видео")
     date_create = models.DateTimeField(auto_now=True, verbose_name="Дата создания")
+
     # date_publish = models.DateTimeField(default=timezone.now, blank=True, null=True, verbose_name="Дата публикации")
     # video = models.FileField(null=True, blank=True, verbose_name="Видеофйал")
 
@@ -200,11 +262,13 @@ class Video(models.Model):
 
 
 class Payment(models.Model):
-    uuid = models.UUIDField(default=uuid.uuid4(), blank=True, primary_key=True, verbose_name="Идентификатор платежа в системе / Ключ идемпотентности")
+    uuid = models.UUIDField(default=uuid.uuid4(), blank=True, primary_key=True,
+                            verbose_name="Идентификатор платежа в системе / Ключ идемпотентности")
     amount = models.PositiveIntegerField(default=0, verbose_name="Сумма платежа")
     account = models.ForeignKey(Account, blank=True, null=True, on_delete=models.SET_NULL, verbose_name="Аккаунт")
     # lesson = models.ForeignKey(Lesson, blank=False, null=False, on_delete=models.DO_NOTHING, verbose_name="Тема/Вебинар")
-    marathon = models.ForeignKey(Marathon, default=None, blank=False, null=False, on_delete=models.DO_NOTHING, verbose_name="Марафон")
+    marathon = models.ForeignKey(Marathon, default=None, blank=False, null=False, on_delete=models.DO_NOTHING,
+                                 verbose_name="Марафон")
     date_pay = models.DateTimeField(auto_now=True, blank=False, null=False, verbose_name="Дата оплаты")
     date_approve = models.DateTimeField(blank=True, null=True, verbose_name="Дата подтверждения платежа")
     request = models.TextField(blank=True, null=True, verbose_name="Запрос в ЯК")
@@ -214,15 +278,15 @@ class Payment(models.Model):
     invoice = models.CharField(max_length=250, blank=True, null=True, verbose_name="Квитанция")
     status = models.CharField(max_length=250, blank=True, null=True, verbose_name="Статус платежа в ЯК")
     status_mail_invoice = models.BooleanField(default=None, blank=True, null=True, verbose_name="Квитанция отправлена")
+
     # status_mail_lesson = models.BooleanField(default=None, blank=True, null=True, verbose_name="Напоминание в день урока отправлено")
 
     class Meta:
-        # unique_together = ('account', 'lesson') - #TODO по истечении двух месяцев повторный платеж
         verbose_name = "Платёж"
         verbose_name_plural = "Платёжи"
 
     def __str__(self):
-        return f"account.pk: {self.account.pk} -  №{self.pk}"
+        return f"№{self.pk}"
 
     def save(self, *args, **kwargs):
         if self.status == 'succeeded':
@@ -238,7 +302,6 @@ class Payment(models.Model):
                 # self.status_mail_invoice = send_email
         super(Payment, self).save(*args, **kwargs)
 
-
     def send_invoice(self):
         sett = Setting.objects.filter().first()
         mail_context = {"settings": sett, 'payment': self}
@@ -251,7 +314,8 @@ class Payment(models.Model):
     def icon_tag(self):
         if not (self.uuid and self.invoice):
             return ''
-        return mark_safe(f'<a href="{path.join(settings.MEDIA_URL, "invoice", self.uuid.__str__())}.pdf" target="_blank">Квитанция {self.uuid}</a>')
+        return mark_safe(
+            f'<a href="{path.join(settings.MEDIA_URL, "invoice", self.uuid.__str__())}.pdf" target="_blank">Квитанция {self.uuid}</a>')
 
 
 class Logging(models.Model):

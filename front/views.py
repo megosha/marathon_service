@@ -20,6 +20,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.static import serve
 
 from front import models, forms, functions
+from front.logging_methods import maillog
 
 
 
@@ -120,7 +121,7 @@ class Index(ContextViewMixin):
                 form.errors['custom'] = f"При отправке сообщения произошла ошибка. Повторите попытку позднее."
                 return self.base(request, form)
             email = settings.contact_mail
-            send_email = functions.sendmail(subject=subject, message=message, recipient_list=[email], )
+            send_email = models.sendmail(subject=subject, message=message, recipient_list=[email], )
             if not send_email:
                 form.errors['custom'] = f"При отправке сообщения произошла ошибка. Повторите попытку позднее."
             else:
@@ -182,7 +183,7 @@ class Register(ContextViewMixin):
                                         "account": account}
                         html_message = render_to_string('mail/registration.html', mail_context)
                         # plain_message = strip_tags(html_message)
-                        send_email = functions.sendmail(subject=subject, message=html_message, recipient_list=[email])
+                        send_email = models.sendmail(subject=subject, message=html_message, recipient_list=[email])
                         if not send_email:
                             account.registry_sent = False
                             account.save()
@@ -242,17 +243,18 @@ class Logout(View):
 class RemoveAccount(LoginRequiredMixin, ContextViewMixin):
     def post(self, request):
         if models.Account.objects.filter(user=self.request.user).exists():
+            if request.POST.get('method') == "check" and self.request.user.account.payment_set.exists():
+                return JsonResponse({"payments": True})
             subject = 'Удаление профиля на платформе марафона "Движение Вверх"'
             settings = models.Setting.objects.filter().first()
             mail_context = {"login": self.request.user.email,
                             "settings": settings}
             html_message = render_to_string('mail/remove.html', mail_context)
             # plain_message = strip_tags(html_message)
-            send_email = functions.sendmail(subject=subject, message=html_message,
+            send_email = models.sendmail(subject=subject, message=html_message,
                                             recipient_list=[self.request.user.email])
             if not send_email:
                 return JsonResponse({'sendmail': send_email})
-                # todo писать в таблицу ошибок или логов
             else:
                 self.request.user.delete()
                 return JsonResponse({'sendmail': send_email, "deleted": True})
@@ -295,10 +297,9 @@ class ResetPassword(ContextViewMixin):
                                     "password": password,
                                     "settings": settings}
                     html_message = render_to_string('mail/reset.html', mail_context)
-                    send_email = functions.sendmail(subject=subject, message=html_message, recipient_list=email)
+                    send_email = models.sendmail(subject=subject, message=html_message, recipient_list=email)
                     if not send_email:
                         form.errors['custom'] = "Ошибка при сбросе пароля. Повторите попытку позднее."
-                        # todo писать в таблицу ошибок или логов
                     else:
                         form_html = get_template('includes/reset_redirect.html').render(context={'email': email},
                                                                                         request=request)

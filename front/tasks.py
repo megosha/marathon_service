@@ -9,7 +9,7 @@ from django.template.loader import render_to_string
 from django.utils import timezone
 
 from front import models
-from front.functions import sendmail
+# from front.functions import sendmail
 from marathon.celery import app
 
 from yandex_checkout import Configuration, Payment, WebhookNotification
@@ -96,11 +96,11 @@ def form_mail(lessons, text, subject, add_time=False, only_not_paid=False):
         html_message = render_to_string('mail/new_lesson_notify.html', mail_context)
 
         for email in accounts_other:
-            send_email = sendmail(subject=subject, message=html_message, recipient_list=[email])
+            send_email = models.sendmail(subject=subject, message=html_message, recipient_list=[email])
 
         if not only_not_paid:
             for email in accounts_payd:
-                send_email = sendmail(subject=subject, message=html_message, recipient_list=[email])
+                send_email = models.sendmail(subject=subject, message=html_message, recipient_list=[email])
 
 
 @app.task(name="front.tasks.mass_email_send_before", ignore_result=True)
@@ -110,7 +110,7 @@ def mass_email_send_day_before():
     """
     lessons = models.Lesson.objects.filter(date_publish__date=(timezone.now() + timedelta(days=1)).date())
     if lessons:
-        subject = 'Ура завтра начало марафона успеха'
+        subject = 'Марафон "Движение Вверх"'
         text = f'<p>Вы стали участником марафона. Осталось сделать последний шаг. ' \
                f'Места ограничены! Не отдайте свой успех другому!</p>' \
                f'<p><a href="{sett.website}" target="_blank" style="font-weight: bold; color: #000">{sett.website}</a></p>' \
@@ -147,7 +147,7 @@ def mass_notify_for_not_paid():
     html_message = render_to_string('mail/new_lesson_notify.html', mail_context)
 
     for email in emails:
-        send_email = sendmail(subject=subject, message=html_message, recipient_list=email)
+        send_email = models.sendmail(subject=subject, message=html_message, recipient_list=email)
 
 
 @app.task(name="front.tasks.start_mailing", ignore_result=True)
@@ -199,4 +199,4 @@ def send_mail(subject, message, recipient_list, from_email=None, attach: iter=No
     """
         отправка письма
     """
-    sendmail(subject, message, recipient_list, from_email, attach)
+    models.sendmail(subject, message, recipient_list, from_email, attach)

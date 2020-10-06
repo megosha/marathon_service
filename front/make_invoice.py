@@ -88,6 +88,5 @@ def create_pdf(payment):
         pdf.ln(row_height * spacing)
     # pdf.ln(5)
     pdf.cell(200, 5, txt=f"Итого: {payment.amount} руб. 00 коп.", ln=1, align="L")
-    # pdf.cell(200, 5, txt="Сумма прописью: Один рубль ноль копеек", ln=1, align="L")  # TODO
     pdf.output(pdf_path)
     return pdf_path
