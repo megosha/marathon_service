@@ -108,6 +108,13 @@
                 {% if payment_valid.status == "succeeded" %}
                         <br><span class="fa fa-awesome fa-calendar-times-o text-primary"></span> {% if payment_valid.date_approve|deltatime:'62' is not None %}Срок подписки истекает: {{ payment_valid.date_approve|deltatime:'62'|date:"d.m.Y" }}{% endif %}
                         <br><a href="/get_invoice/{{ payment_valid.uuid }}" target="_blank"><span class="fa fa-awesome fa-download"></span>  Скачать квитанцию</a>
+                {% else %}
+                    <p class="mbr-fonts-style display-4 text-muted px-3">Внимание! Если Вы уже оплатили марафон, но доступ к нему не появился, <b><a href="/#accordion01-a" class="text-primary">обратитесь к ответам на наиболее частые вопросы на главной странице сайта</a>.</b></p>
+
+                        <form method="POST" action="/api/payment/{{ marathon.pk }}"> {% csrf_token %}
+                            <div class="mbr-section-btn align-center align-self-center">
+                                <button class="btn btn-lg btn-primary display-4" type="submit" style="border-radius: 100px">Получить марафон за {{ marathon.cost }}₽</button></div>
+                        </form>
                 {% endif %}
                 </p>
                 </div>
