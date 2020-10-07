@@ -1,4 +1,4 @@
-
+import math
 from datetime import datetime, timedelta
 from django.utils import timezone
 
@@ -97,10 +97,15 @@ class Index(ContextViewMixin):
         reviews = models.Feedback.objects.filter(kind=1)[:30]
         settings = models.Setting.objects.get()
         feedback = request.session.pop('feedback') if 'feedback' in request.session else False
+        lessons = settings.main_marathon.lesson_set.all().order_by('number')
+        lessons_1 = lessons[:math.floor(len(lessons)/2)]
+        lessons_2 = lessons[math.ceil(len(lessons)/2):]
         context = self.make_context(form=form,
                                     reviews=reviews,
                                     settings=settings,
                                     feedback=feedback,
+                                    lessons_1=lessons_1,
+                                    lessons_2=lessons_2,
                                     GOOGLE_RECAPTCHA_SITE_KEY=cnf.RECAPTCHA_PUBLIC_KEY)
         return render(request, 'index.html', context=context)
 

@@ -68,7 +68,7 @@
                     {% if settings.main_marathon.title|wordcount <= 1 %}
                     <h3 class="mbr-section-title mbr-bold align-left mbr-fonts-style header display-1"><span></span>&nbsp;<span>{{ settings.main_marathon.title }}</span>&nbspЭКСПРЕСС-МАРАФОН</h3>
                     {% else %}
-                    <h3 class="mbr-section-title mbr-bold align-left mbr-fonts-style header display-1"><span>{{ settings.main_marathon.title|title_general }}</span>&nbsp;<span>{{ settings.main_marathon.title|title_last }}</span>&nbspЭКСПРЕСС-МАРАФОН</h3>
+                    <h3 class="mbr-section-title mbr-bold align-left mbr-fonts-style header display-1"><span>{{ settings.main_marathon.title_general }}</span>&nbsp;<span>{{ settings.main_marathon.title_last }}</span>&nbspЭКСПРЕСС-МАРАФОН</h3>
                     {% endif %}
 {#                    <h4 class="mbr-section-subtitle pb-1 align-left mbr-regular mbr-fonts-style display-2"><strong>МАРАФОН</strong></h4>#}
                     
@@ -329,177 +329,81 @@
                 <div id="bootstrap-accordion_02" class="panel-group accordionStyles accordion" role="tablist" aria-multiselectable="true">
                     <div class="row">
                         <div class="col-lg-6">
-                            <div class="card">
-                                <div class="card-header" role="tab" id="heading0">
-                                    <a role="button" class="panel-title collapsed text-black pr-3" data-toggle="collapse" data-core="" href="#collapse0_22" aria-expanded="false" aria-controls="collapse11">
+                            {% for lesson_1 in lessons_1 %}
+                                <div class="card">
+                                <div class="card-header" role="tab" id="heading{{ lesson_1.pk }}">
+                                    <a role="button" class="panel-title collapsed text-black pr-3 {% if not lesson_1.description %}inactive cursor_default{% endif %}" data-toggle="collapse" data-core="" href="#collapse{{ lesson_1.pk }}_22" aria-expanded="false" aria-controls="collapse{{ lesson_1.pk }}1">
 
-                                        <h4 class="mbr-fonts-style display-7">Бесплатный вводный урок. <span class="text-primary">Смотри уже сейчас</span><span class="toggle-icon inactive sign mbr-iconfont"></span>
+                                        <h4 class="mbr-fonts-style display-7">
+                                            {% if lesson_1.free %}
+                                                {{ lesson_1.title }}<span class="text-primary"> Смотри уже сейчас</span>
+                                            {% else %}
+                                                {{ lesson_1.number }} этап.<span class="text-primary"> {{ lesson_1.title }}</span>
+                                            {% endif %}
+                                            {% if lesson_1.description %}
+                                                <span class="toggle-icon inactive sign mbr-iconfont"></span>
+                                            {% endif %}
                                         </h4>
 
                                     </a>
                                 </div>
-                                <div id="collapse0_22" class="panel-collapse noScroll collapse " role="tabpanel" aria-labelledby="heading1" data-parent="#bootstrap-accordion_02">
+                                <div id="collapse{{ lesson_1.pk }}_22" class="panel-collapse noScroll collapse " role="tabpanel" aria-labelledby="heading{{ lesson_1.pk }}" data-parent="#bootstrap-accordion_02">
                                     <div class="panel-body">
+                                        {% if lesson_1.free %}
                                         <p class="mbr-fonts-style panel-text pr-2 display-4 font-weight-bold">
                                             Регистрируйся в личном кабинете и смотри урок бесплатно</p>
                                             <div><a href="/register"  class="btn btn-primary display-4" style="border-radius: 100px">Смотреть ролик</a></div>
+                                        {% else %}
+                                            <ul class="mbr-fonts-style panel-text pr-2 display-4 font-weight-bold">
+                                                {% for d in lesson_1.description.description_as_list %}
+                                                    <li>{{ d }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="card">
-                                <div class="card-header" role="tab" id="heading1">
-                                    <a role="button" class="panel-title collapsed text-black pr-3" data-toggle="collapse" data-core="" href="#collapse1_22" aria-expanded="false" aria-controls="collapse12">
-
-                                        <h4 class="mbr-fonts-style display-7">1 этап.<span class="text-primary"> Точка опоры</span><span class="toggle-icon inactive sign mbr-iconfont"></span>
-                                        </h4>
-
-                                    </a>
-                                </div>
-                                <div id="collapse1_22" class="panel-collapse noScroll collapse " role="tabpanel" aria-labelledby="heading1" data-parent="#bootstrap-accordion_02">
-                                    <div class="panel-body">
-                                        <ul class="mbr-fonts-style panel-text pr-2 display-4 font-weight-bold">
-                                            <li>«Своё» дело</li>
-                                            <li>Диагностика своего предназначения</li>
-                                            <li>Личная миссия и роль в жизни</li>
-                                            <li>Перезагрузка и новый старт</li>
-                                            <li>Разговор со своим будущим</li>
-                                            <li>Голос тела</li>
-                                        </ul>
-
-{#                                        <p class="mbr-fonts-style panel-text pr-2 display-4"></p>#}
-
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-header" role="tab" id="heading2">
-                                    <a role="button" class="collapsed panel-title text-black pr-3" data-toggle="collapse" data-core="" href="#collapse2_22" aria-expanded="false" aria-controls="collapse13">
-                                        <h4 class="mbr-fonts-style display-7">2 этап.<span class="text-primary"> Упаковка</span><span class="toggle-icon inactive sign mbr-iconfont"></span>
-                                        </h4>
-                                    </a>
-
-                                </div>
-                                <div id="collapse2_22" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="heading2" data-parent="#bootstrap-accordion_02">
-                                    <div class="panel-body">
-                                        <ul class="mbr-fonts-style panel-text pr-2 display-4 font-weight-bold">
-                                            <li>Оформление видения</li>
-                                            <li>Ресурсы для старта</li>
-                                            <li>Создание профиля личности</li>
-                                            <li>Сборка пазла</li>
-                                            <li>Чистка эфира</li>
-                                            <li>Как найти своего флагмана</li>
-                                        </ul>
-{#                                        <p class="mbr-fonts-style panel-text pr-2 display-4"></p>#}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-header" role="tab" id="heading3">
-                                    <a role="button" class="collapsed text-black panel-title pr-3" data-toggle="collapse" data-core="" href="#collapse3_22" aria-expanded="false" aria-controls="collapse14">
-                                        <h4 class="mbr-fonts-style display-7">3 этап.<span class="text-primary"> Продвижение</span><span class="toggle-icon inactive sign mbr-iconfont"></span>
-                                        </h4>
-                                    </a>
-                                </div>
-                                <div id="collapse3_22" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="heading3" data-parent="#bootstrap-accordion_02">
-                                    <div class="panel-body">
-                                        <ul class="mbr-fonts-style panel-text pr-2 display-4 font-weight-bold">
-                                            <li>Расчищаем путь к успеху</li>
-                                            <li>Препятствия больше не проблема</li>
-                                            <li>Правильные и неправильные действия</li>
-                                            <li>Цель и стратегия твоего успеха</li>
-                                            <li>Чистка эфира</li>
-                                            <li>Заправка</li>
-                                            <li>Граница - Масштабирование</li>
-                                        </ul>
-{#                                        <p class="mbr-fonts-style panel-text pr-2 display-4"></p>#}
-                                    </div>
-                                </div>
-                            </div>
-
-
+                            {% endfor %}
 
                         </div>
+
                         <div class="col-lg-6">
-{#                            <div class="card">#}
+                            {% for lesson_2 in lessons_2 %}
                                 <div class="card">
-                                <div class="card-header" role="tab" id="heading4">
-                                    <a role="button" class="collapsed panel-title text-black pr-3" data-toggle="collapse" data-core="" href="#collapse4_22" aria-expanded="false" aria-controls="collapse15">
-                                        <h4 class="mbr-fonts-style display-7">4 этап.<span class="text-primary"> Комплектация “LUXE”</span><span class="toggle-icon inactive sign mbr-iconfont"></span></h4>
-                                    </a>
-                                </div>
-                                <div id="collapse4_22" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="heading4" data-parent="#bootstrap-accordion_02">
-                                    <div class="panel-body">
-                                        <ul class="mbr-fonts-style panel-text pr-2 display-4 font-weight-bold">
-                                            <li>Личный бренд</li>
-                                            <li>Навыки для новой высоты</li>
-                                            <li>Где брать ресурсы</li>
-                                            <li>Борьба двух качеств</li>
-                                            <li>Украсить свою жизнь</li>
-                                        </ul>
-{#                                        <p class="mbr-fonts-style panel-text pr-2 display-4"></p>#}
-                                    </div>
-                                </div>
-                            </div>
-{#                            </div>#}
-                             <div class="card">
-                                <div class="card-header" role="tab" id="heading5">
-                                    <a role="button" class="collapsed panel-title text-black pr-3" data-toggle="collapse" data-core="" href="#collapse5_22" aria-expanded="false" aria-controls="collapse16">
-                                        <h4 class="mbr-fonts-style display-7">5 этап.<span class="text-primary"> Лидерство</span><span class="toggle-icon inactive sign mbr-iconfont"><br></span></h4>
-                                    </a>
-                                </div>
-                                <div id="collapse5_22" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="heading5" data-parent="#bootstrap-accordion_02">
-                                    <div class="panel-body">
-                                        <ul class="mbr-fonts-style panel-text pr-2 display-4 font-weight-bold">
-                                            <li>Лучшая версия себя</li>
-                                            <li>Этапы развития лидера</li>
-                                            <li>Команда мастеров</li>
-                                            <li>Лучший твой ресурс</li>
-                                        </ul>
-{#                                        <p class="mbr-fonts-style panel-text pr-2 display-4"></p>#}
-                                    </div>
-                                </div>
-                            </div>
+                                <div class="card-header" role="tab" id="heading0">
+                                    <a role="button" class="panel-title collapsed text-black pr-3 {% if not lesson_2.description %}inactive cursor_default{% endif %}" data-toggle="collapse" data-core="" href="#collapse{{ lesson_2.pk }}_22" aria-expanded="false" aria-controls="collapse{{ lesson_2.pk }}1">
 
-                                <div class="card">
-                                <div class="card-header" role="tab" id="heading6">
-                                    <a role="button" class="panel-title collapsed text-black pr-3" data-toggle="collapse" data-core="" href="#collapse7_22" aria-expanded="false" aria-controls="collapse18">
-                                        <h4 class="mbr-fonts-style display-7">6 этап.<span class="text-primary"> Франшиза</span><span class="toggle-icon inactive sign mbr-iconfont"></span>
+                                        <h4 class="mbr-fonts-style display-7">
+                                            {% if lesson_2.free %}
+                                                {{ lesson_2.title }}<span class="text-primary">Смотри уже сейчас</span>
+                                            {% else %}
+                                                {{ lesson_2.number }} этап.<span class="text-primary"> {{ lesson_2.title }}</span>
+                                            {% endif %}
+                                            {% if lesson_2.description %}
+                                                <span class="toggle-icon inactive sign mbr-iconfont"></span>
+                                            {% endif %}
                                         </h4>
-                                    </a>
-                                </div>
-                                <div id="collapse7_22" class="panel-collapse noScroll collapse " role="tabpanel" aria-labelledby="heading6" data-parent="#bootstrap-accordion_02">
-                                    <div class="panel-body">
-                                        <ul class="mbr-fonts-style panel-text pr-2 display-4 font-weight-bold">
-                                            <li>Новая стратегия влияния</li>
-                                            <li>Время пришло</li>
-                                            <li>Рождение нового</li>
-                                            <li>Миссионерство</li>
-                                        </ul>
-{#                                        <p class="mbr-fonts-style panel-text pr-2 display-4"></p>#}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-header" role="tab" id="heading7">
-                                    <a role="button" class="collapsed panel-title text-black pr-3" data-toggle="collapse" data-core="" href="#collapse8_22" aria-expanded="false" aria-controls="collapse19">
-                                        <h4 class="mbr-fonts-style display-7">Интенсив<span class="text-primary"> «Семья - радость или гадость?»</span><span class="toggle-icon inactive sign mbr-iconfont"></span></h4>
-                                    </a>
 
+                                    </a>
                                 </div>
-                                <div id="collapse8_22" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="heading7" data-parent="#bootstrap-accordion_02">
+                                <div id="collapse{{ lesson_2.pk }}_22" class="panel-collapse noScroll collapse " role="tabpanel" aria-labelledby="heading{{ lesson_2.pk }}" data-parent="#bootstrap-accordion_02">
                                     <div class="panel-body">
-                                        <ul class="mbr-fonts-style panel-text pr-2 display-4 font-weight-bold">
-                                            <li>Как пройти кризисы</li>
-                                            <li>Вернуть страсть</li>
-                                            <li>В чем защита отношений</li>
-                                            <li>Интересные лайфхаки</li>
-                                        </ul>
-{#                                        <p class="mbr-fonts-style panel-text pr-2 display-4"></p>#}
+                                        {% if lesson_2.free %}
+                                        <p class="mbr-fonts-style panel-text pr-2 display-4 font-weight-bold">
+                                            Регистрируйся в личном кабинете и смотри урок бесплатно</p>
+                                            <div><a href="/register"  class="btn btn-primary display-4" style="border-radius: 100px">Смотреть ролик</a></div>
+                                        {% else %}
+                                            <ul class="mbr-fonts-style panel-text pr-2 display-4 font-weight-bold">
+                                                {% for de in lesson_2.description_as_list %}
+                                                    <li>{{ de }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
+                            {% endfor %}
+
 
 
                         </div>

@@ -28,7 +28,8 @@ def check_payment_status():
     периодическая проверка неконечных статусов платежа, с момента создания которых прошел час
     (в течении часа пользователю доступен виджет оплаты в статусе -pending-)
     """
-    payments = models.Payment.objects.exclude(account__isnull=True, status__in=['succeeded', 'canceled'])
+    payments = models.Payment.objects.exclude(account__isnull=True, status__in=['succeeded', 'canceled'],
+                                              yuid__isnull=True)
     if payments:
         try:
             upper_settings = models.UpperSetting.objects.get()
@@ -114,7 +115,7 @@ def mass_email_send_day_before():
         text = f'<p>Вы стали участником марафона. Осталось сделать последний шаг. ' \
                f'Места ограничены! Не отдайте свой успех другому!</p>' \
                f'<p><a href="{sett.website}" target="_blank" style="font-weight: bold; color: #000">{sett.website}</a></p>' \
-               # f'Завтра в 16:00 по моск. времени'
+            # f'Завтра в 16:00 по моск. времени'
         form_mail(lessons, text, subject, add_time=True, only_not_paid=True)
 
 
@@ -142,7 +143,8 @@ def mass_notify_for_not_paid():
            f'Первый урок «Точка опоры» уже ждёт вас в вашем личном кабинете ' \
            f'<a href="{sett.website}" target="_blank" style="font-weight: bold; color: #000">{sett.website}</a></p>' \
            f'<p>Не останавливайтесь!</p>'
-    emails = models.Account.objects.exclude(payment__status="succeeded").values_list('user__email', flat=True).distinct()
+    emails = models.Account.objects.exclude(payment__status="succeeded").values_list('user__email',
+                                                                                     flat=True).distinct()
     mail_context = {"settings": sett, "message": text}
     html_message = render_to_string('mail/new_lesson_notify.html', mail_context)
 
@@ -195,7 +197,7 @@ def start_mailing(pk):
 
 
 @app.task(name="front.tasks.send_mail", ignore_result=True)
-def send_mail(subject, message, recipient_list, from_email=None, attach: iter=None):
+def send_mail(subject, message, recipient_list, from_email=None, attach: iter = None):
     """
         отправка письма
     """

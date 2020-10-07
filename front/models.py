@@ -110,6 +110,12 @@ class Marathon(models.Model):
         verbose_name = "Марафон"
         verbose_name_plural = "Марафоны"
 
+    def title_general(self):
+        return str(self.title).upper()[:str(self.title).rfind(' ')]
+
+    def title_last(self):
+        return str(self.title).upper()[str(self.title).rfind(' ') + 1:]
+
     def __str__(self):
         return f"{self.title}"
 
@@ -220,7 +226,7 @@ class Lesson(models.Model):
                                               verbose_name="Порядковый номер темы в марафоне")
     title = models.CharField(max_length=250, blank=False, null=False, verbose_name="Название темы/вебинара")
     free = models.BooleanField(default=False, verbose_name="Тема доступна без покупки марафона")
-    description = models.TextField(default=None, blank=True, null=True, verbose_name="Комментарий к теме/вебинару")
+    description = models.TextField(default=None, blank=True, null=True, verbose_name="Подэтапы, описание, пункты темы через запятую")
     hometask = models.TextField(default=None, blank=True, null=True, verbose_name="Домашнее задание по теме/вебинару")
     hometask_file = models.FileField(upload_to=user_directory_path, null=True, blank=True,
                                      verbose_name="Файл Домашнего задания по теме/вебинару")
@@ -235,6 +241,10 @@ class Lesson(models.Model):
         unique_together = ('number', 'marathon')
         verbose_name = "Тема/Вебинар"
         verbose_name_plural = "Темы/Вебинары"
+
+    def description_as_list(self):
+        return self.description.split(',')
+
 
     def __str__(self):
         return f"Тема:{self.title} -  №{self.number} - марафон: {self.marathon}"
