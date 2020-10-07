@@ -20,7 +20,6 @@ from django.contrib.auth.decorators import login_required
 from django.views.static import serve
 
 from front import models, forms, functions
-from front.logging_methods import maillog
 
 
 
