@@ -146,11 +146,13 @@
                                 <div id="collapse{{ lesson.number }}_26" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="heading{{ lesson.number }}" data-parent="#bootstrap-accordion_26">
                                     <div class="panel-body">
 {#                                               <div class="mbr-fonts-style panel-text pr-2 display-4 py-0 my-0">#}
-                                                    <ul class="mbr-fonts-style panel-text pr-2 display-4 font-weight-bold py-0 my-0">
-                                                     {% for de in lesson.description_as_list %}
-                                                         <li>{{ de }}</li>
-                                                     {% endfor %}
-                                                     </ul>
+                                                    {% if lesson.description %}
+                                                        <ul class="mbr-fonts-style panel-text pr-2 display-4 font-weight-bold py-0 my-0">
+                                                         {% for de in lesson.description_as_list %}
+                                                             <li>{{ de }}</li>
+                                                         {% endfor %}
+                                                         </ul>
+                                                     {% endif %}
 {#                                                   <strong>{{ lesson.description|linebreaks }}</strong>#}
 {#                                               </div>#}
                                                 {% if lesson.hometask or lesson.hometask_file %}
