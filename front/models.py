@@ -160,6 +160,9 @@ class Account(models.Model):
     def __str__(self):
         return f"{self.user.get_full_name()}"
 
+    def has_success_payment(self):
+        return self.payment_set.filter(status="succeeded").exists()
+
 
 class Mailing(models.Model):
     PAYED = 1
