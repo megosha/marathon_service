@@ -1,14 +1,10 @@
-# TODO payment.status != success and != success canceled
-# TODO payment.status_mail_invoice and success
-# TODO payment.status_mail_lesson and payment.marathon.lesson_set.filter(date_publish-timezone.now<1)
-# TODO account.registry_sent == False
 from datetime import timedelta
 
 from django.db.models import Q
 from django.template.loader import render_to_string
 from django.utils import timezone
 
-from front import models
+from front import models, functions
 # from front.functions import sendmail
 from marathon.celery import app
 
@@ -21,6 +17,32 @@ app.conf.task_default_queue = 'default'
 
 sett = models.Setting.objects.filter().first()
 
+@app.task(name="front.tasks.check_registry_sent", ignore_result=True)
+def check_registry_sent():
+    """
+        периодическая проверка неотправленных писем о регистрации
+    """
+    sett = models.Setting.objects.filter().first()
+    accounts = models.Account.objects.exclude(registry_sent=True)
+    for a in accounts:
+        new_password = functions.generate_code(length=8)
+        a.user.set_password(new_password)
+        a.user.save()
+        subject = 'Регистрация на платформе марафона "Движение Вверх"'
+        mail_context = {"login": a.user.username,
+                        "password": new_password,
+                        "settings": sett,
+                        "account": a}
+        html_message = render_to_string('mail/registration.html', mail_context)
+        # plain_message = strip_tags(html_message)
+        send_email = models.sendmail(subject=subject, message=html_message, recipient_list=[a.user.email])
+        if not send_email:
+            a.registry_sent = False
+            a.save()
+        else:
+            a.registry_sent = True
+            a.save()
+
 
 @app.task(name="front.tasks.check_payment_status", ignore_result=True)
 def check_payment_status():
@@ -28,8 +50,7 @@ def check_payment_status():
     периодическая проверка неконечных статусов платежа, с момента создания которых прошел час
     (в течении часа пользователю доступен виджет оплаты в статусе -pending-)
     """
-    payments = models.Payment.objects.exclude(account__isnull=True, status__in=['succeeded', 'canceled'],
-                                              yuid__isnull=True)
+    payments = models.Payment.objects.filter(account__isnull=False, yuid__isnull=False).exclude(status__in=['succeeded', 'canceled'])
     if payments:
         try:
             upper_settings = models.UpperSetting.objects.get()
@@ -102,6 +123,16 @@ def form_mail(lessons, text, subject, add_time=False, only_not_paid=False):
         if not only_not_paid:
             for email in accounts_payd:
                 send_email = models.sendmail(subject=subject, message=html_message, recipient_list=[email])
+
+@app.task(name="front.tasks.clean_bots", ignore_result=True)
+def clean_bots():
+    """
+        удаление аккаунтов, которые не подтвердили учетную запись в течение месяца
+
+    """
+    bots = models.Account.objects.filter(registry_sent=True, approved=False, date_registry__lt=timezone.now()-32)
+    for b in bots:
+        b.user.delete()
 
 
 @app.task(name="front.tasks.mass_email_send_before", ignore_result=True)

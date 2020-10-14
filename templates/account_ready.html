@@ -296,74 +296,91 @@
 {#<!--    </div>-->#}
 {#<!--</section>-->#}
 
-{#<section class="content02 cid-s8WRsGW5AR" id="content02-12">#}
-{##}
-{#    #}
-{##}
-{#    #}
-{#    <div class="container">#}
-{#        <div class="row">#}
-{#            <div class="card col-12 col-md-12">#}
-{#                <div class="wrapper align-left">#}
-{#                    <h3 class="mbr-section-title mbr-bold align-left mbr-fonts-style display-2"><span>Понравился</span>&nbsp;<span>Марафон</span>&nbsp;?</h3>#}
-{#                    <h3 class="mbr-section-title mbr-bold align-left mbr-fonts-style display-2"><span>Оставь </span>&nbsp;<span>отзыв</span>&nbsp;!</h3>#}
-{#                    #}
-{#                    #}
-{#                    <div class="buttons-wrap mt-4">#}
-{#                        <div class="mbr-section-btn align-left align-self-center"><a class="btn btn-sm btn-success display-4" href="#" data-toggle="modal" data-target="#mbr-popup-13">Написать отзыв</a>#}
-{#<!--                             <a class="btn btn-sm btn-primary" href="#" data-app-placeholder="Введите Текст">Schedule Maintenance</a> --></div>#}
-{#                    </div>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
-{#</section>#}
-{##}
-{#<div class="modal mbr-popup cid-s8WRunfqAc fade" tabindex="-1" role="dialog" data-overlay-color="#000000" data-overlay-opacity="0.8" id="mbr-popup-13" aria-hidden="true">#}
-{#        <div class="modal-dialog modal-dialog-centered" role="document">#}
-{#            <div class="modal-content">#}
-{#                <div class="modal-header">#}
-{#                    #}
-{#                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">#}
-{#                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 32 32" fill="currentColor">#}
-{#                            <path d="M31.797 0.191c-0.264-0.256-0.686-0.25-0.942 0.015l-13.328 13.326c-0.598 0.581 0.342 1.543 0.942 0.942l13.328-13.326c0.27-0.262 0.27-0.695 0-0.957zM14.472 17.515c-0.264-0.256-0.686-0.25-0.942 0.015l-13.328 13.326c-0.613 0.595 0.34 1.562 0.942 0.942l13.328-13.326c0.27-0.262 0.27-0.695 0-0.957zM1.144 0.205c-0.584-0.587-1.544 0.336-0.942 0.942l30.654 30.651c0.613 0.625 1.563-0.325 0.942-0.942z"></path>#}
-{#                        </svg>#}
-{#                    </button>#}
-{#                </div>#}
-{##}
-{#                <div class="modal-body">#}
-{#                    #}
-{##}
-{#                    <div>#}
-{#                        #}
-{#                            #}
-{##}
-{#                            <div class="form-wrapper" data-form-type="formoid">#}
-{#<!--Formbuilder Form-->#}
-{#<form action="https://mobirise.eu/" method="POST" class="mbr-form form-with-styler" data-form-title="Mobirise Form"><input type="hidden" name="email" data-form-email="true" value="VYic1nDpFwH5XBd8qy1I0Yz1tdrUUS8vMriB2neOxdKXoLNFuGTodVikPGrepauPh6eGaJEF2ntuJ43EvDRL5iMuS9s2j0hYZ5Y30HQJJoMTYawSa7qia6sG0i53DOAZ">#}
-{#<div class="">#}
-{#<div hidden="hidden" data-form-alert="" class="alert alert-success col-12">Ваш отзыв успешно получен! Спасибо за обратную связь!</div>#}
-{#<div hidden="hidden" data-form-alert-danger="" class="alert alert-danger col-12">#}
-{#</div>#}
-{#</div>#}
-{#<div class="dragArea">#}
-{#<div class="col-lg-12 col-md-12 col-sm-12 form-group" data-for="avatar">#}
-{#<label for="avatar-mbr-popup-13" class="form-control-label mbr-fonts-style display-7">Ваша фотография (по желанию)</label>#}
+
+{# {% if not user.account.feedback_set %}#}
+
+<section class="content02 cid-s8WRsGW5AR" id="content02-12">
+
+    <div class="container">
+        <div class="row">
+            <div class="card col-12 col-md-12">
+                <div class="wrapper align-left">
+                    <h3 class="mbr-section-title mbr-bold align-left mbr-fonts-style display-2"><span>Понравился</span>&nbsp;<span>марафон</span>&nbsp;?</h3>
+                    <h3 class="mbr-section-title mbr-bold align-left mbr-fonts-style display-2"><span>Оставь </span>&nbsp;<span>отзыв</span>&nbsp;!</h3>
+
+
+                    <div class="buttons-wrap mt-4">
+                        <div class="mbr-section-btn align-left align-self-center"><a class="btn btn-sm btn-success display-4" href="#" data-toggle="modal" data-target="#mbr-popup-13">Написать отзыв</a>
+<!--                             <a class="btn btn-sm btn-primary" href="#" data-app-placeholder="Введите Текст">Schedule Maintenance</a> --></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal mbr-popup cid-s8WRunfqAc fade" tabindex="-1" role="dialog" data-overlay-color="#000000" data-overlay-opacity="0.8" id="mbr-popup-13" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 32 32" fill="currentColor">
+                            <path d="M31.797 0.191c-0.264-0.256-0.686-0.25-0.942 0.015l-13.328 13.326c-0.598 0.581 0.342 1.543 0.942 0.942l13.328-13.326c0.27-0.262 0.27-0.695 0-0.957zM14.472 17.515c-0.264-0.256-0.686-0.25-0.942 0.015l-13.328 13.326c-0.613 0.595 0.34 1.562 0.942 0.942l13.328-13.326c0.27-0.262 0.27-0.695 0-0.957zM1.144 0.205c-0.584-0.587-1.544 0.336-0.942 0.942l30.654 30.651c0.613 0.625 1.563-0.325 0.942-0.942z"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+
+
+                    <div>
+
+
+
+                            <div class="form-wrapper" data-form-type="formoid">
+<!--Formbuilder Form-->
+<form action="/me" method="POST" class="mbr-form form-with-styler" enctype="multipart/form-data" data-form-title="Mobirise Form"><input type="hidden" name="email" data-form-email="true" value="VYic1nDpFwH5XBd8qy1I0Yz1tdrUUS8vMriB2neOxdKXoLNFuGTodVikPGrepauPh6eGaJEF2ntuJ43EvDRL5iMuS9s2j0hYZ5Y30HQJJoMTYawSa7qia6sG0i53DOAZ">
+{% csrf_token %}
+    <div class="">
+<div hidden="hidden" data-form-alert="" class="alert alert-success col-12">Ваш отзыв успешно получен! Спасибо за обратную связь!</div>
+{% if form.errors.custom %}
+    <div class="alert alert-warning col-12 rounded p-0 m-0">
+        <span class="mbr-fonts-style display-4 text-light p-0 m-0">{{ form.errors.custom }}</span>
+    </div>
+ {% endif %}
+</div>
+</div>
+<div class="dragArea">
+<div class="col-lg-12 col-md-12 col-sm-12 form-group" data-for="avatar">
+<label for="{{ form.id_photo }}" class="form-control-label mbr-fonts-style display-7">Ваша фотография (по желанию)</label>
 {#<input type="text" name="avatar" data-form-field="avatar" class="form-control display-7" value="" id="avatar-mbr-popup-13">#}
-{#</div>#}
-{#<div class="col-lg-12 col-md-12 col-sm-12 form-group" data-for="content">#}
-{#<label for="content-mbr-popup-13" class="form-control-label mbr-fonts-style display-7">Текст Вашего отзыва</label>#}
+    {{ form.photo }}
+    {% if form.photo.errors %}
+        <div class="alert alert-warning col-12 rounded p-0 m-0">
+            <span class="mbr-fonts-style subtext display-4 text-light p-0 m-0">{{ form.photo.errors }}</span>
+        </div>
+    {% endif %}
+</div>
+<div class="col-lg-12 col-md-12 col-sm-12 form-group" data-for="content">
+<label for="{{ form.id_review }}" class="form-control-label mbr-fonts-style display-7">Текст Вашего отзыва</label>
 {#<textarea name="content" data-form-field="content" class="form-control display-7" required="required" id="content-mbr-popup-13"></textarea>#}
-{#</div>#}
-{#<div class="col-md-auto input-group-btn">#}
-{#<button type="submit" class="btn btn-primary display-4">Отправить</button>#}
-{#</div>#}
-{#</div>#}
-{#</form><!--Formbuilder Form-->#}
-{#</div>#}
-{#                        </div>#}
-{#                    </div>#}
-{##}
+    {{ form.review }}
+    {% if form.review.errors %}
+        <div class="alert alert-warning col-12 rounded p-0 m-0">
+            <span class="mbr-fonts-style subtext display-4 text-light p-0 m-0">{{ form.review.errors }}</span>
+        </div>
+    {% endif %}
+</div>
+<div class="col-md-auto input-group-btn">
+<button type="submit" class="btn btn-primary display-4">Отправить</button>
+</div>
+</div>
+</form><!--Formbuilder Form-->
+</div>
+                        </div>
+                    </div>
+
 {#                    <div class="modal-footer pt-0">#}
 {#                        <div class="mbr-section-btn">#}
 {#                            <a class="btn btn-md btn-primary display-4" href="#">#}
@@ -371,9 +388,10 @@
 {#                            </a>#}
 {#                        </div>#}
 {#                    </div>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
+                </div>
+            </div>
+        </div>
+{# {% endif %}#}
 
 {#<div class="modal mbr-popup cid-s9ut0GCzMC fade" tabindex="-1" role="dialog" data-overlay-color="#000000" data-overlay-opacity="0.8" id="mbr-popup-2s" aria-hidden="true">#}
 {#        <div class="modal-dialog modal-dialog-centered" role="document">#}

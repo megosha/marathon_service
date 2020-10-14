@@ -21,11 +21,11 @@ from django.views.static import serve
 
 from front import models, forms, functions
 
-
-
 # import environ
 from django.conf import settings as cnf
 from os import path
+
+from PIL import Image, ExifTags
 
 
 # base_dir = sett.BASE_DIR
@@ -61,6 +61,7 @@ def get_hometask(request, marathon_pk, lesson_number):
             return serve(request, f"{hometask_file}", '/')
         return HttpResponseNotFound()
 
+
 class ContextViewMixin(View):
     def make_context(self, context=None, **kwargs):
         if not context: context = {}
@@ -93,12 +94,12 @@ class Test(ContextViewMixin):
 class Index(ContextViewMixin):
     def base(self, request, form=None):
         if form is None: form = forms.Feedback()
-        reviews = models.Feedback.objects.filter(kind=1)[:30]
+        reviews = models.Feedback.objects.filter(kind=1, accepted=True)[:30]
         settings = models.Setting.objects.get()
         feedback = request.session.pop('feedback') if 'feedback' in request.session else False
         lessons = settings.main_marathon.lesson_set.all().order_by('number')
-        lessons_1 = lessons[:math.floor(len(lessons)/2)]
-        lessons_2 = lessons[math.ceil(len(lessons)/2):]
+        lessons_1 = lessons[:math.floor(len(lessons) / 2)]
+        lessons_2 = lessons[math.ceil(len(lessons) / 2):]
         context = self.make_context(form=form,
                                     reviews=reviews,
                                     settings=settings,
@@ -194,7 +195,8 @@ class Register(ContextViewMixin):
                         else:
                             account.registry_sent = True
                             account.save()
-                            request.session['registry'] = f'Данные для входа в личный кабинет отправлены на <span class="text-primary">{email}</span>'
+                            request.session[
+                                'registry'] = f'Данные для входа в личный кабинет отправлены на <span class="text-primary">{email}</span>'
                             return HttpResponseRedirect('/login')
                     else:
                         user.delete()
@@ -256,7 +258,7 @@ class RemoveAccount(LoginRequiredMixin, ContextViewMixin):
             html_message = render_to_string('mail/remove.html', mail_context)
             # plain_message = strip_tags(html_message)
             send_email = models.sendmail(subject=subject, message=html_message,
-                                            recipient_list=[self.request.user.email])
+                                         recipient_list=[self.request.user.email])
             if not send_email:
                 return JsonResponse({'sendmail': send_email})
             else:
@@ -312,7 +314,6 @@ class ResetPassword(ContextViewMixin):
         return self.base(request, form=form)
 
 
-# todo feedback
 class Account(LoginRequiredMixin, ContextViewMixin):
 
     @staticmethod
@@ -329,7 +330,7 @@ class Account(LoginRequiredMixin, ContextViewMixin):
                 values_dict[item[key]] = item
         return values_dict
 
-    def get(self, request, form=None):
+    def get(self, request):
         if not models.Account.objects.filter(user=self.request.user).exists():
             return HttpResponseRedirect('/')
         context = {}
@@ -356,17 +357,64 @@ class Account(LoginRequiredMixin, ContextViewMixin):
         else:
             lessons = []
         # current_date = timezone.now()
-        context = self.make_context(context=context, marathon=marathon, marathones=marathones, lessons=lessons)
+        form = forms.Review()
+        context = self.make_context(context=context, marathon=marathon, marathones=marathones, lessons=lessons,
+                                    form=form)
         return render(request, 'account_ready.html', context=context)
 
-    # def post(self, request):
-    #     """ для отзывов """
-    #     return self.base(request, form=form)
+    def post(self, request):
+        """ для отзывов """
+        if not models.Account.objects.filter(user=self.request.user).exists():
+            return HttpResponseRedirect('/')
+        form = forms.Review(request.POST, files=request.FILES)
+        if form.is_valid():
+            photo = form.cleaned_data.get("photo")
+            review = form.cleaned_data["review"]
+            kind = models.ReviewKind.objects.filter(pk=1).first()
+            account = self.request.user.account
+            account.photo = photo
+            account.save()
+            img = Image.open(account.photo.path)
+
+            # exif = dict(pilImage._getexif().items())
+            orientation = 0
+            for orientation in ExifTags.TAGS.keys():
+                if ExifTags.TAGS[orientation] == 'Orientation':
+                    break
+            exif = img._getexif()
+            if exif and orientation in exif:
+                if exif[orientation] == 3:
+                    img = img.rotate(180, expand=True)
+                elif exif[orientation] == 6:
+                    img = img.rotate(270, expand=True)
+                elif exif[orientation] == 8:
+                    img = img.rotate(90, expand=True)
+
+            if img.width > img.height:
+                delta_crop = (img.width - img.height) / 2
+                img = img.crop((delta_crop, 0, img.width - delta_crop, img.height))
+            elif img.height > img.width:
+                delta_crop = (img.height - img.width) / 2
+                img = img.crop((0, delta_crop, img.width, img.height - delta_crop))
+            if img.width > 300 or img.height > 300:
+                img = img.resize((300, 300))
+            img.save(account.photo.path, quality=80)
+            review_obj = models.Feedback.objects.create(account=account, feedback=review, kind=kind)
+            settings = models.Setting.objects.filter().first()
+            subject = 'НОВЫЙ ОТЗЫВ О МАРАФОНЕ'
+            message = f'<p>Пользователь: {account.user.get_username} - {account.user.email} </p>' \
+                      f'<p>Текст отзыва: {review_obj.feedback} </p>' \
+                      f'<a href="{settings.website}/api/accept_review/{account.pk}-{review_obj.pk}">Опубликовать отзыв</a>'
+            mail_context = {"settings": settings, "message": message}
+            html_message = render_to_string('mail/news.html', mail_context)
+            models.sendmail(subject, html_message,settings.contact_mail, attach=review_obj.account.photo.path)
+
+        return HttpResponseRedirect('/me')
 
 
 class Book(ContextViewMixin):
     def base(self, request):
-        reviews = models.Feedback.objects.filter(kind=2)
+        reviews = models.Feedback.objects.filter(kind=2, accepted=True)
         context = self.make_context(reviews=reviews)
         return render(request, 'book.html', context=context)
 

@@ -148,7 +148,7 @@ class Account(models.Model):
                                         verbose_name="Письмо о регистрации отправлено")
     date_registry = models.DateTimeField(auto_now=True, verbose_name="Дата регистрации")
     description = models.TextField(verbose_name="Комментарий", default=None, blank=True, null=True)
-    photo = models.FileField(upload_to='images/avatars/', blank=True, verbose_name="Аватар")
+    photo = models.ImageField(upload_to='images/avatars/', blank=True, verbose_name="Аватар")
     city = models.CharField(max_length=100, blank=True, null=True, verbose_name="Город")
 
     # marathone = models.ManyToManyField('Marathon', blank=True, verbose_name="Марафоны")
@@ -204,9 +204,11 @@ class ReviewKind(models.Model):
 class Feedback(models.Model):
     account = models.ForeignKey(Account, blank=True, null=True, on_delete=models.SET_NULL,
                                 verbose_name="Аккаунт на сайте")
-    kind = models.ForeignKey(ReviewKind, default=None, blank=True, null=True, on_delete=models.SET_NULL,
+    kind = models.ForeignKey(ReviewKind, default=1, blank=True, null=True, on_delete=models.SET_NULL,
                              verbose_name="Тип отзыва")
     feedback = models.TextField(null=True, blank=True, verbose_name="Отзыв")
+    accepted = models.BooleanField(default=False, blank=True, null=True,
+                                        verbose_name="Отзыв опубликован")
     date_create = models.DateTimeField(auto_now=True, verbose_name="Дата создания отзыва")
     custom_user = models.CharField(max_length=250, blank=True, null=True, verbose_name="Имя (ручное добавление)")
     custom_city = models.CharField(max_length=100, blank=True, null=True, verbose_name="Город")
@@ -292,8 +294,8 @@ class Payment(models.Model):
     # status_mail_lesson = models.BooleanField(default=None, blank=True, null=True, verbose_name="Напоминание в день урока отправлено")
 
     class Meta:
-        verbose_name = "Платёж"
-        verbose_name_plural = "Платёжи"
+        verbose_name = "Платеж"
+        verbose_name_plural = "Платежи"
 
     def __str__(self):
         return f"№{self.pk}"

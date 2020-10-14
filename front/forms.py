@@ -1,6 +1,7 @@
 from captcha.fields import ReCaptchaField
-from captcha.widgets import ReCaptchaV3
+# from captcha.widgets import ReCaptchaV3
 from django import forms
+from django.core.validators import FileExtensionValidator
 
 
 class RegisterAccount(forms.Form):
@@ -44,3 +45,12 @@ class Feedback(forms.Form):
         attrs={'type': 'text', 'placeholder': 'Ваш вопрос или сообщение', "class": "form-control display-7",
                "rows": "2"}))
     captcha = ReCaptchaField()
+
+
+class Review(forms.Form):
+    photo = forms.ImageField(required=False,
+                            widget=forms.FileInput(attrs={"accept": '.jpg,.jpeg', "class": "form-control display-7"}),
+                            validators=[FileExtensionValidator(['jpg', 'jpeg'])])
+    review = forms.CharField(required=True, max_length=1204, widget=forms.Textarea(
+        attrs={'type': 'text', 'placeholder': 'Ваш отзыв', "class": "form-control display-7",
+               "rows": "6"}))

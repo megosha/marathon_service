@@ -40,3 +40,16 @@ class RenderDeny(ContextViewMixin):
                                                                   request=request)
         context = self.make_context(form_html=form_html, title='Сброс пароля')
         return render(request, "auth.html", context)
+
+class AcceptReview(View):
+    def get(self, request, account_id, feedback_id):
+        review = models.Feedback.objects.filter(pk=feedback_id, account__pk=account_id).first()
+        context = {}
+        if review:
+            if not review.accepted:
+                review.accepted = True
+                review.save()
+            context['content'] = "Отзыв опубликован"
+        else:
+            context['content'] = "Отзыв не найден"
+        return render(request, "general.html", context)
