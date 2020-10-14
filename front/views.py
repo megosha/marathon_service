@@ -403,8 +403,8 @@ class Account(LoginRequiredMixin, ContextViewMixin):
             settings = models.Setting.objects.filter().first()
             subject = 'НОВЫЙ ОТЗЫВ О МАРАФОНЕ'
             message = f'<p>Пользователь: {account.user.get_username} - {account.user.email} </p>' \
-                      f'<p>Текст отзыва: {review_obj.feedback} </p>' \
-                      f'<a href="{settings.website}/api/accept_review/{account.pk}-{review_obj.pk}">Опубликовать отзыв</a>'
+                      f'<p>Текст отзыва: "{review_obj.feedback}" </p>' \
+                      f'<a style="font-size: 24px; font-weight: bold;" href="{settings.website}/api/accept_review/{account.pk}-{review_obj.pk}">Опубликовать отзыв</a>'
             mail_context = {"settings": settings, "message": message}
             html_message = render_to_string('mail/news.html', mail_context)
             models.sendmail(subject, html_message,settings.contact_mail, attach=review_obj.account.photo.path)
