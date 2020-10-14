@@ -391,6 +391,29 @@
                 </div>
             </div>
         </div>
+
+ {% else %}
+     <section class="content02 cid-s8WRsGW5AR" id="content02-123">
+
+    <div class="container">
+        <div class="row">
+            <div class="card col-12 col-md-12">
+                <div class="wrapper align-left">
+                    <h3 class="mbr-section-title mbr-bold align-left mbr-fonts-style display-2"><span>Ваш</span>&nbsp;<span>отзыв</span>&nbsp;</h3>
+                    {% for review in user.account.feedback_set.all %}
+                    <p class="mbr-section-title mbr-bold align-left mbr-fonts-style mbr-bold align-left mbr-fonts-style display-4">
+                        Статус: {% if review.accepted %}<span class="text-danger">Опубликован</span>{% else %}<span class="text-warning">На проверке</span>{% endif %}
+                    </p>
+                    <p class="mbr-section-title mbr-bold align-left mbr-fonts-style display-7">
+                        {{ review.feedback }}
+                    </p>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+     </section>
  {% endif %}
 
 {#<div class="modal mbr-popup cid-s9ut0GCzMC fade" tabindex="-1" role="dialog" data-overlay-color="#000000" data-overlay-opacity="0.8" id="mbr-popup-2s" aria-hidden="true">#}
