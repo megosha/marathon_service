@@ -13,10 +13,6 @@ from django.utils.safestring import mark_safe
 
 from front.make_invoice import create_pdf
 
-# from celery.task.control import inspect
-
-# from front.functions import sendmail
-
 
 # Create your models here.
 
@@ -192,11 +188,6 @@ class Mailing(models.Model):
         if self.date <= timezone.now():
             self.date = timezone.now() + timedelta(seconds=10)
         start_mailing.apply_async([self.pk], eta=self.date)
-
-    # @staticmethod
-    # def get_processes_queue():
-    #     i = task.control.inspect()
-    #     return i.scheduled()
 
 
 class ReviewKind(models.Model):
