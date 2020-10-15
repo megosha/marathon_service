@@ -101,7 +101,7 @@ class Marathon(models.Model):
     title = models.CharField(max_length=250, blank=False, null=False, verbose_name="Название темы/вебинара")
     cost = models.PositiveIntegerField(default=0, verbose_name="Стоимость марафона (в рублях)")
     date_start = models.DateTimeField(default=None, blank=True, null=True, verbose_name="Дата старта марафона")
-    date_create = models.DateTimeField(auto_now=True, blank=True, null=True, verbose_name="Дата создания")
+    date_create = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name="Дата создания")
     promo = models.CharField(max_length=100, null=True, blank=True,
                              verbose_name="Ссылка на YouTube-видео (Промо-ролик)")
     description = models.TextField(verbose_name="Комментарий/Описание", default=None, blank=True, null=True)
@@ -146,7 +146,7 @@ class Account(models.Model):
                                    verbose_name="Статус подтверждения аккаунта (совершен вход в ЛК)")
     registry_sent = models.BooleanField(default=None, blank=True, null=True,
                                         verbose_name="Письмо о регистрации отправлено")
-    date_registry = models.DateTimeField(auto_now=True, verbose_name="Дата регистрации")
+    date_registry = models.DateTimeField(auto_now_add=True, verbose_name="Дата регистрации")
     description = models.TextField(verbose_name="Комментарий", default=None, blank=True, null=True)
     photo = models.ImageField(upload_to='images/avatars/', blank=True, verbose_name="Аватар")
     city = models.CharField(max_length=100, blank=True, null=True, verbose_name="Город")
@@ -212,7 +212,7 @@ class Feedback(models.Model):
     feedback = models.TextField(null=True, blank=True, verbose_name="Отзыв")
     accepted = models.BooleanField(default=False, blank=True, null=True,
                                         verbose_name="Отзыв опубликован")
-    date_create = models.DateTimeField(auto_now=True, verbose_name="Дата создания отзыва")
+    date_create = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания отзыва")
     custom_user = models.CharField(max_length=250, blank=True, null=True, verbose_name="Имя (ручное добавление)")
     custom_city = models.CharField(max_length=100, blank=True, null=True, verbose_name="Город")
     custom_photo = models.FileField(upload_to='images/avatars/', blank=True, verbose_name="Аватар")
@@ -236,7 +236,7 @@ class Lesson(models.Model):
     hometask_file = models.FileField(upload_to=user_directory_path, null=True, blank=True,
                                      verbose_name="Файл Домашнего задания по теме/вебинару")
     # cost = models.PositiveIntegerField(default=0, verbose_name="Стоимость темы (в рублях)")
-    date_create = models.DateTimeField(auto_now=True, verbose_name="Дата создания")
+    date_create = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     date_publish = models.DateTimeField(default=timezone.now, blank=True, null=True, verbose_name="Дата публикации")
 
     # status_mail_lesson = models.BooleanField(default=None, blank=True, null=True, verbose_name="Напоминание в день урока отправлено")
@@ -261,7 +261,7 @@ class Video(models.Model):
                                               verbose_name="Порядковый номер видео (номер отображения в уроке)")
     link = models.CharField(max_length=25, null=True, blank=True, verbose_name="ID видео на YouTube")
     description = models.TextField(default=None, blank=True, null=True, verbose_name="Комментарий к видео")
-    date_create = models.DateTimeField(auto_now=True, verbose_name="Дата создания")
+    date_create = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
 
     # date_publish = models.DateTimeField(default=timezone.now, blank=True, null=True, verbose_name="Дата публикации")
     # video = models.FileField(null=True, blank=True, verbose_name="Видеофйал")
@@ -277,14 +277,14 @@ class Video(models.Model):
 
 
 class Payment(models.Model):
-    uuid = models.UUIDField(default=uuid.uuid4(), blank=True, primary_key=True,
+    uuid = models.UUIDField(default=uuid.uuid4, blank=True, primary_key=True,
                             verbose_name="Идентификатор платежа в системе / Ключ идемпотентности")
     amount = models.PositiveIntegerField(default=0, verbose_name="Сумма платежа")
     account = models.ForeignKey(Account, blank=True, null=True, on_delete=models.SET_NULL, verbose_name="Аккаунт")
     # lesson = models.ForeignKey(Lesson, blank=False, null=False, on_delete=models.DO_NOTHING, verbose_name="Тема/Вебинар")
     marathon = models.ForeignKey(Marathon, default=None, blank=False, null=False, on_delete=models.DO_NOTHING,
                                  verbose_name="Марафон")
-    date_pay = models.DateTimeField(auto_now=True, blank=False, null=False, verbose_name="Дата оплаты")
+    date_pay = models.DateTimeField(auto_now_add=True, blank=False, null=False, verbose_name="Дата оплаты")
     date_approve = models.DateTimeField(blank=True, null=True, verbose_name="Дата подтверждения платежа")
     request = models.TextField(blank=True, null=True, verbose_name="Запрос в ЯК")
     response = models.TextField(blank=True, null=True, verbose_name="Ответ от ЯК")
@@ -351,7 +351,7 @@ class Logging(models.Model):
         (SUCCESS, "Успешно"),
         (FAIL, "Ошибка"),
     )
-    date = models.DateTimeField(auto_now=True, blank=False, null=False, verbose_name="Дата действия")
+    date = models.DateTimeField(auto_now_add=True, blank=False, null=False, verbose_name="Дата действия")
     action = models.TextField(blank=True, null=True, verbose_name="Действие")
     input_data = models.TextField(blank=True, null=True, verbose_name="Данные на входе")
     output_data = models.TextField(blank=True, null=True, verbose_name="Данные на выходе")
