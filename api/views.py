@@ -178,11 +178,12 @@ class PaymentReturnUrl(ContextViewMixin):
                     log.save()
                 else:
                     if payment.status != payment_info.status:
-                        models.Payment.objects.filter(pk=payment.pk).update(status=payment_info.status)
-                        payment.status = payment_info.status
-                        if payment_info.status == 'succeeded':
-                            payment.date_approve = timezone.now()
-                        payment.save()
+                        payment.status_set(payment_info.status)
+                        # models.Payment.objects.filter(pk=payment.pk).update(status=payment_info.status)
+                        # payment.status = payment_info.status
+                        # if payment_info.status == 'succeeded':
+                        #     payment.date_approve = timezone.now()
+                        # payment.save()
                     log.result = log.SUCCESS
                     try:
                         payment_info_dict = {key: value.__dict__ if isinstance(value, BaseObject) else value for key, value
@@ -225,11 +226,12 @@ class YandexNotify(ContextViewMixin):
         log.save()
         payment_obj = models.Payment.objects.filter(yuid=payment.id).first()
         if payment_obj and payment_obj.status != payment.status:
-            models.Payment.objects.filter(pk=payment_obj.pk).update(status=payment.status)
-            payment_obj.status = payment.status
-            if payment.status == 'succeeded':
-                payment_obj.date_approve = timezone.now()
-            payment_obj.save()
+            payment_obj.status_set(payment.status)
+            # models.Payment.objects.filter(pk=payment_obj.pk).update(status=payment.status)
+            # payment_obj.status = payment.status
+            # if payment.status == 'succeeded':
+            #     payment_obj.date_approve = timezone.now()
+            # payment_obj.save()
 
         return HttpResponse(status=200)
 
