@@ -17,6 +17,7 @@ app.conf.task_default_queue = 'default'
 
 sett = models.Setting.objects.filter().first()
 
+
 @app.task(name="front.tasks.check_registry_sent", ignore_result=True)
 def check_registry_sent():
     """
@@ -50,7 +51,8 @@ def check_payment_status():
     периодическая проверка неконечных статусов платежа, с момента создания которых прошел час
     (в течении часа пользователю доступен виджет оплаты в статусе -pending-)
     """
-    payments = models.Payment.objects.filter(account__isnull=False, yuid__isnull=False).exclude(status__in=['succeeded', 'canceled'])
+    payments = models.Payment.objects.filter(account__isnull=False, yuid__isnull=False).exclude(
+        status__in=['succeeded', 'canceled'])
     if payments:
         try:
             upper_settings = models.UpperSetting.objects.get()
@@ -74,11 +76,12 @@ def check_payment_status():
             try:
                 payment_info = Payment.find_one(payment.yuid)
                 if payment.status != payment_info.status:
-                    models.Payment.objects.filter(pk=payment.pk).update(status=payment_info.status)
-                    payment.status = payment_info.status
-                    if payment_info.status == 'succeeded':
-                        payment.date_approve = timezone.now()
-                    payment.save()
+                    payment.status_set(payment_info.status)
+                    # models.Payment.objects.filter(pk=payment.pk).update(status=payment_info.status)
+                    # payment.status = payment_info.status
+                    # if payment_info.status == 'succeeded':
+                    #     payment.date_approve = timezone.now()
+                    # payment.save()
             except Exception as ex:
                 print(ex)
 
@@ -124,13 +127,15 @@ def form_mail(lessons, text, subject, add_time=False, only_not_paid=False):
             for email in accounts_payd:
                 send_email = models.sendmail(subject=subject, message=html_message, recipient_list=[email])
 
+
 @app.task(name="front.tasks.clean_bots", ignore_result=True)
 def clean_bots():
     """
         удаление аккаунтов, которые не подтвердили учетную запись в течение месяца
 
     """
-    bots = models.Account.objects.filter(registry_sent=True, approved=False, date_registry__lt=timezone.now()-32)
+    bots = models.Account.objects.filter(registry_sent=True, approved=False,
+                                         date_registry__lt=timezone.now() - timedelta(days=90))
     for b in bots:
         b.user.delete()
 

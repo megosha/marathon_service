@@ -4,7 +4,6 @@ from os import path
 import environ
 
 from django.core.mail import EmailMultiAlternatives
-from celery import Celery
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
@@ -13,6 +12,8 @@ from django.utils import timezone
 from django.utils.safestring import mark_safe
 
 from front.make_invoice import create_pdf
+
+# from celery.task.control import inspect
 
 # from front.functions import sendmail
 
@@ -191,6 +192,11 @@ class Mailing(models.Model):
         if self.date <= timezone.now():
             self.date = timezone.now() + timedelta(seconds=10)
         start_mailing.apply_async([self.pk], eta=self.date)
+
+    # @staticmethod
+    # def get_processes_queue():
+    #     i = task.control.inspect()
+    #     return i.scheduled()
 
 
 class ReviewKind(models.Model):
