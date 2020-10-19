@@ -164,8 +164,8 @@
 {#                                               </div>#}
                                                 {% if lesson.hometask or lesson.hometask_file %}
                                                     <p class="mbr-fonts-style panel-text pr-2 display-4 pt-1 pb-0 my-0 font-weight-bold">
-                                                    <span class="text-primary">Домашнее задание:</span>
-                                                        {% if lesson.hometask %}{{ lesson.hometask }}{% endif %}
+                                                    <span class="text-primary">Домашнее задание:<br></span>
+                                                        {% if lesson.hometask %}{{ lesson.hometask|linebreaksbr }}{% endif %}
                                                         {% if lesson.hometask_file %}
                                                             <br><a href="/get_hometask/{{ lesson.marathon.pk }}-{{ lesson.number }}" target="_blank"><span class="fa fa-awesome fa-download"></span>  Скачать домашнее задание</a>
 
