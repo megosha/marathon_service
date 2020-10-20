@@ -4069,6 +4069,31 @@ a {
 .cid-s9dQTcaqKT .card .card-header a.panel-title h4 {
   text-align: left;
 }
+.cid-s9dQTcaqKT .builtin-video {
+  height: 380px;
+  }
+.cid-s9dQTcaqKT .builtin-video:focus {
+  outline: none; }
+@media (max-width: 800px) {
+   .cid-s9dQTcaqKT .builtin-video {
+    height: 350px;
+  }
+}
+@media (max-width: 710px) {
+   .cid-s9dQTcaqKT .builtin-video {
+    height: 280px;
+  }
+}
+@media (max-width: 576px) {
+  .cid-s9dQTcaqKT .builtin-video {
+    height: 150px;
+  }
+}
+@media (max-width: 350px) {
+  .cid-s9dQTcaqKT .builtin-video {
+    height: 130px;
+  }
+}
 .cid-s9dMobLaeo {
   padding-top: 30px;
   padding-bottom: 75px;
