@@ -38,8 +38,14 @@ def user_directory_path(instance, filename):
     try:
         return f'hometasks/{instance.marathon.pk}/{instance.number}.{filename[filename.rfind(".") + 1:]}'
     except:
-        return f'hometasks/{instance.marathon.pk}/{instance.number}.{filename}'
+        return f'hometasks/{instance.marathon.pk}/{filename}'
 
+def video_directory_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/<marathon.name>/<lesson.number.*>
+    try:
+        return f'video/{instance.lesson.marathon.pk}/{instance.lesson.number}_{instance.number}.{filename[filename.rfind(".") + 1:]}'
+    except:
+        return f'hometasks/{instance.lesson.marathon.pk}/{filename}'
 
 def sendmail(subject, message, recipient_list, from_email=None, attach: iter = None):
     if from_email is None:
@@ -256,12 +262,12 @@ class Video(models.Model):
     lesson = models.ForeignKey(Lesson, blank=True, null=True, on_delete=models.CASCADE, verbose_name="Тема/Вебинар")
     number = models.PositiveSmallIntegerField(null=False, blank=False,
                                               verbose_name="Порядковый номер видео (номер отображения в уроке)")
-    link = models.CharField(max_length=25, null=True, blank=True, verbose_name="ID видео на YouTube")
+    video = models.FileField(upload_to=video_directory_path, default=None, null=True, blank=True, verbose_name="Видеофайл, .mp4")
+    link = models.CharField(max_length=25, null=True, blank=True, verbose_name="ID видео на YouTube (устаревшее)")
     description = models.TextField(default=None, blank=True, null=True, verbose_name="Комментарий к видео")
     date_create = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
 
     # date_publish = models.DateTimeField(default=timezone.now, blank=True, null=True, verbose_name="Дата публикации")
-    # video = models.FileField(null=True, blank=True, verbose_name="Видеофйал")
 
     class Meta:
         ordering = ["number"]
