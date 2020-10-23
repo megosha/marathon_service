@@ -35,8 +35,8 @@
   </style>
 
 </head>
-<body oncontextmenu="return false;">
 {#TODO#}
+<body oncontextmenu="return false;">
 {#<body>#}
 
  {% include "includes/nav.html" %}
@@ -177,7 +177,7 @@
                                             <!-- CUSTOM VIDEOS  -->
                                                     <div class="extVideo cid-s9dMobLaeo" id="extVideo2-1q_{{ lesson.number }}" style="background-color: transparent">
                                                         <div class="container align-center">
-                                                            <div class="row justify-content-md-center">
+                                                            <div class="row justify-content-md-left">
                                                                 {% for video in lesson.video_set.all %}
                                                                     <div class="mbr-white col-md-12 col-12 col-lg-6">\
                                                                         {% if video.description %}<p class="mbr-fonts-style panel-text pr-2 display-4">{{ video.description }}</p>
