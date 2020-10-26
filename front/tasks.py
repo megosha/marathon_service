@@ -194,9 +194,11 @@ def start_mailing(pk):
         рассылка
     """
     log = models.Logging.objects.create(action="start_mailing", input_data=pk)
+    mailing = None
     try:
         mailing = models.Mailing.objects.get(pk=pk)
-
+        if not mailing.active:
+            raise Exception(f'mailing: {mailing.pk} is not active')
         if mailing.recipient == mailing.PAYED:
             if mailing.marathon:
                 qset = models.Account.objects.filter(marathon=mailing.marathon, payment__status="succeeded",
@@ -230,6 +232,9 @@ def start_mailing(pk):
         log.result = log.SUCCESS
     finally:
         log.save()
+        if mailing:
+            mailing.active = False
+            mailing.save(update_fields=('active',))
 
 
 @app.task(name="front.tasks.send_mail", ignore_result=True)

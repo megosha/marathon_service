@@ -46,7 +46,7 @@ def deltatime(dt, deltadays):
 def processes_queue():
     html = 'Очередь рассылок: <table>'
     i = task.control.inspect()
-    q = i.scheduled()
+    q = i.scheduled() or {}
     for k, v in q.items():
         html += f'<thead><tr><th>Процесс: {k}</th></tr></thead>'
         html += f'<thead><tr><th>Дата</th><th>Имя функции</th><th>ID рассылки</th></tr></thead>'

@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap-reboot.min.css">
   <link rel="stylesheet" href="/assets/facebook-plugin/style.css">
   <link rel="stylesheet" href="/assets/dropdown/css/style.css">
-  <link rel="stylesheet" href="/assets/animatecss/animate.min.css">
+{#  <link rel="stylesheet" href="/assets/animatecss/animate.min.css">#}
   <link rel="stylesheet" href="/assets/formstyler/jquery.formstyler.css">
   <link rel="stylesheet" href="/assets/formstyler/jquery.formstyler.theme.css">
   <link rel="stylesheet" href="/assets/datepicker/jquery.datetimepicker.min.css">
@@ -78,6 +78,42 @@
 
 
 {% if marathon %}
+
+    {% if marathon.promo %}
+<section class="extVideo cid-s9dMobLaeo my-0" id="extVideo2-1q-promo">
+   <div class="container align-center">
+      <div class="row justify-content-md-center">
+            <div class="mbr-white col-md-12 col-12 col-lg-11">
+               <div class="box1" style="background-image: url('/assets/images/promo_new.jpg'); height: 580px;">
+                   <div class="mbr-media show-modal align-center py-2" data-toggle="modal" data-target=".w1">
+                       <div class="icon-wrap">
+                           <span class="mbr-iconfont mobi-mbri-play mobi-mbri"></span>
+                       </div>
+                   </div>
+               </div>
+           </div>
+
+       </div>
+   </div>
+   <div>
+       <div class="modalWindow w1" style="display: none;">
+           <div class="modalWindow-container">
+               <div class="modalWindow-video-container">
+                   <div class="modalWindow-video">
+                       <iframe width="100%" height="100%" frameborder="0" allowfullscreen="1" data-src="https://www.youtube.com/watch?v={{ marathon.promo }}"></iframe>
+                   </div>
+                   <a class="close" role="button" data-dismiss="modal">
+                       <span aria-hidden="true" class="mbri-close mbr-iconfont closeModal"></span>
+                       <span class="sr-only">Close</span>
+                   </a>
+               </div>
+           </div>
+       </div>
+   </div>
+</section>
+{% endif %}
+
+
 <section class="accordion1 cid-s9dQTcaqKT" id="accordion01-1r">
 
     <div class="container">

@@ -68,18 +68,25 @@
                     {% if settings.main_marathon.title|wordcount <= 1 %}
                     <h3 class="mbr-section-title mbr-bold align-left mbr-fonts-style header display-1"><span></span>&nbsp;<span>{{ settings.main_marathon.title }}</span>&nbspЭКСПРЕСС-МАРАФОН</h3>
                     {% else %}
-                    <h3 class="mbr-section-title mbr-bold align-left mbr-fonts-style header display-1"><span>{{ settings.main_marathon.title_general }}</span>&nbsp;<span>{{ settings.main_marathon.title_last }}</span>&nbspЭКСПРЕСС-МАРАФОН</h3>
+                    <h3 class="mbr-section-title mbr-bold align-left mbr-fonts-style header display-1"><span>{{ settings.main_marathon.title_general }}</span>&nbsp;<span>{{ settings.main_marathon.title_last }}</span>&nbsp{{ settings.main_marathon.subtitle_upper }}</h3>
                     {% endif %}
 {#                    <h4 class="mbr-section-subtitle pb-1 align-left mbr-regular mbr-fonts-style display-2"><strong>МАРАФОН</strong></h4>#}
                     
-                    <div class="mbr-list mbr-fonts-style display-7">
+                    <div class="mbr-list mbr-fonts-style display-5 mt-3">
                         <ul class="list">
-                            <li><span style="font-size: 1.25rem; background-color: transparent;">Определи свои сильные стороны</span></li><li><span style="font-size: 1.25rem; background-color: transparent;">Получи энергию для действий</span></li><li><span style="font-size: 1.25rem; background-color: transparent;">Узнай своё предназначение</span></li>
+                            {% for ad in settings.main_marathon.ad_list %}
+{#                                <li><span class="display-5" style="font-size: 1.25rem; background-color: transparent;">{{ ad }}</span></li>#}
+                                <li><span class="font-weight-bold" style="background-color: transparent;">{{ ad }}</span></li>
+                            {% endfor %}
+
+{#                            <li><span style="font-size: 1.25rem; background-color: transparent;">Получи энергию для действий</span></li><li><span style="font-size: 1.25rem; background-color: transparent;">Узнай своё предназначение</span></li>#}
                         </ul>
                     </div>
-                    <div class="buttons-wrap mt-4">
-                        <div class="mbr-section-btn align-left align-self-center btn-align"><a class="btn btn-sm btn-success display-4" href="/register">Зарегистроваться</a></div>
-                    </div>
+                    {% if not user %}
+                        <div class="buttons-wrap mt-4">
+                            <div class="mbr-section-btn align-left align-self-center btn-align"><a class="btn btn-sm btn-success display-4" href="/register">Зарегистроваться</a></div>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -241,7 +248,8 @@
       <div class="row justify-content-md-center">
             <div class="mbr-white col-md-12 col-12 col-lg-11">
 {#               <div class="box1" style="background-image: url('https://img.youtube.com/vi/{{ settings.main_marathon.promo }}/maxresdefault.jpg'); height: 580px;">#}
-               <div class="box1" style="background-image: url('/assets/images/promo.jpg'); height: 580px;">
+{#               <div class="box1" style="background-image: url('/assets/images/promo.jpg'); height: 580px;">#}
+               <div class="box1" style="background-image: url('/assets/images/promo_new.jpg'); height: 580px;">
                    <div class="mbr-media show-modal align-center py-2" data-toggle="modal" data-target=".w1">
                        <div class="icon-wrap">
                            <span class="mbr-iconfont mobi-mbri-play mobi-mbri"></span>
@@ -667,14 +675,16 @@
 {#                </div>#}
 {#            </div>#}
         </div>
-        <div class="buttons-wrap mt-5">
-            {% if settings.main_marathon %}
-                <h4 class="mbr-section-title mbr-bold mbr-white mbr-fonts-style display-2">Стоимость {% if settings.fake_cost %}<b class="old-price">{{ settings.fake_cost }}₽</b>{% endif %} <span>{{ settings.main_marathon.cost }}₽</span></h4>
-            {% endif %}
-            <div class="mbr-section-btn align-center align-self-center">
-                <a class="btn btn-sm btn-success display-4" href="/register">Участвовать</a></div>
+        {% if not user %}
+            <div class="buttons-wrap mt-5">
+                {% if settings.main_marathon %}
+                    <h4 class="mbr-section-title mbr-bold mbr-white mbr-fonts-style display-2">Стоимость {% if settings.fake_cost %}<b class="old-price">{{ settings.fake_cost }}₽</b>{% endif %} <span>{{ settings.main_marathon.cost }}₽</span></h4>
+                {% endif %}
+                <div class="mbr-section-btn align-center align-self-center">
+                    <a class="btn btn-sm btn-success display-4" href="/register">Участвовать</a></div>
 
-        </div>
+            </div>
+        {% endif %}
 
     </div>
 </section>

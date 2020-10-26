@@ -1057,14 +1057,14 @@ a {
 }
 .cid-rZqakGdhKi .card .wrapper .mbr-list .list li {
   line-height: 1.75;
-  padding-top: 5px;
-  padding-bottom: 5px;
+  /*padding-top: 5px;*/
+  /*padding-bottom: 5px;*/
 }
 .cid-rZqakGdhKi .card .wrapper .mbr-list .list li:before {
   font-weight: 900;
   color: #ff4e3c;
   display: inline-block;
-  content: "\e97c";
+  content: "\2611";
   font-family: 'Moririse2' !important;
   text-align: center;
   line-height: 1.5em;

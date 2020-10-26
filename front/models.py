@@ -101,12 +101,14 @@ class UpperSetting(models.Model):
 
 
 class Marathon(models.Model):
-    title = models.CharField(max_length=250, blank=False, null=False, verbose_name="Название темы/вебинара")
+    title = models.CharField(max_length=250, blank=False, null=False, verbose_name="Название марафона (на Главной)")
+    subtitle = models.CharField(max_length=250, blank=False, null=False, default="", verbose_name="Подзаголовок (на Главной)")
+    advantages = models.TextField(verbose_name="Достоинства (на Главной)", default="", blank=True, null=True)
     cost = models.PositiveIntegerField(default=0, verbose_name="Стоимость марафона (в рублях)")
     date_start = models.DateTimeField(default=None, blank=True, null=True, verbose_name="Дата старта марафона")
     date_create = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name="Дата создания")
     promo = models.CharField(max_length=100, null=True, blank=True,
-                             verbose_name="Ссылка на YouTube-видео (Промо-ролик)")
+                             verbose_name="Ссылка на YouTube-видео (Промо-ролик на Главной)")
     description = models.TextField(verbose_name="Комментарий/Описание", default=None, blank=True, null=True)
 
     class Meta:
@@ -118,6 +120,13 @@ class Marathon(models.Model):
 
     def title_last(self):
         return str(self.title).upper()[str(self.title).rfind(' ') + 1:]
+
+    def subtitle_upper(self):
+        return str(self.subtitle).upper()
+
+    def ad_list(self):
+        # return self.advantages.strip().split("\r")
+        return self.advantages.split("\n")
 
     def __str__(self):
         return f"{self.title}"
@@ -182,6 +191,7 @@ class Mailing(models.Model):
     subject = models.CharField("Тема письма", max_length=250, default="")
     message = models.TextField("Сообщение", default="")
     attach = models.FileField("Вложение", blank=True)
+    active = models.BooleanField("Активна", default=False, blank=True)
 
     class Meta:
         app_label = 'front'
@@ -190,10 +200,11 @@ class Mailing(models.Model):
 
     def save(self, *args, **kwargs):
         super(Mailing, self).save(*args, **kwargs)
-        from front.tasks import start_mailing
-        if self.date <= timezone.now():
-            self.date = timezone.now() + timedelta(seconds=10)
-        start_mailing.apply_async([self.pk], eta=self.date)
+        if self.active:
+            from front.tasks import start_mailing
+            if self.date <= timezone.now():
+                self.date = timezone.now() + timedelta(seconds=10)
+            start_mailing.apply_async([self.pk], eta=self.date)
 
 
 class ReviewKind(models.Model):
