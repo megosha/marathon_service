@@ -46,11 +46,11 @@ class ReviewKindAdmin(admin.ModelAdmin):
 class MarathonAdmin(admin.ModelAdmin):
     list_display = ['title', 'cost', 'date_start']
     list_display_links = ['title']
-    list_filter = ['date_start', 'date_create']
+    list_filter = ['date_start', 'date_create', 'outdated']
     search_fields = ['title']
 
 class LessonAdmin(admin.ModelAdmin):
-    list_display = ['number', 'title', 'marathon', 'date_publish']
+    list_display = ['title', 'number', 'marathon', 'date_publish']
     list_display_links = ['number', 'title']
     list_filter = ['marathon', 'date_publish']
     search_fields = ['title', 'marathon__title']
@@ -69,6 +69,16 @@ class PaymentAdmin(admin.ModelAdmin):
     search_fields = ['account__user__last_name', 'account__phone', 'account__user__email', 'marathon__title', 'status']
     readonly_fields = ['date_pay', 'icon_tag']
 
+class GiftAdmin(admin.ModelAdmin):
+    list_display = ['marathon', 'description', 'photo']
+    list_display_links = ['marathon', 'description']
+
+class GiftItemsAdmin(admin.ModelAdmin):
+    list_display = ['gift', 'advantage', 'icon']
+    list_display_links = ['gift', 'advantage']
+    list_filter = ['gift']
+
+
 admin.site.register(models.UpperSetting, UpperSettingAdmin)
 admin.site.register(models.Setting, SettingAdmin)
 admin.site.register(models.Account, AccountAdmin)
@@ -78,3 +88,5 @@ admin.site.register(models.Marathon, MarathonAdmin)
 admin.site.register(models.Lesson, LessonAdmin)
 admin.site.register(models.Video, VideoAdmin)
 admin.site.register(models.Payment, PaymentAdmin)
+admin.site.register(models.Gift, GiftAdmin)
+admin.site.register(models.GiftItems, GiftItemsAdmin)

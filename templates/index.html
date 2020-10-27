@@ -426,21 +426,14 @@
 </section>
 
 
-
+{% if settings.main_marathon.gift %}
 <section class="content02 cid-s9jQ6MEGPv" id="content02-2b">
-
-    
-
-    
     <div class="container">
         <div class="row">
             <div class="card col-12 col-md-12">
                 <div class="wrapper align-left">
                     <h3 class="mbr-section-title mbr-bold align-left mbr-fonts-style display-2"><span>БОНУСЫ И&nbsp;</span>
                         <span>ПОДАРКИ</span></h3>
-                    
-                    
-                    
                 </div>
             </div>
         </div>
@@ -458,7 +451,8 @@
 
 
             <div class="img col-lg-5 col-md-12">
-                <img src="/assets/images/whatsapp-image-2018-04-04-at-11.54.36-400x266.png" title="" alt="">
+{#                <img src="/assets/images/whatsapp-image-2018-04-04-at-11.54.36-400x266.png" title="" alt="">#}
+                <img src="{{ settings.main_marathon.gift.photo.url }}" title="" alt="">
             </div>
 
 
@@ -468,49 +462,64 @@
 
                 <div class="row justify-content-center">
 
-                    <h2 class="mbr-section-title pb-4 mbr-bold mbr-fonts-style align-left display-5">В подарок книга «Движение вверх» - практические советы, как самому назначить зарплату и какую хочешь.&nbsp;</h2>
-                    <h2 class="mbr-section-title pb-4 mbr-bold mbr-fonts-style align-left display-5">А также, 7 урок «Семья - радость или гадость»:</h2>
+                    <h2 class="mbr-section-title pb-4 mbr-bold mbr-fonts-style align-left display-5">
+                        {{ settings.main_marathon.gift.description|linebreaksbr }}
+                    </h2>
+{#                    <h2 class="mbr-section-title pb-4 mbr-bold mbr-fonts-style align-left display-5">А также, 7 урок «Семья - радость или гадость»:</h2>#}
 
                     
                 </div>
 
                 <div class="row justify-content-center">
-                    <div class="card col-12 col-md-6 col-lg-6 col-lg-4">
-                        <div class="card-img">
-                            <span class="mbr-iconfont icon54-v3-love" style="color: rgb(255, 78, 60); fill: rgb(255, 78, 60);"></span>
+                    {%  for gift in settings.main_marathon.gift.giftitems_set.all %}
+                        <div class="card col-12 col-md-6 col-lg-6 col-lg-4">
+                            <div class="card-img">
+                                <span class="mbr-iconfont fa fa-awesome fa-{% if gift.icon %}{{ gift.icon }}{% else %}check-square{% endif %}" style="color: rgb(255, 78, 60); fill: rgb(255, 78, 60);"></span>
+                            </div>
+                            <div class="card-box">
+                                <p class="mbr-text mbr-fonts-style mbr-white mbr-normal align-center display-7">{{ gift.advantage }}<br></p>
+                            </div>
                         </div>
-                        <div class="card-box">
-                            <p class="mbr-text mbr-fonts-style mbr-white mbr-normal align-center display-7">Сладкий вкус cемейной жизни<br></p>
-                        </div>
-                    </div>
+                    {% endfor %}
 
-                    <div class="card col-12 col-md-6 col-lg-6 col-lg-4">
-                        <div class="card-img">
-                            <span class="mbr-iconfont icon54-v1-broken-heart" style="color: rgb(255, 78, 60); fill: rgb(255, 78, 60);"></span>
-                        </div>
-                        <div class="card-box">
-                            <p class="mbr-text mbr-fonts-style mbr-white mbr-normal align-center display-7">Причины кризиса в семье<br></p>
-                        </div>
-                    </div>
+{#                    <div class="card col-12 col-md-6 col-lg-6 col-lg-4">#}
+{#                        <div class="card-img">#}
+{#                            <span class="mbr-iconfont icon54-v3-love" style="color: rgb(255, 78, 60); fill: rgb(255, 78, 60);"></span>#}
+{#                        </div>#}
+{#                        <div class="card-box">#}
+{#                            <p class="mbr-text mbr-fonts-style mbr-white mbr-normal align-center display-7">Сладкий вкус cемейной жизни<br></p>#}
+{#                        </div>#}
+{#                    </div>#}
+{##}
+{#                    <div class="card col-12 col-md-6 col-lg-6 col-lg-4">#}
+{#                        <div class="card-img">#}
+{#                            <span class="mbr-iconfont icon54-v3-heart-5" style="color: rgb(255, 78, 60); fill: rgb(255, 78, 60);"></span>#}
+{#                        </div>#}
+{#                        <div class="card-box">#}
+{#                            <p class="mbr-text mbr-fonts-style mbr-white mbr-normal align-center display-7">Причины кризиса в семье<br></p>#}
+{#                        </div>#}
+{#                    </div>#}
 
                 </div>
-                <div class="row justify-content-center">
-
-                    <div class="card col-12 col-md-6 col-lg-6 col-lg-4">
-                        <div class="card-img">
-                            <span class="mbr-iconfont imind-ear" style="color: rgb(255, 78, 60); fill: rgb(255, 78, 60);"></span>
-                        </div>
-                        <div class="card-box">
-                            <p class="mbr-text mbr-fonts-style mbr-white mbr-normal align-center display-7">Как услышать друг друга<br></p>
-                        </div>
-                    </div>
-
-                    
-                </div>
+{#                <div class="row justify-content-center">#}
+{##}
+{#                    <div class="card col-12 col-md-6 col-lg-6 col-lg-4">#}
+{#                        <div class="card-img">#}
+{#                            <span class="mbr-iconfont icon54-v3-heart-key" style="color: rgb(255, 78, 60); fill: rgb(255, 78, 60);"></span>#}
+{#                        </div>#}
+{#                        <div class="card-box">#}
+{#                            <p class="mbr-text mbr-fonts-style mbr-white mbr-normal align-center display-7">Как услышать друг друга<br></p>#}
+{#                        </div>#}
+{#                    </div>#}
+{##}
+{#                    #}
+{#                </div>#}
             </div>
         </div>
     </div>
 </section>
+
+{% endif %}
 
 <section class="features02 cid-s8QOdW7ljC" id="features02-8">
 

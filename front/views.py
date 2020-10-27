@@ -336,11 +336,11 @@ class Account(LoginRequiredMixin, ContextViewMixin):
         context = {}
         account: models.Account = request.user.account
         marathon = request.GET.get('marathon')
-        marathon = models.Marathon.objects.filter(pk=marathon).first()
+        marathon = models.Marathon.objects.filter(pk=marathon, outdated=False).first()
         # marathones = models.Marathon.objects.filter(lesson__payment__account=account).distinct()
-        marathones = models.Marathon.objects.filter().distinct()
+        marathones = models.Marathon.objects.filter(outdated=False).distinct()
         if marathones.count() == 1 and marathon is None:
-            marathon = models.Marathon.objects.filter().first()
+            marathon = models.Marathon.objects.filter(outdated=False).first()
         if marathon:
             lessons = models.Lesson.objects.filter(marathon=marathon).order_by('number')
             payments = models.Payment.objects.filter(account=account, marathon=marathon)
@@ -356,7 +356,6 @@ class Account(LoginRequiredMixin, ContextViewMixin):
 
         else:
             lessons = []
-        # current_date = timezone.now()
         form = forms.Review()
         context = self.make_context(context=context, marathon=marathon, marathones=marathones, lessons=lessons,
                                     form=form)

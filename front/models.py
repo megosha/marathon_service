@@ -78,14 +78,6 @@ def sendmail(subject, message, recipient_list, from_email=None, attach: iter = N
         log.result = log.SUCCESS
         log.save()
         return True
-    # try:
-    #     send_mail(subject=subject, message=message, from_email=from_email,
-    #               recipient_list=recipient_list, fail_silently=fail_silently, html_message=html_message)
-    # except Exception as err:
-    #     print(err)
-    #     return False
-    # else:
-    #     return True
 
 
 class UpperSetting(models.Model):
@@ -110,6 +102,7 @@ class Marathon(models.Model):
     promo = models.CharField(max_length=100, null=True, blank=True,
                              verbose_name="Ссылка на YouTube-видео (Промо-ролик на Главной)")
     description = models.TextField(verbose_name="Комментарий/Описание", default=None, blank=True, null=True)
+    outdated = models.BooleanField(default=False, verbose_name="Скрыть марафон с сайта")
 
     class Meta:
         verbose_name = "Марафон"
@@ -125,11 +118,41 @@ class Marathon(models.Model):
         return str(self.subtitle).upper()
 
     def ad_list(self):
-        # return self.advantages.strip().split("\r")
-        return self.advantages.split("\n")
+        return self.advantages.strip().split("\n")
+        # return self.advantages.split("\n")
 
     def __str__(self):
         return f"{self.title}"
+
+
+class Gift(models.Model):
+    marathon = models.OneToOneField(Marathon, on_delete=models.CASCADE, verbose_name="Марафон")
+    description = models.TextField(null=True, blank=True, verbose_name="Описание")
+    photo = models.ImageField(upload_to='images/gifts/', blank=True, verbose_name="Картинка на сайте")
+
+    class Meta:
+        verbose_name = "Подарки и Бонусы марафонов"
+        verbose_name_plural = "Подарки и Бонусы марафонов"
+
+    def __str__(self):
+        return f"{self.marathon.title}"
+
+
+class GiftItems(models.Model):
+    gift = models.ForeignKey(Gift, on_delete=models.CASCADE, verbose_name="Бонус марафона")
+    icon = models.CharField(max_length=35, blank=True, null=True, verbose_name="Иконка fa-awesome")
+    advantage = models.CharField(max_length=255, verbose_name="Подпункт")
+    number = models.PositiveSmallIntegerField(null=False, blank=False,
+                                              verbose_name="Порядковый номер отображения на сайте")
+
+    class Meta:
+        ordering = ["number"]
+        unique_together = ('number', 'gift')
+        verbose_name = "Подпункты Подарков и Бонусов марафонов"
+        verbose_name_plural = "Подпункты Подарков и Бонусов марафонов"
+
+    def __str__(self):
+        return f"{self.gift}"
 
 
 class Setting(models.Model):
@@ -148,6 +171,7 @@ class Setting(models.Model):
                                      verbose_name="Телефон для квитанции")
     invoice_email = models.CharField(max_length=50, default="", blank=True, null=True,
                                      verbose_name="Email для квитанции")
+    instruction = models.FileField("Руководство администратора", blank=True, null=True)
 
 
 class Account(models.Model):
@@ -162,8 +186,6 @@ class Account(models.Model):
     description = models.TextField(verbose_name="Комментарий", default=None, blank=True, null=True)
     photo = models.ImageField(upload_to='images/avatars/', blank=True, verbose_name="Аватар")
     city = models.CharField(max_length=100, blank=True, null=True, verbose_name="Город")
-
-    # marathone = models.ManyToManyField('Marathon', blank=True, verbose_name="Марафоны")
 
     class Meta:
         verbose_name = "Аккаунт"
@@ -262,7 +284,8 @@ class Lesson(models.Model):
         verbose_name_plural = "Темы/Вебинары"
 
     def description_as_list(self):
-        return self.description.split(',')
+        # return self.description.split(',')
+        return self.description.strip().split("\n")
 
 
     def __str__(self):
