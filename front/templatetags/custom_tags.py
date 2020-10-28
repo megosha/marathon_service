@@ -44,7 +44,7 @@ def deltatime(dt, deltadays):
 
 @register.simple_tag
 def processes_queue():
-    html = 'Очередь рассылок: <table>'
+    html = 'Очередь рассылок: <div style="overflow-x: scroll;"><table style="max-width:1200px;">'
     i = task.control.inspect()
     q = i.scheduled() or {}
     for k, v in q.items():
@@ -52,6 +52,6 @@ def processes_queue():
         html += f'<thead><tr><th>Дата</th><th>Имя функции</th><th>ID рассылки</th></tr></thead>'
         for item in v:
             html += f'<tr><td>{item.get("eta")}</td><td>{item.get("request",{}).get("name")}</td><td>{item.get("request",{}).get("args")}</td></tr>'
-    html += '</tr></table>'
+    html += '</tr></table></div>'
     return mark_safe(html)
 
