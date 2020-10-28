@@ -162,7 +162,7 @@ class Setting(models.Model):
     soc_igm = models.URLField(blank=True, null=True, verbose_name="Ссылка на Instagram на сайте")
     soc_tm = models.URLField(blank=True, null=True, verbose_name="Ссылка на Telegram на сайте")
     soc_wa = models.URLField(blank=True, null=True, verbose_name="Ссылка на WhatsApp на сайте")
-    fake_cost = models.PositiveIntegerField(default=2500, verbose_name="Стоимость марафона (в рублях) до скидки")
+    fake_cost = models.PositiveIntegerField(default=2500, blank=True, verbose_name="Стоимость марафона (в рублях) до скидки")
     main_marathon = models.ForeignKey(Marathon, blank=True, null=True, on_delete=models.DO_NOTHING,
                                       verbose_name="Марафон на главной странице сайта")
     invoice_fio = models.CharField(max_length=100, default="Торопчин Артём Викторович", blank=True, null=True,

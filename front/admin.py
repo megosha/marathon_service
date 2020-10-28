@@ -10,7 +10,8 @@ class LoggingAdmin(admin.ModelAdmin):
 
 @admin.register(models.Mailing)
 class MailingAdmin(admin.ModelAdmin):
-    list_display = ['date', 'recipient', 'subject']
+    list_display = ['date', 'recipient', 'subject', 'active']
+    list_filter = ['active']
     change_list_template = 'mailing_extend_admin.html'
 
 
