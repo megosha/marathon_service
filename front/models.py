@@ -140,7 +140,7 @@ class Gift(models.Model):
 
 class GiftItems(models.Model):
     gift = models.ForeignKey(Gift, on_delete=models.CASCADE, verbose_name="Бонус марафона")
-    icon = models.CharField(max_length=35, blank=True, null=True, verbose_name="Иконка fa-awesome")
+    icon = models.CharField(max_length=35, blank=True, null=True, verbose_name="Иконка fa-awesome c сайта https://fontawesome.com/v4.7.0/icons/")
     advantage = models.CharField(max_length=255, verbose_name="Подпункт")
     number = models.PositiveSmallIntegerField(null=False, blank=False,
                                               verbose_name="Порядковый номер отображения на сайте")
@@ -157,21 +157,21 @@ class GiftItems(models.Model):
 
 class Setting(models.Model):
     website = models.URLField(blank=True, null=True, verbose_name="Адрес сайта")
-    contact_phone = models.CharField(max_length=18, blank=True, null=True, verbose_name="Контактный телефон")
-    contact_mail = models.EmailField(blank=True, null=True, verbose_name="Контактный Email")
-    soc_igm = models.URLField(blank=True, null=True, verbose_name="Ссылка на Instagram")
-    soc_tm = models.URLField(blank=True, null=True, verbose_name="Ссылка на Telegram")
-    soc_wa = models.URLField(blank=True, null=True, verbose_name="Ссылка на WhatsApp")
+    contact_phone = models.CharField(max_length=18, blank=True, null=True, verbose_name="Контактный телефон на сайта")
+    contact_mail = models.EmailField(blank=True, null=True, verbose_name="Контактный Email на сайте")
+    soc_igm = models.URLField(blank=True, null=True, verbose_name="Ссылка на Instagram на сайте")
+    soc_tm = models.URLField(blank=True, null=True, verbose_name="Ссылка на Telegram на сайте")
+    soc_wa = models.URLField(blank=True, null=True, verbose_name="Ссылка на WhatsApp на сайте")
     fake_cost = models.PositiveIntegerField(default=2500, verbose_name="Стоимость марафона (в рублях) до скидки")
     main_marathon = models.ForeignKey(Marathon, blank=True, null=True, on_delete=models.DO_NOTHING,
-                                      verbose_name="Марафон на главной")
+                                      verbose_name="Марафон на главной странице сайта")
     invoice_fio = models.CharField(max_length=100, default="Торопчин Артём Викторович", blank=True, null=True,
                                    verbose_name="ФИО для квитанции")
     invoice_phone = models.CharField(max_length=50, default="", blank=True, null=True,
                                      verbose_name="Телефон для квитанции")
     invoice_email = models.CharField(max_length=50, default="", blank=True, null=True,
                                      verbose_name="Email для квитанции")
-    instruction = models.FileField("Руководство администратора", blank=True, null=True)
+    instruction = models.FileField("Документация на сайт", blank=True, null=True)
 
 
 class Account(models.Model):
@@ -211,9 +211,9 @@ class Mailing(models.Model):
     recipient = models.SmallIntegerField("Получатели", choices=RECIPIENTS, default=ALL)
     marathon = models.ForeignKey(Marathon, verbose_name="Марафон", on_delete=models.CASCADE, null=True, blank=True)
     subject = models.CharField("Тема письма", max_length=250, default="")
-    message = models.TextField("Сообщение", default="")
-    attach = models.FileField("Вложение", blank=True)
-    active = models.BooleanField("Активна", default=False, blank=True)
+    message = models.TextField("Сообщение письма", default="")
+    attach = models.FileField("Вложение письма", blank=True)
+    active = models.BooleanField("Активна (осуществить рассылку)", default=False, blank=True)
 
     class Meta:
         app_label = 'front'
@@ -247,11 +247,11 @@ class Feedback(models.Model):
                              verbose_name="Тип отзыва")
     feedback = models.TextField(null=True, blank=True, verbose_name="Отзыв")
     accepted = models.BooleanField(default=False, blank=True, null=True,
-                                        verbose_name="Отзыв опубликован")
+                                        verbose_name="Опубликовать отзыв ")
     date_create = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания отзыва")
-    custom_user = models.CharField(max_length=250, blank=True, null=True, verbose_name="Имя (ручное добавление)")
-    custom_city = models.CharField(max_length=100, blank=True, null=True, verbose_name="Город")
-    custom_photo = models.FileField(upload_to='images/avatars/', blank=True, verbose_name="Аватар")
+    custom_user = models.CharField(max_length=250, blank=True, null=True, verbose_name="Имя (при ручном добавлении)")
+    custom_city = models.CharField(max_length=100, blank=True, null=True, verbose_name="Город (при ручном добавлении)")
+    custom_photo = models.FileField(upload_to='images/avatars/', blank=True, verbose_name="Аватар при ручном добавлении")
 
     class Meta:
         verbose_name = "Отзыв"
@@ -267,7 +267,7 @@ class Lesson(models.Model):
                                               verbose_name="Порядковый номер темы в марафоне")
     title = models.CharField(max_length=250, blank=False, null=False, verbose_name="Название темы/вебинара")
     free = models.BooleanField(default=False, verbose_name="Тема доступна без покупки марафона")
-    description = models.TextField(default=None, blank=True, null=True, verbose_name="Подэтапы, описание, пункты темы через запятую")
+    description = models.TextField(default=None, blank=True, null=True, verbose_name="Подэтапы, описание, пункты темы в столбик")
     hometask = models.TextField(default=None, blank=True, null=True, verbose_name="Домашнее задание по теме/вебинару")
     hometask_file = models.FileField(upload_to=user_directory_path, null=True, blank=True,
                                      verbose_name="Файл Домашнего задания по теме/вебинару")
@@ -297,7 +297,7 @@ class Video(models.Model):
     number = models.PositiveSmallIntegerField(null=False, blank=False,
                                               verbose_name="Порядковый номер видео (номер отображения в уроке)")
     video = models.FileField(upload_to=video_directory_path, default=None, null=True, blank=True, verbose_name="Видеофайл, .mp4")
-    link = models.CharField(max_length=25, null=True, blank=True, verbose_name="ID видео на YouTube (устаревшее)")
+    link = models.CharField(max_length=25, null=True, blank=True, verbose_name="ID видео на YouTube")
     description = models.TextField(default=None, blank=True, null=True, verbose_name="Комментарий к видео")
     date_create = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
 

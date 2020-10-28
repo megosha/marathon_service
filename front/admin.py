@@ -5,6 +5,7 @@ from django.contrib import admin
 @admin.register(models.Logging)
 class LoggingAdmin(admin.ModelAdmin):
     list_display = ['date', 'action', 'result']
+    list_filter = ['action', 'result']
 
 
 @admin.register(models.Mailing)
@@ -32,9 +33,9 @@ class AccountAdmin(admin.ModelAdmin):
     readonly_fields = ['date_registry']
 
 class FeedbackAdmin(admin.ModelAdmin):
-    list_display = ['account', 'kind', 'custom_user', 'date_create']
+    list_display = ['account', 'kind', 'custom_user', 'date_create', 'accepted']
     list_display_links = ['account', 'kind', 'custom_user']
-    list_filter = ['kind', 'date_create', 'account', 'custom_user']
+    list_filter = ['kind', 'date_create', 'accepted']
     search_fields = ['account__user__last_name', 'account__user__first_name', 'custom_user']
     readonly_fields = ['date_create']
 
