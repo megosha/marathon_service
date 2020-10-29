@@ -201,14 +201,14 @@ def start_mailing(pk):
             raise Exception(f'mailing: {mailing.pk} is not active')
         if mailing.recipient == mailing.PAYED:
             if mailing.marathon:
-                qset = models.Account.objects.filter(marathon=mailing.marathon, payment__status="succeeded",
+                qset = models.Account.objects.filter(payment__marathon=mailing.marathon, payment__status="succeeded",
                                                      payment__date_approve__gte=timezone.now() - timedelta(days=62))
             else:
                 qset = models.Account.objects.filter(payment__status="succeeded",
                                                      payment__date_approve__gte=timezone.now() - timedelta(days=62))
         elif mailing.recipient == mailing.NOT_PAYED:
             if mailing.marathon:
-                qset = models.Account.objects.exclude(marathon=mailing.marathon, payment__status="succeeded",
+                qset = models.Account.objects.exclude(payment__marathon=mailing.marathon, payment__status="succeeded",
                                                       payment__date_approve__gte=timezone.now() - timedelta(days=62))
             else:
                 qset = models.Account.objects.exclude(payment__status="succeeded",

@@ -30,7 +30,7 @@ class AccountAdmin(admin.ModelAdmin):
     list_display = ['user', 'phone', 'approved', 'registry_sent', 'date_registry', 'description']
     list_display_links = ['user']
     list_filter = ['date_registry', 'approved', 'registry_sent']
-    search_fields = ['user__last_name', 'user__first_name', 'phone', 'description']
+    search_fields = ['user__last_name', 'user__first_name', 'phone', 'description', 'user__email']
     readonly_fields = ['date_registry']
 
 class FeedbackAdmin(admin.ModelAdmin):
