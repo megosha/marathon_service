@@ -7,4 +7,4 @@ class Command(BaseCommand):
         payments = models.Payment.objects.filter(status='succeeded').distinct('account')
         videos = models.Video.objects.all()
         for payment in payments:
-            payment.account.looked_videos.add(videos)
+            payment.account.looked_videos.add(*videos)
