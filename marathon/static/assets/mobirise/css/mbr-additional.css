@@ -490,6 +490,9 @@ body {
 .text-black {
   color: #000000 !important;
 }
+.text_success {
+  color: #09b000 !important;
+}
 a.text-primary:hover,
 a.text-primary:focus {
   color: #ffaca2 !important;

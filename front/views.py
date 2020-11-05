@@ -419,3 +419,25 @@ class Book(ContextViewMixin):
 
     def get(self, request):
         return self.base(request)
+
+
+class VideoLooked(LoginRequiredMixin, View):
+    def post(self, request):
+        res = {}
+        account = models.Account.objects.filter(user=self.request.user).first()
+        if account:
+            video_pk = request.POST.get('video')
+            video = models.Video.objects.filter(pk=video_pk).first()
+            if video and not video in account.looked_videos.filter(pk=video_pk):
+                account.looked_videos.add(video)
+                res['result'] = 'success'
+                try:
+                    videos_l = set(video.lesson.video_set.values_list('pk', flat=True))
+                    videos_a = set(account.looked_videos.filter(lesson__pk=video.lesson.pk).values_list('pk', flat=True))
+                    if videos_l == videos_a:
+                        res['lesson'] = video.lesson.pk
+                except:
+                    pass
+        else:
+            res['result'] = 'error'
+        return JsonResponse(res)

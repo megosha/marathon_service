@@ -186,6 +186,7 @@ class Account(models.Model):
     description = models.TextField(verbose_name="Комментарий", default=None, blank=True, null=True)
     photo = models.ImageField(upload_to='images/avatars/', blank=True, verbose_name="Аватар")
     city = models.CharField(max_length=100, blank=True, null=True, verbose_name="Город")
+    looked_videos = models.ManyToManyField('Video', blank=True, verbose_name="Просмотренные видео")
 
     class Meta:
         verbose_name = "Аккаунт"
@@ -296,8 +297,9 @@ class Video(models.Model):
     lesson = models.ForeignKey(Lesson, blank=True, null=True, on_delete=models.CASCADE, verbose_name="Тема/Вебинар")
     number = models.PositiveSmallIntegerField(null=False, blank=False,
                                               verbose_name="Порядковый номер видео (номер отображения в уроке)")
-    video = models.FileField(upload_to=video_directory_path, default=None, null=True, blank=True, verbose_name="Видеофайл, .mp4")
     link = models.CharField(max_length=25, null=True, blank=True, verbose_name="ID видео на YouTube")
+    url = models.TextField(default=None, blank=True, null=True, verbose_name="Ссылка для просмотра видео")
+    video = models.FileField(upload_to=video_directory_path, default=None, null=True, blank=True, verbose_name="Видеофайл, .mp4")
     description = models.TextField(default=None, blank=True, null=True, verbose_name="Комментарий к видео")
     date_create = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
 

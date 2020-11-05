@@ -55,3 +55,14 @@ def processes_queue():
     html += '</tr></table></div>'
     return mark_safe(html)
 
+
+@register.filter()
+def looked(lesson, account):
+    try:
+        videos_l = set(lesson.video_set.values_list('pk', flat=True))
+        videos_a = set(account.looked_videos.filter(lesson__pk=lesson.pk).values_list('pk', flat=True))
+        return videos_l == videos_a
+    except:
+        return False
+
+

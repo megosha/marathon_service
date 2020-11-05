@@ -16,6 +16,7 @@ urlpatterns = [
     path('get_invoice/<str:filename>', views.get_invoice),
     path('get_hometask/<int:marathon_pk>-<int:lesson_number>', views.get_hometask),
     path('api/accept_review/<str:account_id>-<int:feedback_id>', api.AcceptReview.as_view()),
+    path('video-looked', views.VideoLooked.as_view()),
 
     # path('test', views.Test.as_view()),
 ]

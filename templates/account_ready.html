@@ -180,7 +180,12 @@
                                         <h4 class="mbr-fonts-style display-7"><span class="toggle-icon inactive sign mbr-iconfont"></span>
                                             <span class="text-primary display-5">Тема №{{ lesson.number }}. </span>
                                             {{ lesson.title }}.
-                                            {% if lesson.date_publish > current_date %}Дата выхода: {{ lesson.date_publish|date:"d.m.Y" }} {% endif %}</h4>
+                                            {% if lesson.date_publish > current_date %}Дата выхода: {{ lesson.date_publish|date:"d.m.Y" }}
+                                            {% else %}
+                                               <small id="badge_{{ lesson.pk }}">{% if lesson|looked:user.account %}<span class="badge badge-secondary badge-pill">Просмотрена</span>{% else %}<span class="badge badge-success badge-pill">Новая</span>{% endif %}</small>
+                                            {% endif %}
+
+                                        </h4>
                                     </a>
 
                                 </div>
@@ -219,7 +224,7 @@
                                                                         {% if video.description %}<p class="mbr-fonts-style panel-text pr-2 display-4">{{ video.description }}</p>
                                                                         {% else %}<p class="mbr-fonts-style panel-text pr-2 display-4">&nbsp;</p>{% endif %}
                                                                         {% if video.video %}
-                                                                            <video class="builtin-video my-2" controls controlsList="nodownload" poster="/assets/images/online-3412498_1920.jpg" preload="metadata" poster="/assets/images/online-3412498_1920.jpg" oncontextmenu="return false;">
+                                                                            <video class="builtin-video my-2" onplaying="looked({{ video.pk }})" controls controlsList="nodownload" poster="/assets/images/online-3412498_1920.jpg" preload="metadata" poster="/assets/images/online-3412498_1920.jpg" oncontextmenu="return false;">
                                                                                 <source src="{{ video.video.url }}" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"' />
                                                                             </video>
 {#                                                                            <video class="builtin-video" controls controlsList="nodownload" poster="/assets/images/online-3412498_1920.jpg" oncontextmenu="return false;">#}
@@ -228,7 +233,7 @@
 {#                                                                            </video>#}
                                                                         {% else %}
                                                                             <div class="box1" style="background-image: url('/assets/images/online-3412498_1920.jpg');">
-                                                                                <div class="mbr-media show-modal align-center py-2" data-toggle="modal" data-target=".w{{ video.pk }}">
+                                                                                <div class="mbr-media show-modal align-center py-2" data-toggle="modal" data-target=".w{{ video.pk }}" onclick="looked({{ video.pk }})">
                                                                                     <div class="icon-wrap">
                                                                                         <span class="mobi-mbri-play mobi-mbri"></span>
                                                                                     </div>

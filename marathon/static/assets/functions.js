@@ -73,3 +73,20 @@ function bio(mode){
 }
         else return;
     }
+
+
+function looked(video){
+    $.ajax({
+            url: 'video-looked',
+            type: "POST",
+            dataType: 'json',
+            data: {video:video, csrfmiddlewaretoken: '{{ csrf_token }}'},
+            success: function (result) {
+                if (result.lesson){
+                    var elem = document.getElementById('badge_'+result.lesson);
+                    elem.innerHTML = `<span class="badge badge-secondary badge-pill">Просмотрена</span>`;
+               }
+            },
+
+        });
+}
