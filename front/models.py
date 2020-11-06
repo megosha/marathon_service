@@ -2,6 +2,7 @@ import uuid
 from datetime import timedelta
 from os import path
 import environ
+import requests
 
 from django.core.mail import EmailMultiAlternatives
 from django.db import models
@@ -313,6 +314,13 @@ class Video(models.Model):
 
     def __str__(self):
         return f"{self.lesson.title} -  №{self.number}"
+
+    def video_exists(self):
+        try:
+            r = requests.head(self.url)
+            return r.status_code == requests.codes.ok
+        except:
+            return False
 
 
 class Payment(models.Model):

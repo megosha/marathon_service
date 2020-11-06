@@ -122,10 +122,14 @@
                 <h3 class="mbr-section-title mbr-bold align-center mbr-fonts-style display-2">
                     Марафон&nbsp;<span>"{{ marathon.title }}"</span></h3>
                 <h4 class="mbr-section-subtitle pb-1 align-center mbr-light mbr-fonts-style display-7">{{ marathon.description }}</h4>
+                <h4 class="mbr-section-subtitle pb-1 align-center mbr-light mbr-fonts-style display-7 font-weight-bold">{{ marathon.gift.description }}</h4>
             </div>
             {% if not payment_valid %}
                 {% if payment_expired %}
-                    <p class="mbr-section-subtitle pb-1 align-center mbr-light mbr-fonts-style display-4">Двухмесячный срок подписки на марафон истек.</p>
+                    <p class="mbr-section-subtitle pb-1 align-center mbr-light mbr-fonts-style display-4">
+                        <span class="fa fa-awesome fa-warning text-primary"></span>
+                        Двухмесячный срок подписки на марафон истек.
+                    </p>
                 {% else %}
                     <p class="mbr-fonts-style panel-text pr-2 display-5"><strong>Стоимость марафона {{ marathon.cost }}₽</strong></p>
                 {% endif %}
@@ -223,14 +227,10 @@
                                                                     <div class="mbr-white col-md-12 col-12 col-lg-6">\
                                                                         {% if video.description %}<p class="mbr-fonts-style panel-text pr-2 display-4">{{ video.description }}</p>
                                                                         {% else %}<p class="mbr-fonts-style panel-text pr-2 display-4">&nbsp;</p>{% endif %}
-                                                                        {% if video.video %}
+                                                                        {% if video.video_exists %}
                                                                             <video class="builtin-video my-2" onplaying="looked({{ video.pk }})" controls controlsList="nodownload" poster="/assets/images/online-3412498_1920.jpg" preload="metadata" poster="/assets/images/online-3412498_1920.jpg" oncontextmenu="return false;">
-                                                                                <source src="{{ video.video.url }}" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"' />
+                                                                                <source src="{{ video.url }}" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"' />
                                                                             </video>
-{#                                                                            <video class="builtin-video" controls controlsList="nodownload" poster="/assets/images/online-3412498_1920.jpg" oncontextmenu="return false;">#}
-{#                                                                                <source src="/media/video/otchet_instr.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"' />#}
-{#                                                                                <source src="https://cloud.mail.ru/home/andrey/video/%D0%B7%D0%B0%D1%81%D1%82%D0%B0%D0%B2%D0%BA%D0%B0%2030%20%D1%81%D0%B5%D0%BA.mp4" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"' />#}
-{#                                                                            </video>#}
                                                                         {% else %}
                                                                             <div class="box1" style="background-image: url('/assets/images/online-3412498_1920.jpg');">
                                                                                 <div class="mbr-media show-modal align-center py-2" data-toggle="modal" data-target=".w{{ video.pk }}" onclick="looked({{ video.pk }})">
