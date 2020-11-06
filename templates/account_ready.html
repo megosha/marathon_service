@@ -228,7 +228,7 @@
                                                                         {% if video.description %}<p class="mbr-fonts-style panel-text pr-2 display-4">{{ video.description }}</p>
                                                                         {% else %}<p class="mbr-fonts-style panel-text pr-2 display-4">&nbsp;</p>{% endif %}
                                                                         {% if video.video_exists %}
-                                                                            <video class="builtin-video my-2" onplaying="looked({{ video.pk }})" controls controlsList="nodownload" poster="/assets/images/online-3412498_1920.jpg" preload="metadata" poster="/assets/images/online-3412498_1920.jpg" oncontextmenu="return false;">
+                                                                            <video class="builtin-video my-2" onplaying="looked({{ video.pk }})" oncontextmenu="return false;" controls controlsList="nodownload" poster="/assets/images/online-3412498_1920.jpg" preload="metadata">
                                                                                 <source src="{{ video.url }}" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"' />
                                                                             </video>
                                                                         {% else %}
