@@ -1,8 +1,12 @@
 import uuid
 from datetime import timedelta
 from os import path
+import subprocess
+
 import environ
 import requests
+import pytube
+import ffmpeg
 
 from django.core.mail import EmailMultiAlternatives
 from django.db import models
@@ -13,7 +17,6 @@ from django.utils import timezone
 from django.utils.safestring import mark_safe
 
 from front.make_invoice import create_pdf
-
 
 # Create your models here.
 
@@ -41,12 +44,14 @@ def user_directory_path(instance, filename):
     except:
         return f'hometasks/{instance.marathon.pk}/{filename}'
 
+
 def video_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/<marathon.name>/<lesson.number.*>
     try:
         return f'video/{instance.lesson.marathon.pk}/{instance.lesson.number}_{instance.number}.{filename[filename.rfind(".") + 1:]}'
     except:
         return f'hometasks/{instance.lesson.marathon.pk}/{filename}'
+
 
 def sendmail(subject, message, recipient_list, from_email=None, attach: iter = None):
     if from_email is None:
@@ -91,11 +96,16 @@ class UpperSetting(models.Model):
     yandex_api_key_test = models.CharField(max_length=250, blank=True, null=True, verbose_name="yandex_api_key_test")
     test_mode = models.BooleanField(default=False, verbose_name="Тестовый режим ЯК")
     return_url = models.CharField(max_length=250, blank=True, null=True, verbose_name="return_url для ЯК")
+    remote_video_dir = models.FilePathField(path='media/marathon/marathon/', blank=True, null=True,
+                                            verbose_name="Путь к папке с видеофайлами")
+    mount_command = models.TextField(default='', blank=True, null=True,
+                                     verbose_name="Команда для монтирования удаленного хранилища видео")
 
 
 class Marathon(models.Model):
     title = models.CharField(max_length=250, blank=False, null=False, verbose_name="Название марафона (на Главной)")
-    subtitle = models.CharField(max_length=250, blank=False, null=False, default="", verbose_name="Подзаголовок (на Главной)")
+    subtitle = models.CharField(max_length=250, blank=False, null=False, default="",
+                                verbose_name="Подзаголовок (на Главной)")
     advantages = models.TextField(verbose_name="Достоинства (на Главной)", default="", blank=True, null=True)
     cost = models.PositiveIntegerField(default=0, verbose_name="Стоимость марафона (в рублях)")
     date_start = models.DateTimeField(default=None, blank=True, null=True, verbose_name="Дата старта марафона")
@@ -141,7 +151,8 @@ class Gift(models.Model):
 
 class GiftItems(models.Model):
     gift = models.ForeignKey(Gift, on_delete=models.CASCADE, verbose_name="Бонус марафона")
-    icon = models.CharField(max_length=35, blank=True, null=True, verbose_name="Иконка fa-awesome c сайта https://fontawesome.com/v4.7.0/icons/")
+    icon = models.CharField(max_length=35, blank=True, null=True,
+                            verbose_name="Иконка fa-awesome c сайта https://fontawesome.com/v4.7.0/icons/")
     advantage = models.CharField(max_length=255, verbose_name="Подпункт")
     number = models.PositiveSmallIntegerField(null=False, blank=False,
                                               verbose_name="Порядковый номер отображения на сайте")
@@ -163,7 +174,8 @@ class Setting(models.Model):
     soc_igm = models.URLField(blank=True, null=True, verbose_name="Ссылка на Instagram на сайте")
     soc_tm = models.URLField(blank=True, null=True, verbose_name="Ссылка на Telegram на сайте")
     soc_wa = models.URLField(blank=True, null=True, verbose_name="Ссылка на WhatsApp на сайте")
-    fake_cost = models.PositiveIntegerField(default=2500, blank=True, verbose_name="Стоимость марафона (в рублях) до скидки")
+    fake_cost = models.PositiveIntegerField(default=2500, blank=True,
+                                            verbose_name="Стоимость марафона (в рублях) до скидки")
     main_marathon = models.ForeignKey(Marathon, blank=True, null=True, on_delete=models.DO_NOTHING,
                                       verbose_name="Марафон на главной странице сайта")
     invoice_fio = models.CharField(max_length=100, default="Торопчин Артём Викторович", blank=True, null=True,
@@ -249,11 +261,12 @@ class Feedback(models.Model):
                              verbose_name="Тип отзыва")
     feedback = models.TextField(null=True, blank=True, verbose_name="Отзыв")
     accepted = models.BooleanField(default=False, blank=True, null=True,
-                                        verbose_name="Опубликовать отзыв ")
+                                   verbose_name="Опубликовать отзыв ")
     date_create = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания отзыва")
     custom_user = models.CharField(max_length=250, blank=True, null=True, verbose_name="Имя (при ручном добавлении)")
     custom_city = models.CharField(max_length=100, blank=True, null=True, verbose_name="Город (при ручном добавлении)")
-    custom_photo = models.FileField(upload_to='images/avatars/', blank=True, verbose_name="Аватар при ручном добавлении")
+    custom_photo = models.FileField(upload_to='images/avatars/', blank=True,
+                                    verbose_name="Аватар при ручном добавлении")
 
     class Meta:
         verbose_name = "Отзыв"
@@ -269,7 +282,8 @@ class Lesson(models.Model):
                                               verbose_name="Порядковый номер темы в марафоне")
     title = models.CharField(max_length=250, blank=False, null=False, verbose_name="Название темы/вебинара")
     free = models.BooleanField(default=False, verbose_name="Тема доступна без покупки марафона")
-    description = models.TextField(default=None, blank=True, null=True, verbose_name="Подэтапы, описание, пункты темы в столбик")
+    description = models.TextField(default=None, blank=True, null=True,
+                                   verbose_name="Подэтапы, описание, пункты темы в столбик")
     hometask = models.TextField(default=None, blank=True, null=True, verbose_name="Домашнее задание по теме/вебинару")
     hometask_file = models.FileField(upload_to=user_directory_path, null=True, blank=True,
                                      verbose_name="Файл Домашнего задания по теме/вебинару")
@@ -289,7 +303,6 @@ class Lesson(models.Model):
         # return self.description.split(',')
         return self.description.strip().split("\n")
 
-
     def __str__(self):
         return f"Тема:{self.title} -  №{self.number} - марафон: {self.marathon}"
 
@@ -300,11 +313,10 @@ class Video(models.Model):
                                               verbose_name="Порядковый номер видео (номер отображения в уроке)")
     link = models.CharField(max_length=25, null=True, blank=True, verbose_name="ID видео на YouTube")
     url = models.TextField(default=None, blank=True, null=True, verbose_name="Ссылка для просмотра видео")
-    video = models.FileField(upload_to=video_directory_path, default=None, null=True, blank=True, verbose_name="Видеофайл, .mp4")
+    video = models.FileField(upload_to=video_directory_path, default=None, null=True, blank=True,
+                             verbose_name="Видеофайл, .mp4")
     description = models.TextField(default=None, blank=True, null=True, verbose_name="Комментарий к видео")
     date_create = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
-
-    # date_publish = models.DateTimeField(default=timezone.now, blank=True, null=True, verbose_name="Дата публикации")
 
     class Meta:
         ordering = ["number"]
@@ -321,6 +333,51 @@ class Video(models.Model):
             return r.status_code == requests.codes.ok
         except:
             return False
+
+    def save(self, *args, **kwargs):
+        if self.link and not self.url:
+            url_path = self.download_video()
+            if url_path:
+                self.url = url_path
+        super(Video, self).save(*args, **kwargs)
+
+    def download_video(self):
+        log = Logging.objects.create(action="Скачивание видео c YouTube models.Video.download_video()",
+                                     input_data=f'pk: {self.pk}, марафон: {self.lesson.marathon.pk}, '
+                                                f'урок:{self.lesson.number}, видео:{self.number}')
+        try:
+            upper_set = UpperSetting.objects.filter().first()
+            fpath = f'{upper_set.remote_video_dir}/{self.lesson.marathon.pk}/'
+            if not path.isdir(fpath):
+                command = upper_set.mount_command
+                subprocess.Popen(command)
+            yt = pytube.YouTube(f'https://youtu.be/{self.link}')
+            file = yt.streams.filter(res='1080p', file_extension='mp4').first()
+            if file:
+                file.download(output_path=fpath, filename='video')
+                yt.streams.filter(type='audio', mime_type='audio/mp4', progressive=False).first().download(
+                    output_path=fpath, filename='video')
+            else:
+                file = yt.streams.filter(res='720p', file_extension='mp4', progressive=True).first()
+                if file:
+                    file.download(output_path=fpath, filename='video')
+
+            video_stream = ffmpeg.input(f'{fpath}/video.mp4')
+            audio_stream = ffmpeg.input(f'{fpath}/audio.mp4')
+            ffmpeg.output(audio_stream, video_stream, f'{self.lesson.number}_{self.number}.mp4').run()
+            if path.isfile(path.join(fpath, f'{self.lesson.number}_{self.number}.mp4')):
+                log.result = log.SUCCESS
+                log.output_data = str(path.join(fpath, f'{self.lesson.number}_{self.number}.mp4'))
+                return path.join(fpath, f'{self.lesson.number}_{self.number}.mp4')
+            log.output_data = f"None"
+            log.result = log.FAIL
+            return None
+        except Exception as exc:
+            log.output_data = f"{exc}"
+            log.result = log.FAIL
+            return None
+        finally:
+            log.save()
 
 
 class Payment(models.Model):
