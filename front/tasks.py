@@ -243,3 +243,14 @@ def send_mail(subject, message, recipient_list, from_email=None, attach: iter = 
         отправка письма
     """
     models.sendmail(subject, message, recipient_list, from_email, attach)
+
+
+@app.task(name="front.tasks.save_video", ignore_result=True)
+def save_video():
+    """
+        периодическая проверка необходимости скачать видеофайлв качестве для урока
+    """
+    empty_videos = models.Video.objects.filter(lesson__isnull=False, link__isnull=False, url__isnull=True)
+    if empty_videos.exists():
+        for video in empty_videos:
+            video.save()

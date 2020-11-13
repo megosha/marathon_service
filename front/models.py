@@ -96,10 +96,12 @@ class UpperSetting(models.Model):
     yandex_api_key_test = models.CharField(max_length=250, blank=True, null=True, verbose_name="yandex_api_key_test")
     test_mode = models.BooleanField(default=False, verbose_name="Тестовый режим ЯК")
     return_url = models.CharField(max_length=250, blank=True, null=True, verbose_name="return_url для ЯК")
-    remote_video_dir = models.FilePathField(path='media/marathon/marathon/', blank=True, null=True,
+    remote_video_dir = models.CharField(max_length=100, default='/media/marathon/marathon/', blank=True,
                                             verbose_name="Путь к папке с видеофайлами")
     mount_command = models.TextField(default='', blank=True, null=True,
                                      verbose_name="Команда для монтирования удаленного хранилища видео")
+    video_outer_url = models.TextField(default='', blank=True, null=True,
+                                     verbose_name="Префикс внешней ссылки на видеофайлы")
 
 
 class Marathon(models.Model):
@@ -356,7 +358,7 @@ class Video(models.Model):
             if file:
                 file.download(output_path=fpath, filename='video')
                 yt.streams.filter(type='audio', mime_type='audio/mp4', progressive=False).first().download(
-                    output_path=fpath, filename='video')
+                    output_path=fpath, filename='audio')
             else:
                 file = yt.streams.filter(res='720p', file_extension='mp4', progressive=True).first()
                 if file:
@@ -364,11 +366,12 @@ class Video(models.Model):
 
             video_stream = ffmpeg.input(f'{fpath}/video.mp4')
             audio_stream = ffmpeg.input(f'{fpath}/audio.mp4')
-            ffmpeg.output(audio_stream, video_stream, f'{self.lesson.number}_{self.number}.mp4').run()
+            ffmpeg.output(audio_stream, video_stream, f'{fpath}{self.lesson.marathon.pk}/{self.lesson.number}_{self.number}.mp4').run()
             if path.isfile(path.join(fpath, f'{self.lesson.number}_{self.number}.mp4')):
+                url =  f'{upper_set.video_outer_url}/{self.lesson.marathon.pk}/{self.lesson.number}_{self.number}.mp4'
                 log.result = log.SUCCESS
-                log.output_data = str(path.join(fpath, f'{self.lesson.number}_{self.number}.mp4'))
-                return path.join(fpath, f'{self.lesson.number}_{self.number}.mp4')
+                log.output_data = url
+                return url
             log.output_data = f"None"
             log.result = log.FAIL
             return None
