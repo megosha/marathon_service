@@ -254,3 +254,4 @@ def save_video():
     if empty_videos.exists():
         for video in empty_videos:
             video.save()
+

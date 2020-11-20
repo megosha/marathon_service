@@ -58,7 +58,7 @@ class LessonAdmin(admin.ModelAdmin):
     search_fields = ['title', 'marathon__title']
 
 class VideoAdmin(admin.ModelAdmin):
-    list_display = ['lesson', 'number', 'date_create']
+    list_display = ['lesson', 'number', 'date_create', 'processing']
     list_display_links = ['number', 'lesson']
     list_filter = ['lesson', 'date_create']
     search_fields = ['lesson__title']

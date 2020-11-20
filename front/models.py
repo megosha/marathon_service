@@ -97,11 +97,11 @@ class UpperSetting(models.Model):
     test_mode = models.BooleanField(default=False, verbose_name="Тестовый режим ЯК")
     return_url = models.CharField(max_length=250, blank=True, null=True, verbose_name="return_url для ЯК")
     remote_video_dir = models.CharField(max_length=100, default='/media/marathon/marathon/', blank=True,
-                                            verbose_name="Путь к папке с видеофайлами")
+                                        verbose_name="Путь к папке с видеофайлами")
     mount_command = models.TextField(default='', blank=True, null=True,
                                      verbose_name="Команда для монтирования удаленного хранилища видео")
     video_outer_url = models.TextField(default='', blank=True, null=True,
-                                     verbose_name="Префикс внешней ссылки на видеофайлы")
+                                       verbose_name="Префикс внешней ссылки на видеофайлы")
 
 
 class Marathon(models.Model):
@@ -142,6 +142,8 @@ class Gift(models.Model):
     marathon = models.OneToOneField(Marathon, on_delete=models.CASCADE, verbose_name="Марафон")
     description = models.TextField(null=True, blank=True, verbose_name="Описание")
     photo = models.ImageField(upload_to='images/gifts/', blank=True, verbose_name="Картинка на сайте")
+    file = models.FileField(upload_to='files/gifts/', blank=True, null=True,
+                            verbose_name="Файл для отправки в письме (книга)")
 
     class Meta:
         verbose_name = "Подарки и Бонусы марафонов"
@@ -319,6 +321,7 @@ class Video(models.Model):
                              verbose_name="Видеофайл, .mp4")
     description = models.TextField(default=None, blank=True, null=True, verbose_name="Комментарий к видео")
     date_create = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+    processing = models.BooleanField(default=False, verbose_name="В обработке")
 
     class Meta:
         ordering = ["number"]
@@ -366,9 +369,10 @@ class Video(models.Model):
 
             video_stream = ffmpeg.input(f'{fpath}/video.mp4')
             audio_stream = ffmpeg.input(f'{fpath}/audio.mp4')
-            ffmpeg.output(audio_stream, video_stream, f'{fpath}{self.lesson.marathon.pk}/{self.lesson.number}_{self.number}.mp4').run()
+            ffmpeg.output(audio_stream, video_stream,
+                          f'{fpath}{self.lesson.marathon.pk}/{self.lesson.number}_{self.number}.mp4').run()
             if path.isfile(path.join(fpath, f'{self.lesson.number}_{self.number}.mp4')):
-                url =  f'{upper_set.video_outer_url}/{self.lesson.marathon.pk}/{self.lesson.number}_{self.number}.mp4'
+                url = f'{upper_set.video_outer_url}/{self.lesson.marathon.pk}/{self.lesson.number}_{self.number}.mp4'
                 log.result = log.SUCCESS
                 log.output_data = url
                 return url
