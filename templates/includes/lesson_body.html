@@ -1,0 +1,116 @@
+{% load custom_tags %}
+                                <div id="collapse{{ lesson.number }}_26" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="heading{{ lesson.number }}" data-parent="#bootstrap-accordion_26">
+                                    <div class="panel-body">
+{#                                               <div class="mbr-fonts-style panel-text pr-2 display-4 py-0 my-0">#}
+                                                    {% if lesson.description %}
+                                                        <ul class="mbr-fonts-style panel-text pr-2 display-4 font-weight-bold py-0 my-0">
+                                                         {% for de in lesson.description_as_list %}
+                                                             <li>{{ de }}</li>
+                                                         {% endfor %}
+                                                         </ul>
+                                                     {% endif %}
+{#                                                   <strong>{{ lesson.description|linebreaks }}</strong>#}
+{#                                               </div>#}
+                                                {% if lesson.hometask or lesson.hometask_file %}
+                                                    <p class="mbr-fonts-style panel-text pr-2 display-4 pt-1 pb-0 my-0 font-weight-bold">
+                                                    <span class="text-primary">Домашнее задание:<br></span>
+                                                        {% if lesson.hometask %}{{ lesson.hometask|linebreaksbr }}{% endif %}
+                                                        {% if lesson.hometask_file %}
+                                                            <br><a href="/get_hometask/{{ lesson.marathon.pk }}-{{ lesson.number }}" target="_blank"><span class="fa fa-awesome fa-download"></span>  Скачать домашнее задание</a>
+
+                                                        {% endif %}
+                                                    </p>
+                                                {% endif %}
+                                                {% if lesson.video_set.all %}
+                                            <!-- CUSTOM VIDEOS  -->
+                                                    <div class="extVideo cid-s9dMobLaeo" id="extVideo2-1q_{{ lesson.number }}" style="background-color: transparent">
+                                                        <div class="container align-center">
+                                                            <div class="row justify-content-md-left">
+                                                                {% for video in lesson.video_set.all %}
+                                                                    <div class="mbr-white col-md-12 col-12 col-lg-6">\
+                                                                        {% if video.description %}<p class="mbr-fonts-style panel-text pr-2 display-4">{{ video.description }}</p>
+                                                                        {% else %}<p class="mbr-fonts-style panel-text pr-2 display-4">&nbsp;</p>{% endif %}
+                                                                        {% if video.video_exists %}
+                                                                            <video class="builtin-video my-2" onplaying="looked({{ video.pk }})" oncontextmenu="return false;" controls controlsList="nodownload" poster="/assets/images/online-3412498_1920.jpg" preload="metadata">
+                                                                                <source src="{{ video.url }}" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"' />
+                                                                            </video>
+                                                                        {% else %}
+                                                                            <div class="box1" style="background-image: url('/assets/images/online-3412498_1920.jpg');">
+                                                                                <div class="mbr-media show-modal align-center py-2" data-toggle="modal" data-target=".w{{ video.pk }}" onclick="looked({{ video.pk }})">
+                                                                                    <div class="icon-wrap">
+                                                                                        <span class="mobi-mbri-play mobi-mbri"></span>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        {% endif %}
+                                                                    </div>
+                                                                {% endfor %}
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        {% for vid in lesson.video_set.all %}
+{#                                                            {% if not vid.video %}#}
+                                                            <div class="modalWindow w{{ vid.pk }}" style="display: none;">
+                                                                <div class="modalWindow-container">
+                                                                    <div class="modalWindow-video-container">
+                                                                        <div class="modalWindow-video">
+{#                                                                            <iframe width="100%" height="100%" frameborder="0" allowfullscreen="1" data-src="https://youtu.be/{{ vid.link }}?modestbranding=1"></iframe>#}
+                                                                            <iframe width="100%" height="100%" frameborder="0" allowfullscreen="1" data-src="https://youtu.be/{{ vid.link }}"></iframe>
+                                                                        </div>
+                                                                        <a class="close custom-close" role="button" data-dismiss="modal">
+                                                                            <span aria-hidden="true" class="mbri-close closeModal"></span>
+                                                                            <span class="sr-only">Close</span>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+{#                                                            {% endif %}#}
+                                                        {% endfor %}
+
+
+                                                    </div>
+                                                    </div>
+
+{#                                                <div class="extVideo cid-s9dMobLaeo" id="extVideo2-1q_{{ lesson.number }}" style="background-color: transparent">#}
+{##}
+{#                                                    <div class="container align-center">#}
+{#                                                        <div class="row justify-content-md-center">#}
+{#                                                            {% for video in lesson.video_set.all %}#}
+{#                                                            <div class="mbr-white col-md-12 col-12 col-lg-6">#}
+{#                                                                {% if video.description %}<p class="mbr-fonts-style panel-text pr-2 display-4">{{ video.description }}</p>#}
+{#                                                                {% else %}<p class="mbr-fonts-style panel-text pr-2 display-4">&nbsp;</p>{% endif %}#}
+{#                                                                <div class="box1" style="background-image: url('/assets/images/online-3412498_1920.jpg');">#}
+{#                                                                    <div class="mbr-media show-modal align-center py-2" data-toggle="modal" data-target=".w{{ video.pk }}">#}
+{#                                                                        <div class="icon-wrap">#}
+{#                                                                            <span class="mobi-mbri-play mobi-mbri"></span>#}
+{#                                                                        </div>#}
+{#                                                                    </div>#}
+{#                                                                </div>#}
+{#                                                            </div>#}
+{#                                                            {% endfor %}#}
+{#                                                        </div>#}
+{#                                                    </div>#}
+{#                                                    <div>#}
+{#                                                        {% for vid in lesson.video_set.all %}#}
+{#                                                            <div class="modalWindow w{{ vid.pk }}" style="display: none;">#}
+{#                                                                <div class="modalWindow-container">#}
+{#                                                                    <div class="modalWindow-video-container">#}
+{#                                                                        <div class="modalWindow-video">#}
+{#                                                                            <iframe width="100%" height="100%" frameborder="0" allowfullscreen="1" data-src="https://youtu.be/{{ vid.link }}?modestbranding=1"></iframe>#}
+{#                                                                        </div>#}
+{#                                                                        <a class="close custom-close" role="button" data-dismiss="modal">#}
+{#                                                                            <span aria-hidden="true" class="mbri-close closeModal"></span>#}
+{#                                                                            <span class="sr-only">Close</span>#}
+{#                                                                        </a>#}
+{#                                                                    </div>#}
+{#                                                                </div>#}
+{#                                                            </div>#}
+{#                                                        {% endfor %}#}
+{##}
+{##}
+{#                                                    </div>#}
+{#                                                </div>#}
+                                                                                     <!-- CUSTOM VIDEOS  END  -->
+                                                {% endif %}
+                                    </div>
+                                </div>

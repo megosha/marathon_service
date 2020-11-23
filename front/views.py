@@ -406,7 +406,7 @@ class Account(LoginRequiredMixin, ContextViewMixin):
                       f'<a style="font-size: 24px; font-weight: bold;" href="{settings.website}/api/accept_review/{account.pk}-{review_obj.pk}">Опубликовать отзыв</a>'
             mail_context = {"settings": settings, "message": message}
             html_message = render_to_string('mail/news.html', mail_context)
-            models.sendmail(subject, html_message,settings.contact_mail, attach=review_obj.account.photo.path)
+            models.sendmail(subject, html_message, settings.contact_mail, attach=review_obj.account.photo.path)
 
         return HttpResponseRedirect('/me')
 
@@ -421,7 +421,7 @@ class Book(ContextViewMixin):
         return self.base(request)
 
 
-class VideoLooked(LoginRequiredMixin, View):
+class VideoLooked(LoginRequiredMixin, ContextViewMixin):
     def post(self, request):
         res = {}
         account = models.Account.objects.filter(user=self.request.user).first()
@@ -433,9 +433,29 @@ class VideoLooked(LoginRequiredMixin, View):
                 res['result'] = 'success'
                 try:
                     videos_l = set(video.lesson.video_set.values_list('pk', flat=True))
-                    videos_a = set(account.looked_videos.filter(lesson__pk=video.lesson.pk).values_list('pk', flat=True))
+                    videos_a = set(
+                        account.looked_videos.filter(lesson__pk=video.lesson.pk).values_list('pk', flat=True))
                     if videos_l == videos_a:
                         res['lesson'] = video.lesson.pk
+
+                        lesson_next = video.lesson.next()
+                        context = self.make_context(lesson=lesson_next)
+                        payments = models.Payment.objects.filter(account=account, marathon=video.lesson.marathon)
+                        if payments:
+                            # есть ли актуальный (не просроченный) платеж за марафон
+                            payment_valid = payments.filter(
+                                date_approve__gte=datetime.now() - timedelta(days=62)).order_by(
+                                '-date_pay').first()
+                            # есть ли просроченный платеж за марафон
+                            payment_expired = payments.filter(
+                                date_approve__lt=datetime.now() - timedelta(days=62)).order_by(
+                                '-date_pay').first()
+
+                            context.update({"payment_valid": payment_valid, "payment_expired": payment_expired})
+                        html_title = get_template('includes/lesson_title.html').render(context, request=request)
+                        html_body = get_template('includes/lesson_body.html').render(context, request=request)
+                        res.update(
+                            {"html_title": html_title, "html_body": html_body, 'lesson_next': lesson_next.number or None})
                 except:
                     pass
         else:

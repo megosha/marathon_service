@@ -1,0 +1,25 @@
+{% load custom_tags %}
+<a role="button" class="collapsed panel-title text-black pr-3
+    {% if lesson.date_publish > current_date %}
+         inactive cursor_default
+    {% elif not lesson.free %}
+         {% if not payment_valid or payment_valid.status != 'succeeded'%}
+         inactive cursor_default
+         {% endif %}
+     {% endif %}
+    {% if not lesson.free %}
+        {% if not lesson.prev|looked:user.account %}
+            inactive cursor_default
+        {% endif %}
+     {% endif %}
+     "
+   data-toggle="collapse" data-core="" href="#collapse{{ lesson.number }}_26" aria-expanded="false" aria-controls="collaps{{ lesson.number }}">
+    <h4 class="mbr-fonts-style display-7"><span class="toggle-icon inactive sign mbr-iconfont"></span>
+        <span class="text-primary display-5">Тема №{{ lesson.number }}. </span>
+        {{ lesson.title }}.
+        {% if lesson.date_publish > current_date %}Дата выхода: {{ lesson.date_publish|date:"d.m.Y" }}
+        {% else %}
+            <small id="badge_{{ lesson.pk }}">{% if lesson|looked:user.account %}<span class="badge badge-secondary badge-pill">Просмотрена</span>{% else %}<span class="badge badge-success badge-pill">Новая</span>{% endif %}</small>
+        {% endif %}
+    </h4>
+</a>

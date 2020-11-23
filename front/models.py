@@ -307,8 +307,14 @@ class Lesson(models.Model):
         # return self.description.split(',')
         return self.description.strip().split("\n")
 
+    def prev(self):
+        return Lesson.objects.filter(marathon=self.marathon, number__lt=self.number).order_by('number').last()
+
+    def next(self):
+        return Lesson.objects.filter(marathon=self.marathon, number__gt=self.number).order_by('number').first()
+
     def __str__(self):
-        return f"Тема:{self.title} -  №{self.number} - марафон: {self.marathon}"
+        return f"Тема №{self.number} - Mарафон: {self.marathon.pk}"
 
 
 class Video(models.Model):
@@ -330,7 +336,7 @@ class Video(models.Model):
         verbose_name_plural = "Видео"
 
     def __str__(self):
-        return f"{self.lesson.title} -  №{self.number}"
+        return f"Mарафон №{self.lesson.marathon.pk}-Тема №{self.lesson.number}-Видео №{self.number}"
 
     def video_exists(self):
         try:
