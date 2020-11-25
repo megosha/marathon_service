@@ -143,7 +143,7 @@ class Gift(models.Model):
     description = models.TextField(null=True, blank=True, verbose_name="Описание")
     photo = models.ImageField(upload_to='images/gifts/', blank=True, verbose_name="Картинка на сайте")
     file = models.FileField(upload_to='files/gifts/', blank=True, null=True,
-                            verbose_name="Файл для отправки в письме (книга)")
+                            verbose_name="Файл подарка (книга)")
 
     class Meta:
         verbose_name = "Подарки и Бонусы марафонов"
