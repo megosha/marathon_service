@@ -88,9 +88,7 @@ function looked(video){
                }
                 if (result.lesson_next){
                     var div_title = document.getElementById('heading'+result.lesson_next);
-                    var div_body = document.getElementById('body'+result.lesson_next);
                     div_title.innerHTML = result.html_title;
-                    div_body.innerHTML = result.html_body;
 
                }
             },
