@@ -62,6 +62,16 @@ def get_hometask(request, marathon_pk, lesson_number):
         return HttpResponseNotFound()
 
 
+@login_required
+def get_gift(request, marathon):
+    try:
+        gift_file = models.Marathon.objects.filter(pk=marathon).first().gift.file.file.name
+    except:
+        return HttpResponseNotFound()
+    if path.isfile(gift_file):
+            return serve(request, f"{gift_file}", '/')
+    return HttpResponseNotFound()
+
 class ContextViewMixin(View):
     def make_context(self, context=None, **kwargs):
         if not context: context = {}

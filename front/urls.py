@@ -17,6 +17,7 @@ urlpatterns = [
     path('get_hometask/<int:marathon_pk>-<int:lesson_number>', views.get_hometask),
     path('api/accept_review/<str:account_id>-<int:feedback_id>', api.AcceptReview.as_view()),
     path('video-looked', views.VideoLooked.as_view()),
+    path('get_gift/<str:marathon>', views.get_gift),
 
     # path('test', views.Test.as_view()),
 ]
