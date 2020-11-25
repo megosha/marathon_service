@@ -69,13 +69,23 @@ class YandexPayment(LoginRequiredMixin, ContextViewMixin):
             result['error'] = 'Ошибка данных для формирования нового платежа'
             return HttpResponseRedirect('/me')
 
-        # if marathon.cost == 0:
-        #     new_payment = models.Payment.objects.create(account=account,
-        #                                                 marathon=marathon,
-        #                                                 date_pay=timezone.now(),
-        #                                                 date_approve=timezone.now(),
-        #                                                 status="succeeded")
-        #     return HttpResponseRedirect(f'/me?marathon={marathon.pk}')
+        if marathon.cost == 0:
+            try:
+                new_payment = models.Payment.objects.create(account=account,
+                                                        marathon=marathon,
+                                                        date_pay=timezone.now(),
+                                                        date_approve=timezone.now(),
+                                                        status="succeeded")
+                log.input_data = f"account {account.user.username}\nmarathon {marathon.pk}\ntime  {timezone.now()}\n"
+                log.output_data = f"payment_pk {new_payment.pk},\nuuid {new_payment.pk}"
+                log.result = log.SUCCESS
+                log.save()
+            except Exception as exc:
+                log.result = log.FAIL
+                log.output_data = f"{exc}"
+                log.save()
+
+            return HttpResponseRedirect(f'/me?marathon={marathon.pk}')
 
         try:
             idempotence_key = uuid.uuid4()

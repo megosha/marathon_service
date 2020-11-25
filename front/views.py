@@ -453,9 +453,11 @@ class VideoLooked(LoginRequiredMixin, ContextViewMixin):
 
                             context.update({"payment_valid": payment_valid, "payment_expired": payment_expired})
                         html_title = get_template('includes/lesson_title.html').render(context, request=request)
-                        html_body = get_template('includes/lesson_body.html').render(context, request=request)
+                        # html_body = get_template('includes/lesson_body.html').render(context, request=request)
+                        # res.update(
+                        #     {"html_title": html_title, "html_body": html_body, 'lesson_next': lesson_next.number or None})
                         res.update(
-                            {"html_title": html_title, "html_body": html_body, 'lesson_next': lesson_next.number or None})
+                            {"html_title": html_title, 'lesson_next': lesson_next.number or None})
                 except:
                     pass
         else:

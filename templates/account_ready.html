@@ -205,9 +205,9 @@ TODO
                                 <div id="body{{ lesson.number }}">
                                 {% if lesson.date_publish <= current_date %}
                                     {% if lesson.free or payment_valid.status == 'succeeded' %}
-                                        {% if lesson.free or lesson.prev|looked:user.account  %}
+{#                                        {% if lesson.free or lesson.prev|looked:user.account  %}#}
                                             {% include 'includes/lesson_body.html' %}
-                                        {% endif %}
+{#                                        {% endif %}#}
                                     {% endif %}
                                 {% endif %}
                                 </div>
