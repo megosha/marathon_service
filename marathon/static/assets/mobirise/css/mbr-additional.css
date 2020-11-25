@@ -4205,7 +4205,24 @@ a {
   .cid-s9dMobLaeo .box2 {
     height: 250px;
   }
+   .cid-s9dMobLaeo iframe {
+    height: 200px!important;
+  }
 }
+.cid-s9dMobLaeo .video-block {
+  margin: auto;
+}
+@media (max-width: 768px) {
+  .cid-s9dMobLaeo .video-block {
+    width: 100% !important;
+  }
+}
+@media (max-width: 410px) {
+  .cid-s9dMobLaeo iframe {
+    height: 100px!important;
+  }
+}
+
 .cid-s8WRsGW5AR {
   padding-top: 45px;
   padding-bottom: 45px;

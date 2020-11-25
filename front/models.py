@@ -346,10 +346,10 @@ class Video(models.Model):
             return False
 
     def save(self, *args, **kwargs):
-        if self.link and not self.url:
-            url_path = self.download_video()
-            if url_path:
-                self.url = url_path
+        # if self.link and not self.url:
+        #     url_path = self.download_video()
+        #     if url_path:
+        #         self.url = url_path
         super(Video, self).save(*args, **kwargs)
 
     def download_video(self):
