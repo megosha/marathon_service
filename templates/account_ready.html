@@ -142,7 +142,7 @@
 
                         <form method="POST" action="/api/payment/{{ marathon.pk }}"> {% csrf_token %}
                             <div class="mbr-section-btn align-center align-self-center">
-                                <button class="btn btn-lg btn-primary display-4" type="submit" style="border-radius: 100px">Получить марафон за {{ marathon.cost }}₽</button></div>
+                                <button class="btn btn-lg btn-primary display-4" type="submit" style="border-radius: 100px" onclick="ym(67791019,'reachGoal','marathon_001'); return true;">Получить марафон за {{ marathon.cost }}₽</button></div>
                         </form>
             {% else %}
                 <div class="col-12 col-md-12 ">
