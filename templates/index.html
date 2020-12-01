@@ -898,7 +898,7 @@
                                 </div>
                                 <div id="collapse4_12" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingFour" data-parent="#bootstrap-accordion_12">
                                     <div class="panel-body">
-                                        <p class="mbr-fonts-style panel-text pr-2 display-4">По любому вопросу Вам помогут модераторы тренинга. Напишите свой вопрос <a href="/#feedback-label">в форму обратной связи</a> и мы поможем найти решение.<br></p>
+                                        <p class="mbr-fonts-style panel-text pr-2 display-4">По любому вопросу Вам помогут модераторы тренинга. Напишите свой вопрос <a href="/#feedback-label">в форму обратной связи</a> или в онлайн-чат и мы поможем найти решение.<br></p>
                                     </div>
                                 </div>
                             </div>
@@ -983,7 +983,7 @@
                                 <div id="collapse11_12" class="panel-collapse noScroll collapse" role="tabpanel" aria-labelledby="headingFive" data-parent="#bootstrap-accordion_12">
                                     <div class="panel-body">
                                         <p class="mbr-fonts-style panel-text pr-2 display-4">
-                                            Обратная связь на нашем курсе - это возможность задавать вопросы по курсу кураторам либо Артёму лично. Обратная связь – это урок «День вопросов», который проходит по воскресеньям. Вы задаете письменно вопросы <a href="/#feedback-label">в форме обратной связи</a> на самом сайте. Ответ можно ожидать в течение нескольких дней. Если вам нужна личная консультация Артёма то вопросы задаются в <a href="/#map02-d" data-toggle="tooltip" data-placement="top" title='Доступен в разделе "Контакты" только для участников марафона'>whatsapp <span class="fa fa-awesome fa-question-circle-o"></span></a> также по воскресеньям с 8 до 20:00. Там же он присылает Вам ответ.</p>
+                                            Обратная связь на нашем курсе - это возможность задавать вопросы по курсу кураторам либо Артёму лично. Обратная связь – это урок «День вопросов», который проходит по воскресеньям. Вы задаете письменно вопросы <a href="/#feedback-label">в форме обратной связи</a> или в онлайн-чате на самом сайте. Ответ можно ожидать в течение нескольких дней. Если вам нужна личная консультация Артёма то вопросы задаются в <a href="/#map02-d" data-toggle="tooltip" data-placement="top" title='Доступен в разделе "Контакты" только для участников марафона'>whatsapp <span class="fa fa-awesome fa-question-circle-o"></span></a> также по воскресеньям с 8 до 20:00. Там же он присылает Вам ответ.</p>
                                     </div>
                                 </div>
                             </div>
@@ -1000,7 +1000,8 @@
 
     <div class="container">
         <div class="row">
-             <div class="col-lg-6 col-md-12 col-sm-12 order-2">
+            {% if user %}
+            <div class="col-lg-6 col-md-12 col-sm-12 order-2">
                                  <div data-form-type="formoid">
                     
 <!--Formbuilder Form-->
@@ -1059,6 +1060,7 @@
 </div>
 
             </div>
+        {% endif %}
 
             <div class="card col-lg-6 col-md-12 col-sm-12">
                 <h3 class="mbr-section-title mbr-bold align-left mbr-fonts-style display-2"><span>КОНТАКТЫ</span></h3>

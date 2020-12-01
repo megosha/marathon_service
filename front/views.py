@@ -122,6 +122,7 @@ class Index(ContextViewMixin):
     def get(self, request, form=None):
         return self.base(request, form)
 
+    @login_required
     def post(self, request):
         form = forms.Feedback(request.POST)
         if form.is_valid():
