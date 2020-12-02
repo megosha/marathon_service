@@ -1,6 +1,6 @@
 import uuid
 from datetime import timedelta
-from os import path
+import os
 import subprocess
 
 import environ
@@ -15,6 +15,7 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.safestring import mark_safe
+from front import functions
 
 from front.make_invoice import create_pdf
 
@@ -24,7 +25,7 @@ base_dir = settings.BASE_DIR
 # medis_dir = settings.MEDIA_ROOT
 
 env = environ.Env()
-env.read_env(path.join(base_dir, '.env'))
+env.read_env(os.path.join(base_dir, '.env'))
 
 # statuses = {'pending': 'Платёж создан (в обработке)',
 #             'waiting_for_capture': 'Платёж оплачен, деньги авторизованы и ожидают списания',
@@ -66,7 +67,7 @@ def sendmail(subject, message, recipient_list, from_email=None, attach: iter = N
         for file in attach:
             if isinstance(file, str):
                 try:
-                    mail.attach_file(path.join(settings.MEDIA_ROOT, 'invoice', file))
+                    mail.attach_file(os.path.join(settings.MEDIA_ROOT, 'invoice', file))
                 except Exception as e:
                     print(e)
                     pass
@@ -346,22 +347,24 @@ class Video(models.Model):
             return False
 
     def save(self, *args, **kwargs):
-        # if self.link and not self.url:
-        #     url_path = self.download_video()
-        #     if url_path:
-        #         self.url = url_path
         super(Video, self).save(*args, **kwargs)
+        if self.link and not self.url and not self.processing:
+            from front.tasks import download_video
+            download_video.delay(self.pk)
+            # download_video(self.pk)
 
     def download_video(self):
+        Video.objects.filter(pk=self.pk).update(processing = True)
         log = Logging.objects.create(action="Скачивание видео c YouTube models.Video.download_video()",
                                      input_data=f'pk: {self.pk}, марафон: {self.lesson.marathon.pk}, '
                                                 f'урок:{self.lesson.number}, видео:{self.number}')
         try:
             upper_set = UpperSetting.objects.filter().first()
-            fpath = f'{upper_set.remote_video_dir}/{self.lesson.marathon.pk}/'
-            if not path.isdir(fpath):
+            fpath = f'{upper_set.remote_video_dir}{self.lesson.marathon.pk}/'
+            if not os.path.isdir(fpath):
                 command = upper_set.mount_command
-                subprocess.Popen(command)
+                os.system(command)
+                # subprocess.Popen(command)
             yt = pytube.YouTube(f'https://youtu.be/{self.link}')
             file = yt.streams.filter(res='1080p', file_extension='mp4').first()
             if file:
@@ -373,23 +376,25 @@ class Video(models.Model):
                 if file:
                     file.download(output_path=fpath, filename='video')
 
-            video_stream = ffmpeg.input(f'{fpath}/video.mp4')
-            audio_stream = ffmpeg.input(f'{fpath}/audio.mp4')
+            video_stream = ffmpeg.input(f'{fpath}video.mp4')
+            audio_stream = ffmpeg.input(f'{fpath}audio.mp4')
             ffmpeg.output(audio_stream, video_stream,
-                          f'{fpath}{self.lesson.marathon.pk}/{self.lesson.number}_{self.number}.mp4').run()
-            if path.isfile(path.join(fpath, f'{self.lesson.number}_{self.number}.mp4')):
+                          f'{fpath}/{self.lesson.number}_{self.number}.mp4').run()
+            if os.path.isfile(os.path.join(fpath, f'{self.lesson.number}_{self.number}.mp4')):
                 url = f'{upper_set.video_outer_url}/{self.lesson.marathon.pk}/{self.lesson.number}_{self.number}.mp4'
                 log.result = log.SUCCESS
                 log.output_data = url
+                Video.objects.filter(pk=self.pk).update(url=url)
                 return url
             log.output_data = f"None"
             log.result = log.FAIL
             return None
         except Exception as exc:
-            log.output_data = f"{exc}"
+            log.output_data = functions.get_detail_exception_info(exc)
             log.result = log.FAIL
             return None
         finally:
+            Video.objects.filter(pk=self.pk).update(processing=False)
             log.save()
 
 
@@ -456,7 +461,7 @@ class Payment(models.Model):
         if not (self.uuid and self.invoice):
             return ''
         return mark_safe(
-            f'<a href="{path.join(settings.MEDIA_URL, "invoice", self.uuid.__str__())}.pdf" target="_blank">Квитанция {self.uuid}</a>')
+            f'<a href="{os.path.join(settings.MEDIA_URL, "invoice", self.uuid.__str__())}.pdf" target="_blank">Квитанция {self.uuid}</a>')
 
 
 class Logging(models.Model):

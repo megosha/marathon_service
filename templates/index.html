@@ -65,14 +65,12 @@
         <div class="row">
             <div class="card col-12 col-md-12">
                 <div class="wrapper align-left">
-{#                    <h3 class="mbr-section-title mbr-bold align-left mbr-fonts-style header display-1"><span>ДВИЖЕНИЕ</span>&nbsp;<span>ВВЕРХ</span>&nbspЭКСПРЕСС-МАРАФОН</h3>#}
                     {% if settings.main_marathon.title|wordcount <= 1 %}
-                    <h3 class="mbr-section-title mbr-bold align-left mbr-fonts-style header display-1"><span></span>&nbsp;<span>{{ settings.main_marathon.title }}</span>&nbspЭКСПРЕСС-МАРАФОН</h3>
+                    <h3 class="mbr-section-title mbr-bold align-left mbr-fonts-style header display-1"><span></span>&nbsp;<span>{{ settings.main_marathon.title|upper }}</span>&nbsp{{ settings.main_marathon.subtitle_upper }}</h3>
                     {% else %}
                     <h3 class="mbr-section-title mbr-bold align-left mbr-fonts-style header display-1"><span>{{ settings.main_marathon.title_general }}</span>&nbsp;<span>{{ settings.main_marathon.title_last }}</span>&nbsp{{ settings.main_marathon.subtitle_upper }}</h3>
                     {% endif %}
-{#                    <h4 class="mbr-section-subtitle pb-1 align-left mbr-regular mbr-fonts-style display-2"><strong>МАРАФОН</strong></h4>#}
-                    
+
                     <div class="mbr-list mbr-fonts-style display-5 mt-3">
                         <ul class="list">
                             {% for ad in settings.main_marathon.ad_list %}
