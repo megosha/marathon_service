@@ -375,12 +375,12 @@ class Video(models.Model):
                 yt.streams.filter(type='audio', mime_type='audio/mp4', progressive=False).first().download(
                     output_path=fpath, filename='audio')
 
-                if os.path.isfile(f'{fpath}{self.lesson.number}_{self.number}.mp4'):
-                    os.remove(f'{fpath}{self.lesson.number}_{self.number}.mp4')
+                # if os.path.isfile(f'{fpath}{self.lesson.number}_{self.number}.mp4'):
+                #     os.remove(f'{fpath}{self.lesson.number}_{self.number}.mp4')
                 video_stream = ffmpeg.input(f'{fpath}video.mp4')
                 audio_stream = ffmpeg.input(f'{fpath}audio.mp4')
                 ffmpeg.output(audio_stream, video_stream,
-                              f'{fpath}{self.lesson.number}_{self.number}.mp4').run()
+                              f'{fpath}{self.lesson.number}_{self.number}.mp4').run(overwrite_output=True)
 
             else:
                 file = yt.streams.filter(res='720p', file_extension='mp4', progressive=True).first()
