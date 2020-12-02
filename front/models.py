@@ -361,25 +361,31 @@ class Video(models.Model):
         try:
             upper_set = UpperSetting.objects.filter().first()
             fpath = f'{upper_set.remote_video_dir}{self.lesson.marathon.pk}/'
-            if not os.path.isdir(fpath):
+            # if not os.path.isdir(fpath):
+            if not os.path.isdir(upper_set.remote_video_dir):
                 command = upper_set.mount_command
                 os.system(command)
                 # subprocess.Popen(command)
+            if not os.path.isdir(fpath):
+                os.mkdir(fpath)
             yt = pytube.YouTube(f'https://youtu.be/{self.link}')
             file = yt.streams.filter(res='1080p', file_extension='mp4').first()
             if file:
                 file.download(output_path=fpath, filename='video')
                 yt.streams.filter(type='audio', mime_type='audio/mp4', progressive=False).first().download(
                     output_path=fpath, filename='audio')
+
+                if os.path.isfile(f'{fpath}{self.lesson.number}_{self.number}.mp4'):
+                    os.remove(f'{fpath}{self.lesson.number}_{self.number}.mp4')
+                video_stream = ffmpeg.input(f'{fpath}video.mp4')
+                audio_stream = ffmpeg.input(f'{fpath}audio.mp4')
+                ffmpeg.output(audio_stream, video_stream,
+                              f'{fpath}{self.lesson.number}_{self.number}.mp4').run()
+
             else:
                 file = yt.streams.filter(res='720p', file_extension='mp4', progressive=True).first()
                 if file:
-                    file.download(output_path=fpath, filename='video')
-
-            video_stream = ffmpeg.input(f'{fpath}video.mp4')
-            audio_stream = ffmpeg.input(f'{fpath}audio.mp4')
-            ffmpeg.output(audio_stream, video_stream,
-                          f'{fpath}/{self.lesson.number}_{self.number}.mp4').run()
+                    file.download(output_path=fpath, filename=f'{self.lesson.number}_{self.number}')
             if os.path.isfile(os.path.join(fpath, f'{self.lesson.number}_{self.number}.mp4')):
                 url = f'{upper_set.video_outer_url}/{self.lesson.marathon.pk}/{self.lesson.number}_{self.number}.mp4'
                 log.result = log.SUCCESS
