@@ -378,7 +378,7 @@
                         <div class="col-lg-6">
                             {% for lesson_2 in lessons_2 %}
                                 <div class="card">
-                                <div class="card-header" role="tab" id="heading0">
+                                <div class="card-header" role="tab" id="heading{{ lesson_2.pk }}">
                                     <a role="button" class="panel-title collapsed text-black pr-3 {% if not lesson_2.free and not lesson_2.description %}inactive cursor_default{% endif %}" data-toggle="collapse" data-core="" href="#collapse{{ lesson_2.pk }}_22" aria-expanded="false" aria-controls="collapse{{ lesson_2.pk }}1">
 
                                         <h4 class="mbr-fonts-style display-7">
@@ -1107,6 +1107,103 @@
 
                 
 
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="accordion31 cid-rZqao4M7ed mt-0 pt-2" id="accordion03-a">
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-12 title-text">
+                <h3 class="mbr-section-title mbr-bold align-center mbr-fonts-style display-2">
+                    ВСЕ&nbsp;<span>МАРАФОНЫ</span></h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="bootstrap-accordion_03" class="panel-group accordionStyles accordion" role="tablist" aria-multiselectable="true">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            {% for marathon_1 in marathones_1 %}
+                                <div class="card">
+                                <div class="card-header" role="tab" id="heading_m{{ marathon_1.pk }}">
+                                    <a role="button" class="panel-title collapsed text-black pr-3 " data-toggle="collapse" data-core="" href="#collapse{{ marathon_1.pk }}_33" aria-expanded="false" aria-controls="collapse{{ marathon_1.pk }}3">
+                                        <h4 class="mbr-fonts-style display-7">
+                                        <span class="text-primary"> {{ marathon_1.title }}</span>
+                                            {% if marathon_1.description %}
+                                                <span class="toggle-icon inactive sign mbr-iconfont"></span>
+                                            {% endif %}
+                                        </h4>
+
+                                    </a>
+                                </div>
+                                <div id="collapse{{ marathon_1.pk }}_33" class="panel-collapse noScroll collapse " role="tabpanel" aria-labelledby="heading_m{{ marathon_1.pk }}" data-parent="#bootstrap-accordion_03">
+                                    <div class="panel-body">
+                                        {% if marathon_1.description %}
+                                            <p class="mbr-fonts-style panel-text pr-2 display-4 font-weight-bold">
+                                                {{ marathon_1.description|linebreaksbr }}
+                                            </p>
+                                        {% endif %}
+
+                                        <hr class="mt-2" style="border: 0.5px solid #ff4e3c;"/>
+                                        <dl class=" mbr-fonts-style panel-text p-0 my-0 display-4 font-weight-bold">
+                                            <dt>ПРОГРАММА</dt>
+                                            {% for lsn in marathon_1.ordered_lessons %}
+                                                <dd class="py-0 my-0">
+                                                    {{ lsn.number }}. {{ lsn.title }}
+                                                </dd>
+                                            {% endfor %}
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+
+                        </div>
+
+                        <div class="col-lg-6">
+                            {% for marathon_2 in marathones_2 %}
+                                <div class="card">
+                                <div class="card-header" role="tab" id="heading_m{{ marathon_2.pk }}">
+                                    <a role="button" class="panel-title collapsed text-black pr-3 " data-toggle="collapse" data-core="" href="#collapse{{ marathon_2.pk }}_33" aria-expanded="false" aria-controls="collapse{{ marathon_1.pk }}3">
+                                        <h4 class="mbr-fonts-style display-7">
+                                            <span class="text-primary"> {{ marathon_2.title }}</span>
+                                                {% if marathon_2.description %}
+                                                    <span class="toggle-icon inactive sign mbr-iconfont"></span>
+                                                {% endif %}
+                                            </h4>
+                                    </a>
+                                </div>
+                                <div id="collapse{{ marathon_2.pk }}_33" class="panel-collapse noScroll collapse " role="tabpanel" aria-labelledby="heading_m{{ marathon_2.pk }}" data-parent="#bootstrap-accordion_03">
+                                    <div class="panel-body">
+                                        <div class="panel-body">
+                                            {% if marathon_2.description %}
+                                                <p class="mbr-fonts-style panel-text pr-2 display-4 font-weight-bold">
+                                                    {{ marathon_2.description|linebreaksbr }}
+                                                </p>
+                                            {% endif %}
+                                        <hr class="mt-2" style="border: 0.5px solid #ff4e3c;"/>
+                                        <dl class=" mbr-fonts-style panel-text p-0 my-0 display-4 font-weight-bold">
+                                            <dt>ПРОГРАММА</dt>
+                                            {% for lsn in marathon_2.ordered_lessons %}
+                                                <dd class="py-0 my-0">
+                                                    {{ lsn.number }}. {{ lsn.title }}
+                                                </dd>
+                                            {% endfor %}
+                                        </dl>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+
+
+
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

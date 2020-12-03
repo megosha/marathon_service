@@ -2200,7 +2200,7 @@ a {
 .cid-rZqao4M7ed .card .panel-body {
   padding: 14px 20px;
 }
-.cid-rZqao4M7ed .card .panel-body p {
+.cid-rZqao4M7ed .card .panel-body p, dl {
   color: #61728a;
   line-height: 1.5;
 }

@@ -107,7 +107,7 @@ class UpperSetting(models.Model):
 
 class Marathon(models.Model):
     title = models.CharField(max_length=250, blank=False, null=False, verbose_name="Название марафона (на Главной)")
-    subtitle = models.CharField(max_length=250, blank=False, null=False, default="",
+    subtitle = models.CharField(max_length=250, blank=True, null=True, default="",
                                 verbose_name="Подзаголовок (на Главной)")
     advantages = models.TextField(verbose_name="Достоинства (на Главной)", default="", blank=True, null=True)
     cost = models.PositiveIntegerField(default=0, verbose_name="Стоимость марафона (в рублях)")
@@ -134,6 +134,15 @@ class Marathon(models.Model):
     def ad_list(self):
         return self.advantages.strip().split("\n")
         # return self.advantages.split("\n")
+
+    def ordered_lessons(self):
+        return self.lesson_set.all().order_by('number')
+
+    def short_description(self):
+        return ''.join(self.description.split('\n')[:5])
+
+    def ending_description(self):
+        return ''.join(self.description.split('\n')[5:])
 
     def __str__(self):
         return f"{self.title}"

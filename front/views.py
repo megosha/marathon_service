@@ -72,6 +72,7 @@ def get_gift(request, marathon):
             return serve(request, f"{gift_file}", '/')
     return HttpResponseNotFound()
 
+
 class ContextViewMixin(View):
     def make_context(self, context=None, **kwargs):
         if not context: context = {}
@@ -104,18 +105,24 @@ class Test(ContextViewMixin):
 class Index(ContextViewMixin):
     def base(self, request, form=None):
         if form is None: form = forms.Feedback()
-        reviews = models.Feedback.objects.filter(kind=1, accepted=True)[:30]
+        reviews = models.Feedback.objects.filter(kind=1, accepted=True)[:50]
         settings = models.Setting.objects.get()
         feedback = request.session.pop('feedback') if 'feedback' in request.session else False
         lessons = settings.main_marathon.lesson_set.all().order_by('number')
         lessons_1 = lessons[:math.floor(len(lessons) / 2)]
         lessons_2 = lessons[math.ceil(len(lessons) / 2):]
+        # marathones = models.Marathon.objects.exclude(outdated=True).order_by('pk')
+        marathones = models.Marathon.objects.all().order_by('pk')
+        marathon_1 = marathones[:math.floor(len(marathones) / 2)]
+        marathon_2 = marathones[math.ceil(len(marathones) / 2):]
         context = self.make_context(form=form,
                                     reviews=reviews,
                                     settings=settings,
                                     feedback=feedback,
                                     lessons_1=lessons_1,
                                     lessons_2=lessons_2,
+                                    marathones_1=marathon_1,
+                                    marathones_2=marathon_2,
                                     GOOGLE_RECAPTCHA_SITE_KEY=cnf.RECAPTCHA_PUBLIC_KEY)
         return render(request, 'index.html', context=context)
 
