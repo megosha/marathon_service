@@ -8,8 +8,11 @@
 
         <div class="row mbr-white justify-content-center">
             {% if user is not None %}
-                <a class="col-2" style="text-align: left!important;" onclick="remove()"><p class="small text-info p-o m-0">Удалить аккаунт</p></a>
-                <span class="col-9"></span>
+                <div class="col-3">
+                    <span class="small text-info p-o m-0 cursor_pointer" style="text-align: left!important;" onclick="remove()">Удалить аккаунт</span>
+                </div>
+
+                <span class="col-8"></span>
             {% endif %}
             <div class="col-12 copyright mbr-flex">
 

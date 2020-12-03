@@ -582,6 +582,9 @@ a.custom-hover:hover {
 .cursor_default {
   cursor: default
 }
+.cursor_pointer{
+  cursor: pointer;
+}
 .mbr-plan-header.bg-primary .mbr-plan-subtitle,
 .mbr-plan-header.bg-primary .mbr-plan-price-desc {
   color: #ffffff;

@@ -1112,6 +1112,8 @@
     </div>
 </section>
 
+
+{% if marathones_1 %}
 <section class="accordion31 cid-rZqao4M7ed mt-0 pt-2" id="accordion03-a">
 
     <div class="container">
@@ -1187,9 +1189,9 @@
                                         <hr class="mt-2" style="border: 0.5px solid #ff4e3c;"/>
                                         <dl class=" mbr-fonts-style panel-text p-0 my-0 display-4 font-weight-bold">
                                             <dt>ПРОГРАММА</dt>
-                                            {% for lsn in marathon_2.ordered_lessons %}
+                                            {% for lsn2 in marathon_2.ordered_lessons %}
                                                 <dd class="py-0 my-0">
-                                                    {{ lsn.number }}. {{ lsn.title }}
+                                                    {{ lsn2.number }}. {{ lsn2.title }}
                                                 </dd>
                                             {% endfor %}
                                         </dl>
@@ -1208,6 +1210,7 @@
         </div>
     </div>
 </section>
+{% endif %}
 
 {% include "includes/footer.html" %}
 
