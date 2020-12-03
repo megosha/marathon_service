@@ -152,7 +152,7 @@ def mass_email_send_day_before():
     """
     lessons = models.Lesson.objects.filter(date_publish__date=(timezone.now() + timedelta(days=1)).date())
     if lessons:
-        subject = 'Марафон'
+        subject = 'Напоминание о новом уроке'
         text = f'<p>Вы стали участником марафона. Осталось сделать последний шаг. ' \
                f'Места ограничены! Не отдайте свой успех другому!</p>' \
                f'<p><a href="{sett.website}" target="_blank" style="font-weight: bold; color: #000">{sett.website}</a></p>' \
@@ -167,7 +167,7 @@ def mass_email_send_today():
     """
     lessons = models.Lesson.objects.filter(date_publish__date=timezone.now().date())
     if lessons:
-        subject = 'Марафон'
+        subject = 'Напоминание о новом уроке'
         text = f'<p>Уже сегодня ты узнаешь, к чему ты призван, в каком направлении развиваться. ' \
                f'Старт в 16:00 по (моск.времени). Не откладывай на завтра, твой успех тебя ждёт!</p>'
         form_mail(lessons, text, subject)
@@ -179,7 +179,7 @@ def mass_notify_for_not_paid():
         периодическая отправка напоминаний о покупке марафона, зарегистрировавшимся
     """
 
-    subject = 'Марафон "Движение Вверх"'
+    subject = 'Напоминание о новом уроке'
     text = f'<p>Вы прошли удачно регистрацию на марафон успеха. ' \
            f'Урок уже ждёт вас в вашем личном кабинете ' \
            f'<a href="{sett.website}" target="_blank" style="font-weight: bold; color: #000">{sett.website}</a></p>' \
