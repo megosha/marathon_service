@@ -134,7 +134,9 @@
                 <div class="mbr-section-btn align-left align-self-left">
                     <h4 class="mbr-section-subtitle pb-1 align-left mbr-light mbr-fonts-style display-7 font-weight-bold">{{ marathon.gift.description }}
 {#                        {% if payment_valid and marathon.gift.file %}<a href="{{ marathon.gift.file.url }}" class="btn btn-sm btn btn-success">Скачать книгу</a> {% endif %}#}
-                        {% if payment_valid and marathon.gift.file %}<a href="get_gift/{{ marathon.pk }}" class="btn btn-sm btn btn-success">Скачать книгу</a> {% endif %}
+                        {% if marathon.gift.file %}
+                            {% if payment_valid or payment_expired %}<a href="get_gift/{{ marathon.pk }}" class="btn btn-sm btn btn-success">Скачать книгу</a> {% endif %}
+                        {% endif %}
                     </h4>
                 </div>
             </div>
