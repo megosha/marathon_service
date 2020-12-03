@@ -125,7 +125,7 @@
                 <h4 class="mbr-section-subtitle pb-1 align-left mbr-light mbr-fonts-style display-7">
                     <span>{{ marathon.short_description|linebreaksbr }}</span>
                     {% if marathon.ending_description %}
-                        <a class="text-primary" onclick="bio(1)" id="more-bio">Показать больше...&nbsp;</a>
+                        <a class="text-primary small" onclick="bio(1)" id="more-bio">Показать больше...&nbsp;</a>
                         <span style="display: none" id="slide_block">{{ marathon.ending_description|linebreaksbr }}</span>
                         <span id="full_bio"></span>
                     {% endif %}
