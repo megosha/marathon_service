@@ -63,7 +63,7 @@ function bio(mode){
         var p = document.getElementById('full_bio');
         if (mode==1){
             document.getElementById('more-bio').innerText = '';
-             p.innerHTML = '<a class="text-primary" onclick="bio(0)">Показать меньше</a>';
+             p.innerHTML = '<a class="text-primary small" onclick="bio(0)">Показать меньше</a>';
         $("#slide_block").slideDown();
         }
         else if (mode==0) {
