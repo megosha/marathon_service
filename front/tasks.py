@@ -267,4 +267,5 @@ def download_video(pk):
         асинхронное скачивание видео при models.Video.save()
     """
     video_obj = models.Video.objects.get(pk=pk)
-    video_obj.download_video()
+    if not video_obj.processing:
+        video_obj.download_video()
