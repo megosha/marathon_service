@@ -17,7 +17,6 @@ import pytube
 import ffmpeg
 import subprocess
 
-
 app.conf.task_default_queue = 'default'
 
 sett = models.Setting.objects.filter().first()
@@ -250,15 +249,17 @@ def send_mail(subject, message, recipient_list, from_email=None, attach: iter = 
     models.sendmail(subject, message, recipient_list, from_email, attach)
 
 
-# @app.task(name="front.tasks.save_video", ignore_result=True)
-# def save_video():
-#     """
-#         периодическая проверка необходимости скачать видеофайлв качестве для урока
-#     """
-#     empty_videos = models.Video.objects.filter(lesson__isnull=False, link__isnull=False, url__isnull=True)
-#     if empty_videos.exists():
-#         for video in empty_videos:
-#             video.save()
+@app.task(name="front.tasks.save_video", ignore_result=True)
+def save_video():
+    """
+        периодическая проверка необходимости скачать видеофайл в качестве для урока
+    """
+    empty_videos = models.Video.objects.filter(lesson__isnull=False, link__isnull=False, url__isnull=True,
+                                               processing=False)
+    if empty_videos.exists():
+        for video in empty_videos:
+            download_video(video.pk)
+
 
 @app.task(name="front.tasks.download_video", ignore_result=True)
 def download_video(pk):
