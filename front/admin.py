@@ -62,7 +62,7 @@ class VideoAdmin(admin.ModelAdmin):
     list_display_links = ['number', 'lesson']
     list_filter = ['lesson', 'date_create', 'processing']
     search_fields = ['lesson__title']
-    readonly_fields = ['date_create', 'processing']
+    readonly_fields = ['date_create', 'processing', 'video']
 
 class PaymentAdmin(admin.ModelAdmin):
     list_display = ['date_pay', 'uuid', 'status', 'account', 'marathon', 'status_mail_invoice']

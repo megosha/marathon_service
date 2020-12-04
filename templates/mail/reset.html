@@ -23,12 +23,12 @@
                             <tr>
                                 <td style="padding: 0; margin: 0;" width="39.285714285714%">
                                     {% if settings %}
-                                        <a href="{{ site }}" target="_blank" style="text-decoration: none; font-size: 35px; font-weight: bold; color: #000;">
-                                            Платформа проведения марафонов <span style="color: #ff513c;">"Движение Вверх"</span>
+                                        <a href="{{ settings.website }}" target="_blank" style="text-decoration: none; font-size: 35px; font-weight: bold; color: #000;">
+                                            Платформа проведения марафонов <span style="color: #ff513c;">{{ settings.website }}</span>
                                         </a>
                                     {% else %}
                                         <span style="font-size: 35px; font-weight: bold; color: #000;">
-                                            Платформа проведения марафонов <span style="color: #ff513c;">"Движение Вверх"</span>
+                                            Платформа проведения марафонов <span style="color: #ff513c;">artemtoropchin.ru</span>
                                         </span>
                                     {% endif %}
                                 </td>

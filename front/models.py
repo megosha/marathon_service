@@ -198,7 +198,7 @@ class Setting(models.Model):
                                      verbose_name="Телефон для квитанции")
     invoice_email = models.CharField(max_length=50, default="", blank=True, null=True,
                                      verbose_name="Email для квитанции")
-    instruction = models.FileField("Документация на сайт", blank=True, null=True)
+    instruction = models.FileField("Документация на сайт", upload_to='files/', blank=True, null=True)
 
 
 class Account(models.Model):
