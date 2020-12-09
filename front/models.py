@@ -324,7 +324,7 @@ class Lesson(models.Model):
         return Lesson.objects.filter(marathon=self.marathon, number__gt=self.number).order_by('number').first()
 
     def __str__(self):
-        return f"Тема №{self.number} - Mарафон: {self.marathon.pk}"
+        return f'Тема №{self.number} - Mарафон "{self.marathon.title}"'
 
 
 class Video(models.Model):
@@ -346,7 +346,7 @@ class Video(models.Model):
         verbose_name_plural = "Видео"
 
     def __str__(self):
-        return f"Mарафон №{self.lesson.marathon.pk}-Тема №{self.lesson.number}-Видео №{self.number}"
+        return f'Mарафон "{self.lesson.marathon.title}"-Тема №{self.lesson.number}-Видео №{self.number}'
 
     def video_exists(self):
         try:
