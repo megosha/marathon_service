@@ -8,7 +8,7 @@
          {% endif %}
      {% endif %}
     {% if not lesson.free %}
-        {% if not lesson.prev|looked:user.account %}
+        {% if lesson.prev and not lesson.prev|looked:user.account %}
             inactive cursor_default
         {% endif %}
      {% endif %}
