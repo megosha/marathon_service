@@ -368,47 +368,60 @@ class Video(models.Model):
         log = Logging.objects.create(action="Скачивание видео c YouTube models.Video.download_video()",
                                      input_data=f'pk: {self.pk}, марафон: {self.lesson.marathon.pk}, '
                                                 f'урок:{self.lesson.number}, видео:{self.number}')
+        progress = log.input_data
         try:
             upper_set = UpperSetting.objects.filter().first()
             fpath = f'{upper_set.remote_video_dir}{self.lesson.marathon.pk}/'
             # if not os.path.isdir(fpath):
             if not os.path.isdir(upper_set.remote_video_dir):
-                log.input_data += '\n отсутствует примонтированный удаленный сервер - запуск монтирования'
+                progress += '\n отсутствует примонтированный удаленный сервер - запуск монтирования'
+                Logging.objects.filter(pk=log.pk).update(input_data=progress)
                 command = upper_set.mount_command
                 os.system(command)
                 # subprocess.Popen(command)
-            log.input_data += '\n успешное монтирование диска сервера'
+            progress += '\n диск монтирован'
+            Logging.objects.filter(pk=log.pk).update(input_data=progress)
             if not os.path.isdir(fpath):
-                log.input_data += f'\n отсутствует путь к папке - создание новой папки {fpath}'
+                progress += f'\n отсутствует путь к папке - создание новой папки {fpath}'
+                Logging.objects.filter(pk=log.pk).update(input_data=progress)
                 os.mkdir(fpath)
-            log.input_data += f'\n успешное создание новой папки\nзапрос видео к pytube https://youtu.be/{self.link}'
+            progress += f'\n успешное создание новой папки\nзапрос видео к pytube https://youtu.be/{self.link}'
+            Logging.objects.filter(pk=log.pk).update(input_data=progress)
             yt = pytube.YouTube(f'https://youtu.be/{self.link}')
-            log.input_data += f'\nпоиск стрима 1080p'
+            progress += f'\nпоиск стрима 1080p'
+            Logging.objects.filter(pk=log.pk).update(input_data=progress)
             file = yt.streams.filter(res='1080p', file_extension='mp4').first()
             if file:
-                log.input_data += f'\nскачивание видео 1080p'
+                progress += f'\nскачивание видео 1080p'
+                Logging.objects.filter(pk=log.pk).update(input_data=progress)
                 file.download(output_path=fpath, filename='video')
-                log.input_data += f'\nвидео 1080p скачано\nскачивание аудио'
+                progress += f'\nвидео 1080p скачано\nскачивание аудио'
+                Logging.objects.filter(pk=log.pk).update(input_data=progress)
                 yt.streams.filter(type='audio', mime_type='audio/mp4', progressive=False).first().download(
                     output_path=fpath, filename='audio')
 
                 # if os.path.isfile(f'{fpath}{self.lesson.number}_{self.number}.mp4'):
                 #     os.remove(f'{fpath}{self.lesson.number}_{self.number}.mp4')
-                log.input_data += f'\nаудио скачано\nопределение видео и аудио для синтеза ffmpeg'
+                progress += f'\nаудио скачано\nопределение видео и аудио для синтеза ffmpeg'
+                Logging.objects.filter(pk=log.pk).update(input_data=progress)
                 video_stream = ffmpeg.input(f'{fpath}video.mp4')
                 audio_stream = ffmpeg.input(f'{fpath}audio.mp4')
-                log.input_data += f'\nзапуск рендера видео и аудио в один файл'
+                progress += f'\nзапуск рендера видео и аудио в один файл'
+                Logging.objects.filter(pk=log.pk).update(input_data=progress)
                 ffmpeg.output(audio_stream, video_stream,
                               f'{fpath}{self.lesson.number}_{self.number}.mp4').run(overwrite_output=True)
 
             else:
-                log.input_data += f'\nпоиск стрима 720p'
+                progress += f'\nпоиск стрима 720p'
+                Logging.objects.filter(pk=log.pk).update(input_data=progress)
                 file = yt.streams.filter(res='720p', file_extension='mp4', progressive=True).first()
                 if file:
-                    log.input_data += f'\nскачивание стрима 720p'
+                    progress += f'\nскачивание стрима 720p'
+                    Logging.objects.filter(pk=log.pk).update(input_data=progress)
                     file.download(output_path=fpath, filename=f'{self.lesson.number}_{self.number}')
             if os.path.isfile(os.path.join(fpath, f'{self.lesson.number}_{self.number}.mp4')):
-                log.input_data += f'\nвидео готово - формирование ссылки на видео'
+                progress += f'\nвидео готово - формирование ссылки на видео'
+                Logging.objects.filter(pk=log.pk).update(input_data=progress)
                 url = f'{upper_set.video_outer_url}/{self.lesson.marathon.pk}/{self.lesson.number}_{self.number}.mp4'
                 log.result = log.SUCCESS
                 log.output_data = url
@@ -423,6 +436,7 @@ class Video(models.Model):
             return None
         finally:
             Video.objects.filter(pk=self.pk).update(processing=False)
+            log.input_data = progress
             log.save()
 
 
