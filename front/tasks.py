@@ -254,11 +254,16 @@ def save_video():
     """
         периодическая проверка необходимости скачать видеофайл в качестве для урока
     """
-    empty_videos = models.Video.objects.filter(lesson__isnull=False, link__isnull=False, url__isnull=True,
-                                               processing=False)
-    if empty_videos.exists():
-        for video in empty_videos:
-            download_video(video.pk)
+    # empty_videos = models.Video.objects.filter(lesson__isnull=False, link__isnull=False, url__isnull=True, processing=False)
+    empty_videos = models.Video.objects.filter(lesson__isnull=False, link__isnull=False, url='', processing=False)
+    processing_exists = models.Video.objects.filter(processing=True).exists()
+    # if empty_videos.exists():
+    #     for video in empty_videos:
+    #         download_video(video.pk)
+
+    if empty_videos.exists() and not processing_exists:
+        video = empty_videos.order_by('lesson__marathon__pk', 'lesson__number', 'number', 'date_create').first()
+        download_video(video.pk)
 
 
 @app.task(name="front.tasks.download_video", ignore_result=True)
