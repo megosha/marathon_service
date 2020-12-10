@@ -54,13 +54,13 @@ class MarathonAdmin(admin.ModelAdmin):
 class LessonAdmin(admin.ModelAdmin):
     list_display = ['title', 'number', 'marathon', 'date_publish']
     list_display_links = ['number', 'title']
-    list_filter = ['marathon', 'date_publish']
+    list_filter = ['marathon', 'date_publish', 'free']
     search_fields = ['title', 'marathon__title']
 
 class VideoAdmin(admin.ModelAdmin):
     list_display = ['lesson', 'number', 'date_create', 'processing']
     list_display_links = ['number', 'lesson']
-    list_filter = ['lesson', 'date_create', 'processing']
+    list_filter = ['lesson__marathon', 'date_create', 'processing']
     search_fields = ['lesson__title']
     readonly_fields = ['date_create', 'processing', 'video']
 
