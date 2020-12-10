@@ -357,7 +357,8 @@ class Video(models.Model):
 
     def save(self, *args, **kwargs):
         super(Video, self).save(*args, **kwargs)
-        if self.link and not self.url and not self.processing:
+        processing_exists = Video.objects.filter(processing=True).exists()
+        if self.link and not self.url and not self.processing and not processing_exists:
             from front.tasks import download_video
             download_video.delay(self.pk)
             # download_video(self.pk)
