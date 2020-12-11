@@ -10,6 +10,7 @@ urlpatterns = [
     path('logout', views.Logout.as_view()),
     path('remove', views.RemoveAccount.as_view()),
     path('reset', views.ResetPassword.as_view()),
+    path('reset_confirmation/<str:uid>', views.ResetConfirmation.as_view()),
     path('api/account_deny/<str:uuid>_<str:login>', api.AccountDeny.as_view()),
     path('accountdeny', api.RenderDeny.as_view()),
     path('book', views.Book.as_view()),

@@ -214,6 +214,7 @@ class Account(models.Model):
     photo = models.ImageField(upload_to='images/avatars/', blank=True, verbose_name="Аватар")
     city = models.CharField(max_length=100, blank=True, null=True, verbose_name="Город")
     looked_videos = models.ManyToManyField('Video', blank=True, verbose_name="Просмотренные видео")
+    reset_pwd_uuid = models.UUIDField(null=True, blank=True, verbose_name="ID для генерации сброса пароля")
 
     class Meta:
         verbose_name = "Аккаунт"

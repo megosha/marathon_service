@@ -28,11 +28,11 @@
             <div class="col-md-12 col-lg-12">
                 <div class="text-block text-center" >
 
-                    <h3 class="mbr-section-subtitle mbr-fonts-style mb-4 display-7">Письмо с новыми данными отправлено на почту <b>{{ email }}</b>.<br>Cервис перенаправит Вас на страницу входа через</h3>
+                    <h3 class="mbr-section-subtitle mbr-fonts-style mb-4 display-7">Письмо с данными для сброса пароля отправлено на почту <b>{{ email }}</b>.<br>Cервис перенаправит Вас на страницу входа через</h3>
                         <p id="interval" class="display-5"></p>
                     </div>
 
-                    <div class="mbr-section-btn mb-5 align-center"><a class="btn btn-md btn-bgr btn-success display-4" href="/login">Войти</a></div>
+                    <div class="mbr-section-btn mb-5 align-center"><a class="btn btn-md btn-bgr btn-success display-4" href="/login">Вход в кабинет</a></div>
                 </div>
 
             </div>
@@ -44,7 +44,7 @@
         function delayredirect() {
             $.get("{% url 'login' %}");
             }
-    var time = 7;
+    var time = 8;
   window.onload = function()
   {document.getElementById("interval").innerHTML = `<b>${time}</b>`;
       setInterval(function() {
