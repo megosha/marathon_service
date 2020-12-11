@@ -347,6 +347,7 @@ class ResetConfirmation(ContextViewMixin):
         account.user.set_password(password)
         account.reset_pwd_uuid = None
         try:
+            account.save()
             account.user.save()
         except:
             context['content'] = "Ошибка при сбросе пароля. Повторите попытку позднее."
