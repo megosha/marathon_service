@@ -1,0 +1,47 @@
+
+<section class="content02 cid-s8W7Ok1cDw" id="content02-n">
+
+
+
+
+    <div class="container">
+        <div class="row">
+            <div class="card col-12 col-md-12">
+                <div class="wrapper align-left">
+                    <h3 class="mbr-section-title mbr-bold align-left mbr-fonts-style display-2"><span>Сброс</span>&nbsp;<span>пароля</span></h3>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="mbr-section extForm cid-s8W7lwQa7y" id="extForm2-m">
+
+
+
+
+   <div class="container">
+        <div class="media-container-row">
+            <div class="col-md-12 col-lg-12">
+                <div class="text-block text-left" >
+
+                    <p class="mbr-section-subtitle mbr-fonts-style mb-4 display-7 h3">Пароль успешно сброшен.</p>
+                    <span class="text-small text-right" id="copied"></span>
+                    <p class="mbr-section-subtitle mbr-fonts-style mb-4 display-7 h3">Новый пароль:
+                        <input type="password" value="{{ pwd }}" size="9" disabled id="pwd"/>
+                        <button class="btn btn-sm btn-primary-outline display-4" onclick="show_pwd(this.id, 'pwd')" style="border-radius: 100px" id="view_pwd">Показать</button>
+                        <button class="btn btn-sm btn-primary btn-bgr display-4" onclick="buff_copy(this.id, '{{ pwd }}')" style="border-radius: 100px" id="copy_pwd">Скопировать</button>
+
+                    </p>
+                    </div>
+
+                    <div class="mbr-section-btn mb-5 align-left"><a class="btn btn-md btn-bgr btn-success display-4" href="/login">Вход в кабинет</a></div>
+                </div>
+
+            </div>
+        </div>
+</section>
+

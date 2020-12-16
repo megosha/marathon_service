@@ -1,14 +1,15 @@
 import math
 from datetime import datetime, timedelta
 from django.utils import timezone
+import uuid
 
 from django.contrib.auth import authenticate, login, logout
-from django.db.models import Exists, OuterRef, F, Q, Value, Subquery
+# from django.db.models import Exists, OuterRef, F, Q, Value, Subquery
 from django.template.loader import render_to_string
-from django.utils.html import strip_tags
+# from django.utils.html import strip_tags
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseNotFound
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponseNotFound
 from django.shortcuts import render
 from django.template.loader import get_template
 
@@ -96,8 +97,9 @@ class PostRequiredMixin(ContextViewMixin):
 
 class Test(ContextViewMixin):
     def get(self, request):
-        form_html = get_template('includes/reset_redirect.html').render(context={'email': 'qwe'},
-                                                                        request=request)
+        # form_html = get_template('includes/reset_redirect.html').render(context={'email': 'qwe'}, request=request)
+        # context = self.make_context(form_html=form_html, title='Сброс пароля')
+        form_html = get_template('includes/pwd_show.html').render(context={'pwd': 'qw-%ghj14'}, request=request)
         context = self.make_context(form_html=form_html, title='Сброс пароля')
         return render(request, "auth.html", context)
 
@@ -308,17 +310,18 @@ class ResetPassword(ContextViewMixin):
             if not account:
                 form.errors['custom'] = "Пользователь с таким email не найден."
             else:
-                password = functions.generate_code(length=8)
-                account.user.set_password(password)
+                account.reset_pwd_uuid = uuid.uuid4()
                 try:
+                    account.save()
                     account.user.save()
                 except:
                     form.errors['custom'] = "Ошибка при сбросе пароля. Повторите попытку позднее."
                 else:
                     subject = 'Сброс пароля в личном кабинете марафона "Движение Вверх"'
                     settings = models.Setting.objects.filter().first()
+                    reset_url = f'{settings.website}/reset_confirmation/{account.reset_pwd_uuid}'
                     mail_context = {"login": email,
-                                    "password": password,
+                                    "reset_url": reset_url,
                                     "settings": settings}
                     html_message = render_to_string('mail/reset.html', mail_context)
                     send_email = models.sendmail(subject=subject, message=html_message, recipient_list=email)
@@ -330,6 +333,38 @@ class ResetPassword(ContextViewMixin):
                         context = self.make_context(form_html=form_html, title='Сброс пароля')
                         return render(request, "auth.html", context)
         return self.base(request, form=form)
+
+
+class ResetConfirmation(ContextViewMixin):
+    def get(self, request, uid):
+        if request.user.is_authenticated: return HttpResponseRedirect('/me')
+        context = self.make_context()
+        account = models.Account.objects.filter(reset_pwd_uuid=uid).first()
+        if not account or not account.reset_pwd_uuid:
+            context['content'] = 'Ссылка на сброс пароля недействительна или устарела.'
+            return render(request, 'general.html', context)
+        password = functions.generate_code(length=8)
+        account.user.set_password(password)
+        account.reset_pwd_uuid = None
+        try:
+            account.save()
+            account.user.save()
+        except:
+            context['content'] = "Ошибка при сбросе пароля. Повторите попытку позднее."
+            return render(request, 'general.html', context)
+        else:
+            subject = 'Новый пароль в личном кабинете марафона "Движение Вверх"'
+            settings = models.Setting.objects.filter().first()
+            mail_context = {"login": account.user.email,
+                            "password": password,
+                            "settings": settings}
+            html_message = render_to_string('mail/reset_confirmation.html', mail_context)
+            send_email = models.sendmail(subject=subject, message=html_message, recipient_list=account.user.email)
+
+            form_html = get_template('includes/pwd_show.html').render(context={'pwd': password}, request=request)
+            context = self.make_context(form_html=form_html, title='Сброс пароля')
+            return render(request, "auth.html", context)
+
 
 
 class Account(LoginRequiredMixin, ContextViewMixin):

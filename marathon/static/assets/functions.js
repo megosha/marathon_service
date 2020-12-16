@@ -95,3 +95,26 @@ function looked(video){
 
         });
 }
+
+function show_pwd(btn_id, inp_id) {
+    var inp = document.getElementById(inp_id);
+    var btn = document.getElementById(btn_id);
+    if (inp.type === 'password') {
+        inp.type = 'text';
+        btn.innerText = 'Скрыть';
+    }
+    else {
+        inp.type = 'password';
+        btn.innerText = 'Показать';
+    }
+  }
+function buff_copy(btn_id, pwd){
+    function handler (event){event.clipboardData.setData('text/plain', pwd);
+    event.preventDefault();
+    document.removeEventListener('copy', handler, true);
+    }
+
+    document.addEventListener('copy', handler, true);
+    document.execCommand('copy');
+    document.getElementById(btn_id).innerText = "Скопировано";
+  }

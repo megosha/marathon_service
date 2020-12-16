@@ -43,14 +43,15 @@
 
                             <tr>
                                 <td colspan="3" style="font-family: Arial, Helvetica, sans-serif; color: #000; text-decoration: none; font-size: 16px; line-height: 29px;">
-                                    <p>Вы отправили запрос на сброс пароля в личном кабинете платформы.</p>
+                                    <p>Пароль в Вашем личном кабинете платформы был сброшен.</p>
 
-                                    <p style="font-weight: bold;">Для сброса пароля перейдите по ссылке ниже:</p>
-
-                                    <a href="{{ reset_url }}" target="_blank" style="font-weight: bold;">{{ reset_url }}</a>
-
-                                    <br>
-                                    <p>Если Вы не отправляли запрос на сброс пароля, не переходите по ссылке.</p>
+                                    <p style="font-weight: bold;">Для входа в личный кабинет используйте следующие данные:</p>
+                                    <p>
+                                        <span style="display: inline-block; font-weight: bold; color: #ff513c; line-height: 29px;">Логин:</span>&nbsp;
+                                        <span style="display: inline-block; padding: 0 3px; background: #fbc8c2; line-height: 24px;"><a style="color: #000; text-decoration: none; pointer-events: none;">{{ login }}</a></span><br />
+                                        <span style="display: inline-block; font-weight: bold; color: #ff513c; line-height: 29px;">Новый пароль:</span>&nbsp;
+                                        <span style="display: inline-block; padding: 0 3px; background: #fbc8c2; line-height: 24px;">{{ password }}</span>
+                                    </p>
                                 </td>
                             </tr>
                             <tr>

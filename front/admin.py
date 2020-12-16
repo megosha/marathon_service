@@ -31,7 +31,7 @@ class AccountAdmin(admin.ModelAdmin):
     list_display_links = ['user']
     list_filter = ['date_registry', 'approved', 'registry_sent']
     search_fields = ['user__last_name', 'user__first_name', 'phone', 'description', 'user__email']
-    readonly_fields = ['date_registry', 'looked_videos']
+    readonly_fields = ['date_registry', 'looked_videos', 'reset_pwd_uuid']
 
 class FeedbackAdmin(admin.ModelAdmin):
     list_display = ['account', 'kind', 'custom_user', 'date_create', 'accepted']
