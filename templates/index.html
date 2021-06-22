@@ -81,11 +81,17 @@
 {#                            <li><span style="font-size: 1.25rem; background-color: transparent;">Получи энергию для действий</span></li><li><span style="font-size: 1.25rem; background-color: transparent;">Узнай своё предназначение</span></li>#}
                         </ul>
                     </div>
-                    {% if not user %}
-                        <div class="buttons-wrap mt-4">
-                            <div class="mbr-section-btn align-left align-self-center btn-align"><a class="btn btn-sm btn-success display-4" href="/register">Зарегистроваться</a></div>
+                    <div class="buttons-wrap mt-4">
+                        <div class="mbr-section-btn align-left align-self-center btn-align">
+                            {% if not user %}
+                                <a class="btn btn-sm btn-primary display-4" href="/login">Войти</a>
+
+                            {% else %}
+                                <a class="btn btn-sm btn-primary display-4" href="/me">Личный кабинет</a>
+                            {% endif %}
+                        <a class="btn btn-sm btn-success display-4" href="/#accordion03-a">Все марафоны</a>
                         </div>
-                    {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
@@ -1063,7 +1069,7 @@
             <div class="card col-lg-6 col-md-12 col-sm-12">
                 <h3 class="mbr-section-title mbr-bold align-left mbr-fonts-style display-2"><span>КОНТАКТЫ</span></h3>
                 
-                <p class="mbr-text mbr-regular align-left mbr-fonts-style display-4">Остались вопросы? Звоните, пишите на почту или заполните форму и мы свяжемся с Вами.</p>
+                <p class="mbr-text mbr-regular align-left mbr-fonts-style display-4">Остались вопросы? Звоните, пишите на почту или в онлайн-чат и мы свяжемся с Вами!</p>
 <!--                 <h3 class="mbr-text mbr-bold mbr-fonts-style group-title mt-4" mbr-theme-style="display-7" data-app-selector=".card .group-title" mbr-if="showTitle">w</h3> -->
                 <div class="items mbr-white">
                     
@@ -1121,6 +1127,11 @@
             <div class="col-12 col-md-12 title-text">
                 <h3 class="mbr-section-title mbr-bold align-center mbr-fonts-style display-2">
                     ВСЕ&nbsp;<span>МАРАФОНЫ</span></h3>
+                <h3 class="mbr-section-sub-title mbr-bold align-center mbr-fonts-style display-5">
+                    Подробнее о каждом марафоне в Личном Кабинете</h3>
+                <div class="mbr-section-btn align-center align-self-center btn-align">
+                    <a class="btn btn-sm btn-primary display-4" href="/me">Личный кабинет</a>
+                </div>
             </div>
         </div>
         <div class="row">
@@ -1158,6 +1169,9 @@
                                                 </dd>
                                             {% endfor %}
                                         </dl>
+                                        <div class="mbr-section-btn align-center align-self-center btn-align">
+                                            <a class="btn btn-sm btn-secondary display-4" href="/me?marathon={{ marathon_1.pk }}">Участвовать</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1195,6 +1209,9 @@
                                                 </dd>
                                             {% endfor %}
                                         </dl>
+                                        <div class="mbr-section-btn align-center align-self-center btn-align">
+                                            <a class="btn btn-sm btn-secondary display-4" href="/me?marathon={{ marathon_2.pk }}">Участвовать</a>
+                                        </div>
                                     </div>
                                     </div>
                                 </div>
