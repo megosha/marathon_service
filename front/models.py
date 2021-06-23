@@ -351,7 +351,7 @@ class Video(models.Model):
 
     def video_exists(self):
         try:
-            r = requests.head(self.url)
+            r = requests.head(self.url, timeout=1)
             return r.status_code == requests.codes.ok
         except:
             return False

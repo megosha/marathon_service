@@ -366,7 +366,6 @@ class ResetConfirmation(ContextViewMixin):
             return render(request, "auth.html", context)
 
 
-
 class Account(LoginRequiredMixin, ContextViewMixin):
 
     @staticmethod
