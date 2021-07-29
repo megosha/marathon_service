@@ -30,25 +30,18 @@
 
     </div>
 </section>
-<script type='text/javascript'>
-(function () {
-    window['yandexChatWidgetCallback'] = function() {
-        try {
-            window.yandexChatWidget = new Ya.ChatWidget({
-                guid: '7370ee09-c110-9670-41c8-975935676c74',
-                buttonText: 'Чат с помощником',
-                title: 'Чат',
-                theme: 'light',
-                collapsedDesktop: 'never',
-                collapsedTouch: 'always'
-            });
-        } catch(e) { }
-    };
-    var n = document.getElementsByTagName('script')[0],
-        s = document.createElement('script');
-    s.async = true;
-    s.charset = 'UTF-8';
-    s.src = 'https://yastatic.net/s3/chat/widget.js';
-    n.parentNode.insertBefore(s, n);
-})();
+
+{#chat#}
+
+<script>
+    (function(d, w, c) {
+        w.ChatraID = 'cDZrv6YqpPeXFBio3';
+        var s = d.createElement('script');
+        w[c] = w[c] || function() {
+            (w[c].q = w[c].q || []).push(arguments);
+        };
+        s.async = true;
+        s.src = 'https://call.chatra.io/chatra.js';
+        if (d.head) d.head.appendChild(s);
+    })(document, window, 'Chatra');
 </script>
