@@ -25,11 +25,11 @@
                                 <td style="padding: 0; margin: 0;" width="39.285714285714%">
                                     {% if settings %}
                                         <a href="{{ settings.website }}" target="_blank" style="text-decoration: none; font-size: 35px; font-weight: bold; color: #000;">
-                                            Платформа проведения марафонов <span style="color: #ff513c;">{{ settings.website }}</span>
+                                            Платформа проведения интенсивов <span style="color: #ff513c;">{{ settings.website }}</span>
                                         </a>
                                     {% else %}
                                         <span style="font-size: 35px; font-weight: bold; color: #000;">
-                                            Платформа проведения марафонов <span style="color: #ff513c;">artemtoropchin.ru</span>
+                                            Платформа проведения интенсивов <span style="color: #ff513c;">artemtoropchin.ru</span>
                                         </span>
                                     {% endif %}
                                 </td>
@@ -46,7 +46,7 @@
 
                             <tr>
                                 <td colspan="3" style="font-family: Arial, Helvetica, sans-serif; color: #000; text-decoration: none; font-size: 16px; line-height: 29px;">
-                                    <p>Вы приобрели подписку на марафон "{{ payment.marathon.title }}"</p>
+                                    <p>Вы приобрели подписку на интенсив "{{ payment.marathon.title }}"</p>
                                     <p>Сумма: ₽{{ payment.amount }}.00</p>
                                     <p>Статус: {{ payment|full_status }}</p>
                                 </td>

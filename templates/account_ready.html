@@ -6,7 +6,7 @@
   {% include "includes/meta.html" %}
   
   
-  <title>"Движение Вверх" марафон - Личный кабинет</title>
+  <title>"Движение Вверх" интенсив - Личный кабинет</title>
   <link rel="stylesheet" href="/assets/web/assets/mobirise-icons/mobirise-icons.css">
   <link rel="stylesheet" href="/assets/web/assets/mobirise-icons2/mobirise2.css">
     <link rel="stylesheet" href="/assets/font-awesome/css/font-awesome.css">
@@ -63,7 +63,7 @@
 
 <section class="extContent cid-s8X6rwmHeE" id="extContent21-18">
     <div class="container">
-        <h3 class="mbr-section-title mbr-bold align-center mbr-fonts-style display-2">Выберите марафон</h3>
+        <h3 class="mbr-section-title mbr-bold align-center mbr-fonts-style display-2">Выберите интенсив</h3>
         <div class="row">
             {% for mar in marathones %}
 {#                <div class="col-md-4">#}
@@ -124,7 +124,7 @@
         <div class="row justify-content-center">
             <div class="col-12 col-md-12 ">
                 <h3 class="mbr-section-title mbr-bold align-center mbr-fonts-style display-2">
-                    Марафон&nbsp;<span>"{{ marathon.title }}"</span></h3>
+                    Интенсив&nbsp;<span>"{{ marathon.title }}"</span></h3>
 {#                <h4 class="mbr-section-subtitle pb-1 align-left mbr-light mbr-fonts-style display-7">{{ marathon.description|linebreaksbr }}</h4>#}
                 <h4 class="mbr-section-subtitle pb-1 align-left mbr-light mbr-fonts-style display-7">
                     <span>{{ marathon.short_description|linebreaksbr }}</span>
@@ -148,20 +148,20 @@
                 {% if payment_expired %}
                     <p class="mbr-section-subtitle pb-1 align-center mbr-light mbr-fonts-style display-4">
                         <span class="fa fa-awesome fa-warning text-primary"></span>
-                        Двухмесячный срок подписки на марафон истек.
+                        Двухмесячный срок подписки на интенсив истек.
                     </p>
                 {% else %}
-                    <p class="mbr-fonts-style panel-text pr-2 display-5"><strong>Стоимость марафона {{ marathon.cost }}₽</strong></p>
+                    <p class="mbr-fonts-style panel-text pr-2 display-5"><strong>Стоимость интенсива {{ marathon.cost }}₽</strong></p>
                 {% endif %}
-                <p class="mbr-fonts-style display-4 text-muted px-3">Внимание! Если Вы уже оплатили марафон, но доступ к нему не появился, <b><a href="/#accordion01-a" class="text-primary">обратитесь к ответам на наиболее частые вопросы на главной странице сайта</a>.</b></p>
+                <p class="mbr-fonts-style display-4 text-muted px-3">Внимание! Если Вы уже оплатили интенсив, но доступ к нему не появился, <b><a href="/#accordion01-a" class="text-primary">обратитесь к ответам на наиболее частые вопросы на главной странице сайта</a>.</b></p>
 
                         <form method="POST" action="/api/payment/{{ marathon.pk }}"> {% csrf_token %}
                             <div class="mbr-section-btn align-center align-self-center">
-                                <button class="btn btn-lg btn-primary display-4" type="submit" style="border-radius: 100px" onclick="ym(67791019,'reachGoal','marathon_001'); return true;">Получить марафон за {{ marathon.cost }}₽</button></div>
+                                <button class="btn btn-lg btn-primary display-4" type="submit" style="border-radius: 100px" onclick="ym(67791019,'reachGoal','marathon_001'); return true;">Пройти интенсив за {{ marathon.cost }}₽</button></div>
                         </form>
             {% else %}
                 <div class="col-12 col-md-12 ">
-                    <span class="mbr-section-subtitle pt-2 align-left mbr-light mbr-fonts-style display-4 text-muted">Здесь находятся все вебинары марафона. Сроки выхода вебинаров могут быть изменены. Вы будете проинформированы о выходе вебинара предварительно за день.</span>
+                    <span class="mbr-section-subtitle pt-2 align-left mbr-light mbr-fonts-style display-4 text-muted">Здесь находятся все вебинары интенсива. Сроки выхода вебинаров могут быть изменены. Вы будете проинформированы о выходе вебинара предварительно за день.</span>
                     <p class="mbr-light mbr-fonts-style display-4 text-small text-muted mt-2">
                         <span class="fa fa-awesome fa-info-circle text-primary"></span>
                         Статус платежа: "{{ payment_valid|full_status }}"
@@ -170,11 +170,11 @@
                         <br><span class="fa fa-awesome fa-calendar-times-o text-primary"></span> {% if payment_valid.date_approve|deltatime:'62' is not None %}Срок подписки истекает: {{ payment_valid.date_approve|deltatime:'62'|date:"d.m.Y" }}{% endif %}
                         <br><a href="/get_invoice/{{ payment_valid.uuid }}" target="_blank"><span class="fa fa-awesome fa-download"></span>  Скачать квитанцию</a>
                 {% else %}
-                    <p class="mbr-fonts-style display-4 text-muted px-3">Внимание! Если Вы уже оплатили марафон, но доступ к нему не появился, <b><a href="/#accordion01-a" class="text-primary">обратитесь к ответам на наиболее частые вопросы на главной странице сайта</a>.</b></p>
+                    <p class="mbr-fonts-style display-4 text-muted px-3">Внимание! Если Вы уже оплатили интенсив, но доступ к нему не появился, <b><a href="/#accordion01-a" class="text-primary">обратитесь к ответам на наиболее частые вопросы на главной странице сайта</a>.</b></p>
 
                         <form method="POST" action="/api/payment/{{ marathon.pk }}"> {% csrf_token %}
                             <div class="mbr-section-btn align-center align-self-center">
-                                <button class="btn btn-lg btn-primary display-4" type="submit" style="border-radius: 100px">Получить марафон за {{ marathon.cost }}₽</button></div>
+                                <button class="btn btn-lg btn-primary display-4" type="submit" style="border-radius: 100px">Пройти интенсив за {{ marathon.cost }}₽</button></div>
                         </form>
                 {% endif %}
                 </p>
@@ -206,7 +206,7 @@
                             </div>
 
                             {% empty %}
-                                <p class="mbr-fonts-style display-5">Пока опубликованных тем в этом марафоне нет. Но они появятся уже скоро.</p>
+                                <p class="mbr-fonts-style display-5">Опубликованных тем в этом интенсиве нет. Но они появятся уже скоро.</p>
                             {% endfor %}
                         </div>
                         
@@ -288,7 +288,7 @@
         <div class="row">
             <div class="card col-12 col-md-12">
                 <div class="wrapper align-left">
-                    <h3 class="mbr-section-title mbr-bold align-left mbr-fonts-style display-2"><span>Понравился</span>&nbsp;<span>марафон</span>&nbsp;?</h3>
+                    <h3 class="mbr-section-title mbr-bold align-left mbr-fonts-style display-2"><span>Понравился</span>&nbsp;<span>интенсив</span>&nbsp;?</h3>
                     <h3 class="mbr-section-title mbr-bold align-left mbr-fonts-style display-2"><span>Оставь </span>&nbsp;<span>отзыв</span>&nbsp;!</h3>
 
 
