@@ -140,7 +140,7 @@ class Index(ContextViewMixin):
             for k, v in form.cleaned_data.items():
                 if k != 'captcha':
                     message += f'{fields.get(k)}: "{v}"\n'
-            subject = 'Новое сообщение по обратной связи  марафона "Движение Вверх"'
+            subject = 'Новое сообщение по обратной связи интенсива "Движение Вверх"'
             settings = models.Setting.objects.filter().first()
             if not settings:
                 form.errors['custom'] = f"При отправке сообщения произошла ошибка. Повторите попытку позднее."
@@ -200,7 +200,7 @@ class Register(ContextViewMixin):
 
                     created = models.Account.objects.filter(user=user, phone=phone).exists()
                     if created:
-                        subject = 'Регистрация на платформе марафона "Движение Вверх"'
+                        subject = 'Регистрация на платформе интенсива "Движение Вверх"'
                         settings = models.Setting.objects.filter().first()
                         mail_context = {"login": email,
                                         "password": password,
@@ -271,7 +271,7 @@ class RemoveAccount(LoginRequiredMixin, ContextViewMixin):
         if models.Account.objects.filter(user=self.request.user).exists():
             if request.POST.get('method') == "check" and self.request.user.account.payment_set.exists():
                 return JsonResponse({"payments": True})
-            subject = 'Удаление профиля на платформе марафона "Движение Вверх"'
+            subject = 'Удаление профиля на платформе интенсива "Движение Вверх"'
             settings = models.Setting.objects.filter().first()
             mail_context = {"login": self.request.user.email,
                             "settings": settings}
@@ -317,7 +317,7 @@ class ResetPassword(ContextViewMixin):
                 except:
                     form.errors['custom'] = "Ошибка при сбросе пароля. Повторите попытку позднее."
                 else:
-                    subject = 'Сброс пароля в личном кабинете марафона "Движение Вверх"'
+                    subject = 'Сброс пароля в личном кабинете интенсива "Движение Вверх"'
                     settings = models.Setting.objects.filter().first()
                     reset_url = f'{settings.website}/reset_confirmation/{account.reset_pwd_uuid}'
                     mail_context = {"login": email,
@@ -452,7 +452,7 @@ class Account(LoginRequiredMixin, ContextViewMixin):
             img.save(account.photo.path, quality=80)
             review_obj = models.Feedback.objects.create(account=account, feedback=review, kind=kind)
             settings = models.Setting.objects.filter().first()
-            subject = 'НОВЫЙ ОТЗЫВ О МАРАФОНЕ'
+            subject = 'НОВЫЙ ОТЗЫВ ОБ ИНТЕНСИВЕ'
             message = f'<p>Пользователь: {account.user.get_username} - {account.user.email} </p>' \
                       f'<p>Текст отзыва: "{review_obj.feedback}" </p>' \
                       f'<a style="font-size: 24px; font-weight: bold;" href="{settings.website}/api/accept_review/{account.pk}-{review_obj.pk}">Опубликовать отзыв</a>'

@@ -152,7 +152,7 @@ def mass_email_send_day_before():
     lessons = models.Lesson.objects.filter(date_publish__date=(timezone.now() + timedelta(days=1)).date())
     if lessons:
         subject = 'Напоминание о новом уроке'
-        text = f'<p>Вы стали участником марафона. Осталось сделать последний шаг. ' \
+        text = f'<p>Вы стали участником интенсива. Осталось сделать последний шаг. ' \
                f'Места ограничены! Не отдайте свой успех другому!</p>' \
                f'<p><a href="{sett.website}" target="_blank" style="font-weight: bold; color: #000">{sett.website}</a></p>' \
             # f'Завтра в 16:00 по моск. времени'
@@ -179,7 +179,7 @@ def mass_notify_for_not_paid():
     """
 
     subject = 'Напоминание о новом уроке'
-    text = f'<p>Вы прошли удачно регистрацию на марафон успеха. ' \
+    text = f'<p>Вы прошли удачно регистрацию на интенсив успеха. ' \
            f'Урок уже ждёт вас в вашем личном кабинете ' \
            f'<a href="{sett.website}" target="_blank" style="font-weight: bold; color: #000">{sett.website}</a></p>' \
            f'<p>Не останавливайтесь!</p>'
