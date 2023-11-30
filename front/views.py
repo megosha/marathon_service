@@ -115,7 +115,7 @@ class Index(ContextViewMixin):
         lessons_2 = lessons[math.ceil(len(lessons) / 2):]
         # marathones = models.Marathon.objects.exclude(outdated=True).order_by('pk')
         marathones = models.Marathon.objects.all().order_by('pk')
-        marathon_1 = marathones[:math.floor(len(marathones) / 2)]
+        marathon_1 = marathones[:math.ceil(len(marathones) / 2)]
         marathon_2 = marathones[math.ceil(len(marathones) / 2):]
         context = self.make_context(form=form,
                                     reviews=reviews,
