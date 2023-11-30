@@ -67,10 +67,11 @@
         <div class="row">
             {% for mar in marathones %}
 {#                <div class="col-md-4">#}
-                <div class="col-md-4 mbr-section-btn">
+                <div class="col-md-4 mbr-section-btn" style="text-align: center;">
                     <p>
 {#                        <a href="/me?marathon={{ mar.pk }}" class="mbr-text mbr-fonts-style display-7 custom-hover{% if mar.pk == marathon.pk %} text-primary{% endif %}">"{{ mar.title }}"</a>#}
                         <a href="/me?marathon={{ mar.pk }}" class="btn btn-sm btn-white-outline mbr-text mbr-fonts-style display-7 custom-hover{% if mar.pk == marathon.pk %} text-primary{% endif %}">"{{ mar.title }}"</a>
+
                     </p>
 
                 </div>
