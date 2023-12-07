@@ -162,7 +162,7 @@ def mass_email_send_day_before():
 @app.task(name="front.tasks.mass_email_send_today", ignore_result=True)
 def mass_email_send_today():
     """
-        периодическая  отправка напоминаний о публикации темы 08:00 15:00 в день
+        периодическая отправка напоминаний о публикации темы 08:00 15:00 в день
     """
     lessons = models.Lesson.objects.filter(date_publish__date=timezone.now().date())
     if lessons:
