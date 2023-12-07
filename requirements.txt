@@ -1,0 +1,9 @@
+Django~=2.2.16
+uuid~=1.30
+yookassa~=2.5.0
+pytube~=10.4.1
+Pillow~=7.2.0
+requests~=2.27.1
+celery~=4.4.7
+fpdf~=1.7.2
+urllib3==1.26.18

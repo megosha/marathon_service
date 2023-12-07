@@ -1,4 +1,5 @@
 .idea/*
+.env_backup
 .env
 /static/
 /requests.http

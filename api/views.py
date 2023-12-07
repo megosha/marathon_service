@@ -14,8 +14,9 @@ from django.utils import timezone
 from front import models, functions
 from front.views import ContextViewMixin
 
-from yandex_checkout import Configuration, Payment, WebhookNotification
-from yandex_checkout.domain.common.base_object import BaseObject
+from yookassa import Configuration, Payment
+from yookassa.domain.notification import WebhookNotification
+from yookassa.domain.common.base_object import BaseObject
 
 # Create your views here.
 
@@ -130,7 +131,7 @@ class YandexPayment(LoginRequiredMixin, ContextViewMixin):
             log.input_data = f"{shopid}\n{yandex_api_key}\n{payment_params}\n{idempotence_key}"
         except Exception as err:
             log.result = log.FAIL
-            log.output_data = f"{err}"
+            log.output_data = functions.get_detail_exception_info(err)
             log.save()
         else:
             new_payment = models.Payment.objects.create(uuid=idempotence_key,
