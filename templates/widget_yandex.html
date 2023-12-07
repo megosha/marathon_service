@@ -1,14 +1,45 @@
-<script src="https://kassa.yandex.ru/checkout-ui/v2.js"></script>
+<script src="https://yookassa.ru/checkout-widget/v1/checkout-widget.js"></script>
+
+<link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap-grid.min.css">
+  <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap-reboot.min.css">
+<link rel="stylesheet" href="/assets/mobirise/css/mbr-additional.css" type="text/css">
+
 
 <div id="payment-form"></div>
 
 <script>
-const checkout = new window.YandexCheckout({
-    confirmation_token: '{{ confirmation_token }}',
-    return_url: '{{ return_url }}',
-    error_callback(error) {
+//Инициализация виджета. Все параметры обязательные, кроме объекта customization.
+const checkout = new window.YooMoneyCheckoutWidget({
+    confirmation_token: '{{ confirmation_token }}', //Токен, который перед проведением оплаты нужно получить от ЮKassa
+    return_url: '{{ return_url }}', //Ссылка на страницу завершения оплаты
+
+    //Настройка виджета (при необходимости)
+    customization: {
+        //Настройка цветовой схемы, минимум один параметр, значения цветов в HEX
+        colors: {
+            //Цвет акцентных элементов: кнопка Заплатить, выбранные переключатели, опции и текстовые поля
+            control_primary: '#ff513c', //Значение цвета в HEX
+            control_primary_content: '#ffffff'
+        }
+    },
+    error_callback: function(error) {
+        //Обработка ошибок инициализации
     }
 });
 
+//Отображение платежной формы в контейнере
 checkout.render('payment-form');
 </script>
+
+<div class="container">
+    <div class="row">
+        <div class="mbr-white offset-5 col-md-5 align-center">
+            <div class="buttons-wrap">
+                <div class="mbr-section-btn align-center align-self-center">
+                    <a class="btn btn-sm btn-primary display-4" href="/me">Вернуться назад</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
