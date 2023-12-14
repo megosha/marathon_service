@@ -131,6 +131,17 @@ def form_mail(lessons, text, subject, add_time=False, only_not_paid=False):
             for email in accounts_payd:
                 send_email = models.sendmail(subject=subject, message=html_message, recipient_list=[email])
 
+def send_paid_mail(lesson, text, subject):
+    active_payments = models.Payment.objects.filter(
+        marathon__lesson=lesson, status="succeeded", date_approve__gte=timezone.now() - timedelta(days=62)
+    ).values_list('account__user__email', flat=True).distinct()
+
+    mail_context = {"settings": sett, "message": text}
+    html_message = render_to_string('mail/new_lesson_notify.html', mail_context)
+
+    for email in active_payments:
+        send_email = models.sendmail(subject=subject, message=html_message, recipient_list=[email])
+
 
 @app.task(name="front.tasks.clean_bots", ignore_result=True)
 def clean_bots():
@@ -171,6 +182,20 @@ def mass_email_send_today():
                f'Не откладывай на завтра, твой успех ждёт тебя сегодня!</p>'
         form_mail(lessons, text, subject)
 
+
+@app.task(name="front.tasks.mass_email_send_before", ignore_result=True)
+def mass_email_send_day_today_paid():
+    """
+        периодическая отправка напоминаний о публикации темы сегодня тем, кто оплатил
+    """
+    subject = 'Напоминание о новом уроке'
+
+    lessons = models.Lesson.objects.filter(date_publish__date=timezone.now().date())
+    for lesson in lessons:
+        text = f'<p>Сегодня новый урок «{lesson.title}». Уже сегодня ты узнаешь, к чему ты призван, в каком направлении развиваться. ' \
+               f'Не откладывай на завтра, твой успех ждёт тебя сегодня!' \
+               f'<p><a href="{sett.website}" target="_blank" style="font-weight: bold; color: #000">{sett.website}</a></p>'
+        send_paid_mail(lesson, text, subject)
 
 @app.task(name="front.tasks.mass_notify_for_not_paid", ignore_result=True)
 def mass_notify_for_not_paid():
