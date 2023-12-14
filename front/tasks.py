@@ -183,7 +183,7 @@ def mass_email_send_today():
         form_mail(lessons, text, subject)
 
 
-@app.task(name="front.tasks.mass_email_send_before", ignore_result=True)
+@app.task(name="front.tasks.mass_email_send_day_today_paid", ignore_result=True)
 def mass_email_send_day_today_paid():
     """
         периодическая отправка напоминаний о публикации темы сегодня тем, кто оплатил
