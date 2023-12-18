@@ -10,3 +10,5 @@ urllib3
 django-environ
 captcha
 django_celery_beat
+psycopg[binary]
+ffmpeg

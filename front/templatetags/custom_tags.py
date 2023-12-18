@@ -2,7 +2,7 @@ from datetime import timedelta
 
 from django import template
 
-from celery import task
+from marathon.celery import app
 from django.utils.safestring import mark_safe
 
 register = template.Library()
@@ -45,7 +45,7 @@ def deltatime(dt, deltadays):
 @register.simple_tag
 def processes_queue():
     html = 'Очередь рассылок: <div style="overflow-x: scroll;"><table style="max-width:1200px;">'
-    i = task.control.inspect()
+    i = app.control.inspect()
     q = i.scheduled() or {}
     for k, v in q.items():
         html += f'<thead><tr><th>Процесс: {k}</th></tr></thead>'
