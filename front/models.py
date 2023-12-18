@@ -395,11 +395,11 @@ class Video(models.Model):
             if file:
                 progress += f'\nскачивание видео 1080p'
                 Logging.objects.filter(pk=log.pk).update(input_data=progress)
-                file.download(output_path=fpath, filename='video')
+                file.download(output_path=fpath, filename='video.mp4')
                 progress += f'\nвидео 1080p скачано\nскачивание аудио'
                 Logging.objects.filter(pk=log.pk).update(input_data=progress)
                 yt.streams.filter(type='audio', mime_type='audio/mp4', progressive=False).first().download(
-                    output_path=fpath, filename='audio')
+                    output_path=fpath, filename='audio.mp4')
 
                 # if os.path.isfile(f'{fpath}{self.lesson.number}_{self.number}.mp4'):
                 #     os.remove(f'{fpath}{self.lesson.number}_{self.number}.mp4')
