@@ -1,4 +1,4 @@
-Django~=4.2
+Django~=3.2
 uuid
 yookassa
 pytube
@@ -10,5 +10,8 @@ urllib3
 django-environ
 django-recaptcha
 django_celery_beat
-psycopg[binary]
-ffmpeg
+psycopg2-binary
+ffmpeg-python
+gunicorn
+yandex_checkout
+redis

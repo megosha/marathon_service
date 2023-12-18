@@ -1,0 +1,40 @@
+[program:marathon]
+command=/www/marathon_venv/bin/gunicorn marathon.wsgi:application --bind=127.0.0.1:8101 --workers=1 --pid=/tmp/marathon_service.pid --log-file=/www/marathon_service/gunicorn.log --reload
+process_name=%(program_name)s
+redirect_stderr=true
+numprocs=1
+
+directory=/www/marathon_service/
+umask=022
+autostart=true
+autorestart=true
+startsecs=10
+startretries=3
+exitcodes=0,2
+stopsignal=TERM
+stopwaitsecs=10
+user=andrey
+environment=LANG="ru_RU.utf8", LC_ALL="ru_RU.UTF-8", LC_LANG="ru_RU.UTF-8"
+
+
+[program:marathon_celery_prod]
+command=/www/marathon_venv/bin/celery -A marathon worker --beat -S django
+#command=/www/marathon_venv/bin/celery worker --scheduler django -B -A marathon --loglevel=INFO -Q default -E  --concurrency=1 -n marathon_prod
+directory=/www/marathon_service
+process_name=%(program_name)s
+autostart=true
+autorestart=true
+stdout_logfile=/www/marathon_service/logs/celery.log
+stderr_logfile=/www/marathon_service/logs/celery_error.log
+user=andrey
+
+
+[program:marathon_celery_dev]
+command=/www/marathon_venv/bin/celery -A marathon worker --beat -S django
+#command=/www/marathon_venv/bin/celery worker --scheduler django -B -A marathon --loglevel=INFO -Q default -E  --concurrency=1 -n marathon_dev
+directory=/tmp/marathon_remote
+process_name=%(program_name)s
+autostart=false
+autorestart=true
+user=andrey
+
