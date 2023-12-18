@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'front',
     'api',
-    'captcha',
+    'django_recaptcha',
     'django_celery_beat',
 ]
 

@@ -8,7 +8,7 @@ celery
 fpdf
 urllib3
 django-environ
-captcha
+django-recaptcha
 django_celery_beat
 psycopg[binary]
 ffmpeg
