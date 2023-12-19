@@ -410,7 +410,7 @@ class Video(models.Model):
                 progress += f'\nзапуск рендера видео и аудио в один файл'
                 Logging.objects.filter(pk=log.pk).update(input_data=progress)
                 ffmpeg.output(audio_stream, video_stream,
-                              f'{fpath}{self.lesson.number}_{self.number}.mp4').run(overwrite_output=True)
+                              f'{fpath}{self.lesson.number}_{self.number}.mp4', threads=1).run(overwrite_output=True)
 
             else:
                 progress += f'\nпоиск стрима 720p'
