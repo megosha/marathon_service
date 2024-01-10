@@ -460,7 +460,8 @@ class Account(LoginRequiredMixin, ContextViewMixin):
                       f'<a style="font-size: 24px; font-weight: bold;" href="{settings.website}/api/accept_review/{account.pk}-{review_obj.pk}">Опубликовать отзыв</a>'
             mail_context = {"settings": settings, "message": message}
             html_message = render_to_string('mail/news.html', mail_context)
-            models.sendmail(subject, html_message, settings.contact_mail, attach=review_obj.account.photo.path)
+            # models.sendmail(subject, html_message, settings.contact_mail, attach=review_obj.account.photo.path)
+            models.sendmail(subject, html_message, settings.contact_mail)
 
         return HttpResponseRedirect('/me')
 
