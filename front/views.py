@@ -425,31 +425,33 @@ class Account(LoginRequiredMixin, ContextViewMixin):
             account = self.request.user.account
             account.photo = photo
             account.save()
-            img = Image.open(account.photo.path)
 
-            # exif = dict(pilImage._getexif().items())
-            orientation = 0
-            for orientation in ExifTags.TAGS.keys():
-                if ExifTags.TAGS[orientation] == 'Orientation':
-                    break
-            exif = img._getexif()
-            if exif and orientation in exif:
-                if exif[orientation] == 3:
-                    img = img.rotate(180, expand=True)
-                elif exif[orientation] == 6:
-                    img = img.rotate(270, expand=True)
-                elif exif[orientation] == 8:
-                    img = img.rotate(90, expand=True)
+            if photo:
+                img = Image.open(account.photo.path)
 
-            if img.width > img.height:
-                delta_crop = (img.width - img.height) / 2
-                img = img.crop((delta_crop, 0, img.width - delta_crop, img.height))
-            elif img.height > img.width:
-                delta_crop = (img.height - img.width) / 2
-                img = img.crop((0, delta_crop, img.width, img.height - delta_crop))
-            if img.width > 300 or img.height > 300:
-                img = img.resize((300, 300))
-            img.save(account.photo.path, quality=80)
+                # exif = dict(pilImage._getexif().items())
+                orientation = 0
+                for orientation in ExifTags.TAGS.keys():
+                    if ExifTags.TAGS[orientation] == 'Orientation':
+                        break
+                exif = img._getexif()
+                if exif and orientation in exif:
+                    if exif[orientation] == 3:
+                        img = img.rotate(180, expand=True)
+                    elif exif[orientation] == 6:
+                        img = img.rotate(270, expand=True)
+                    elif exif[orientation] == 8:
+                        img = img.rotate(90, expand=True)
+
+                if img.width > img.height:
+                    delta_crop = (img.width - img.height) / 2
+                    img = img.crop((delta_crop, 0, img.width - delta_crop, img.height))
+                elif img.height > img.width:
+                    delta_crop = (img.height - img.width) / 2
+                    img = img.crop((0, delta_crop, img.width, img.height - delta_crop))
+                if img.width > 300 or img.height > 300:
+                    img = img.resize((300, 300))
+                img.save(account.photo.path, quality=80)
             review_obj = models.Feedback.objects.create(account=account, feedback=review, kind=kind)
             settings = models.Setting.objects.filter().first()
             subject = 'НОВЫЙ ОТЗЫВ ОБ ИНТЕНСИВЕ'
