@@ -350,11 +350,15 @@ class Video(models.Model):
         return f'Mарафон "{self.lesson.marathon.title}"-Тема №{self.lesson.number}-Видео №{self.number}'
 
     def video_exists(self):
+        """
         try:
             r = requests.head(self.url, timeout=1)
             return r.status_code == requests.codes.ok
-        except:
+        except Exception as e:
+            print(e)
             return False
+        """
+        return True
 
     def save(self, *args, **kwargs):
         super(Video, self).save(*args, **kwargs)
@@ -365,7 +369,7 @@ class Video(models.Model):
             # download_video(self.pk)
 
     def download_video(self):
-        Video.objects.filter(pk=self.pk).update(processing = True)
+        Video.objects.filter(pk=self.pk).update(processing=True)
         log = Logging.objects.create(action="Скачивание видео c YouTube models.Video.download_video()",
                                      input_data=f'pk: {self.pk}, марафон: {self.lesson.marathon.pk}, '
                                                 f'урок:{self.lesson.number}, видео:{self.number}')

@@ -76,7 +76,7 @@ def get_gift(request, marathon):
 
 class ContextViewMixin(View):
     def make_context(self, context=None, **kwargs):
-        if not context: context = {}
+        context = context or {}
         context['current_date'] = timezone.now()
         if self.request.user.is_authenticated and models.Account.objects.filter(user=self.request.user).exists():
             context['user'] = self.request.user
